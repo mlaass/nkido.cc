@@ -18,10 +18,12 @@
 	/* Transitions */
 	--transition-fast: 150ms ease;
 	--transition-normal: 250ms ease;
-}
 
-/* Theme colors - dark-first */
-:root {
+	/* Layout */
+	--max-width: 1200px;
+	--content-padding: var(--spacing-lg);
+
+	/* Colors - Dark theme (default) */
 	--bg-primary: #0d1117;
 	--bg-secondary: #161b22;
 	--bg-tertiary: #21262d;
@@ -46,10 +48,6 @@
 	--syntax-comment: #8b949e;
 	--syntax-function: #d2a8ff;
 	--syntax-operator: #ff7b72;
-
-	/* Layout */
-	--max-width: 1200px;
-	--content-padding: var(--spacing-lg);
 }
 
 /* Light mode */
@@ -65,11 +63,10 @@
 		--text-muted: #8c959f;
 
 		--accent-primary: #0969da;
-		--accent-success: #1a7f37;
 		--accent-secondary: #1a7f37;
 		--accent-warning: #9a6700;
 		--accent-error: #cf222e;
-		--accent-viz: #1a7f37;
+		--accent-viz: #16a34a;
 
 		--border-default: #d0d7de;
 		--border-muted: #eaeef2;
