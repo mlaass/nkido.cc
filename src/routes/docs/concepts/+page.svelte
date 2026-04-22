@@ -1,5 +1,23 @@
 <script lang="ts">
-	import { BookOpen, ArrowRight } from 'lucide-svelte';
+	import { ArrowRight, ArrowLeft } from 'lucide-svelte';
+
+	const concepts = [
+		{
+			title: 'Signals & DAGs',
+			href: '/docs/concepts/signals',
+			summary: "How audio flows through NKIDO's directed acyclic graph architecture."
+		},
+		{
+			title: 'Hot-swap explained',
+			href: '/docs/concepts/hot-swap',
+			summary: 'Preserving state across code changes — no glitches, no drops.'
+		},
+		{
+			title: 'Mini-notation',
+			href: '/docs/concepts/mini-notation',
+			summary: 'Strudel/Tidal-style pattern syntax for rapid musical exploration.'
+		}
+	];
 </script>
 
 <svelte:head>
@@ -9,43 +27,25 @@
 
 <section class="page">
 	<div class="page-inner">
+		<a href="/docs" class="back-link">
+			<ArrowLeft size={14} />
+			All docs
+		</a>
 		<h1>Concepts</h1>
 		<p class="intro">
-			Understand the ideas that make NKIDO work.
+			The ideas that make NKIDO work. Start here before jumping into the tutorials.
 		</p>
 
 		<div class="concepts-list">
-			<a href="https://live.nkido.cc/?docs=signals" class="concept-card" target="_blank" rel="noopener">
-				<h2>Signals & DAGs</h2>
-				<p>How audio flows through NKido's directed acyclic graph architecture.</p>
-				<span class="learn-more">
-					Learn more <ArrowRight size={14} />
-				</span>
-			</a>
-
-			<a href="https://live.nkido.cc/?docs=hot-swap" class="concept-card" target="_blank" rel="noopener">
-				<h2>Hot-swap Explained</h2>
-				<p>Preserving state across code changes — no glitches, no drops.</p>
-				<span class="learn-more">
-					Learn more <ArrowRight size={14} />
-				</span>
-			</a>
-
-			<a href="https://live.nkido.cc/?docs=mini-notation" class="concept-card" target="_blank" rel="noopener">
-				<h2>Mini-notation</h2>
-				<p>Strudel/Tidal-style pattern syntax for rapid musical exploration.</p>
-				<span class="learn-more">
-					Learn more <ArrowRight size={14} />
-				</span>
-			</a>
-
-			<a href="https://live.nkido.cc/?docs=akkado" class="concept-card" target="_blank" rel="noopener">
-				<h2>The Akkado Language</h2>
-				<p>Nkido's domain-specific language for live-coding patterns.</p>
-				<span class="learn-more">
-					Learn more <ArrowRight size={14} />
-				</span>
-			</a>
+			{#each concepts as concept}
+				<a href={concept.href} class="concept-card">
+					<h2>{concept.title}</h2>
+					<p>{concept.summary}</p>
+					<span class="learn-more">
+						Read <ArrowRight size={14} />
+					</span>
+				</a>
+			{/each}
 		</div>
 	</div>
 </section>
@@ -58,6 +58,20 @@
 	.page-inner {
 		max-width: 800px;
 		margin: 0 auto;
+	}
+
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacing-xs);
+		font-size: 0.875rem;
+		color: var(--text-secondary);
+		margin-bottom: var(--spacing-lg);
+	}
+
+	.back-link:hover {
+		color: var(--text-primary);
+		text-decoration: none;
 	}
 
 	h1 {

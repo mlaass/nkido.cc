@@ -5,6 +5,10 @@
 <svelte:head>
 	<title>Getting Started — NKIDO</title>
 	<meta name="description" content="Get started with NKIDO — install the CLI, try the web IDE, or embed in your project." />
+	<meta property="og:title" content="Getting started with NKIDO" />
+	<meta property="og:description" content="Install the CLI, try the web IDE, or embed NKIDO in your project." />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://nkido.cc/getting-started" />
 </svelte:head>
 
 <section class="page">

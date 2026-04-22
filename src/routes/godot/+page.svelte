@@ -5,6 +5,10 @@
 <svelte:head>
 	<title>Godot Addon — NKIDO</title>
 	<meta name="description" content="Embed NKIDO in your Godot 4.x games for dynamic music and sound design." />
+	<meta property="og:title" content="NKIDO for Godot" />
+	<meta property="og:description" content="Embed NKIDO in your Godot 4.x games for dynamic music and sound design." />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://nkido.cc/godot" />
 </svelte:head>
 
 <section class="page">

@@ -1,11 +1,21 @@
 <script lang="ts">
-	import { BookOpen, Layers, Code, Zap } from 'lucide-svelte';
+	import { Layers, Code, Zap, type Icon as IconType } from 'lucide-svelte';
 
-	const docsSections = [
+	type DocItem = { title: string; href: string };
+	type DocSection = {
+		title: string;
+		icon: typeof Layers;
+		description: string;
+		href: string;
+		external?: boolean;
+		items?: DocItem[];
+	};
+
+	const docsSections: DocSection[] = [
 		{
 			title: 'Concepts',
 			icon: Layers,
-			description: 'Understand the core ideas behind NKIDO',
+			description: 'Understand the core ideas behind NKIDO.',
 			href: '/docs/concepts',
 			items: [
 				{ title: 'Signals & DAGs', href: '/docs/concepts/signals' },
@@ -16,20 +26,23 @@
 		{
 			title: 'Tutorials',
 			icon: Zap,
-			description: 'Step-by-step guides from first sound to advanced patterns',
-			href: '/docs/tutorials',
+			description: 'Step-by-step guides from first sound to advanced patterns.',
+			href: '/docs/tutorials/hello-sine',
 			items: [
-				{ title: 'Hello Sine', href: '/docs/tutorials/hello-sine' },
-				{ title: 'Adding filters', href: '/docs/tutorials/filters' },
-				{ title: 'Patterns', href: '/docs/tutorials/patterns' }
+				{ title: 'Hello Sine', href: '/docs/tutorials/hello-sine' }
 			]
 		},
 		{
 			title: 'Reference',
 			icon: Code,
-			description: 'Full opcode and builtin reference',
+			description: 'Full opcode and builtin reference, opened in the live IDE.',
 			href: 'https://live.nkido.cc/?docs=',
-			external: true
+			external: true,
+			items: [
+				{ title: 'osc', href: 'osc' },
+				{ title: 'filter', href: 'filter' },
+				{ title: 'reverb', href: 'reverb' }
+			]
 		}
 	];
 </script>
@@ -59,11 +72,11 @@
 							{#each section.items as item}
 								<li>
 									{#if section.external}
-										<a href="{section.href}{encodeURIComponent(item.title)}" target="_blank" rel="noopener">
+										<a href="{section.href}{encodeURIComponent(item.href)}" target="_blank" rel="noopener">
 											{item.title} →
 										</a>
 									{:else}
-										<a href="{item.href}">{item.title} →</a>
+										<a href={item.href}>{item.title} →</a>
 									{/if}
 								</li>
 							{/each}

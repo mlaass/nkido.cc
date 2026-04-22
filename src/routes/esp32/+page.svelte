@@ -5,6 +5,10 @@
 <svelte:head>
 	<title>ESP32 Port — NKIDO</title>
 	<meta name="description" content="Run NKIDO on ESP32-A1S Audio Kit for embedded audio projects." />
+	<meta property="og:title" content="NKIDO for ESP32" />
+	<meta property="og:description" content="Run NKIDO on ESP32-A1S Audio Kit for embedded audio projects." />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://nkido.cc/esp32" />
 </svelte:head>
 
 <section class="page">
