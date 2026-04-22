@@ -13,7 +13,9 @@ const config = {
 			strict: true
 		}),
 		prerender: {
-			entries: []
+			entries: ['*'],
+			handleHttpError: 'warn',
+			handleMissingId: 'warn'
 		}
 	}
 };
