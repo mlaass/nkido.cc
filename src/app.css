@@ -1,0 +1,203 @@
+:root {
+	/* Typography */
+	--font-mono: 'Fira Code', 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+	--font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+	/* Spacing */
+	--spacing-xs: 4px;
+	--spacing-sm: 8px;
+	--spacing-md: 16px;
+	--spacing-lg: 24px;
+	--spacing-xl: 32px;
+	--spacing-2xl: 48px;
+	--spacing-3xl: 64px;
+
+	/* Sizing */
+	--header-height: 64px;
+
+	/* Transitions */
+	--transition-fast: 150ms ease;
+	--transition-normal: 250ms ease;
+}
+
+/* Theme colors - dark-first */
+:root {
+	--bg-primary: #0d1117;
+	--bg-secondary: #161b22;
+	--bg-tertiary: #21262d;
+	--bg-hover: #30363d;
+
+	--text-primary: #e6edf3;
+	--text-secondary: #8b949e;
+	--text-muted: #6e7681;
+
+	--accent-primary: #58a6ff;
+	--accent-secondary: #3fb950;
+	--accent-warning: #d29922;
+	--accent-error: #f85149;
+	--accent-viz: #4ade80;
+
+	--border-default: #30363d;
+	--border-muted: #21262d;
+
+	--syntax-keyword: #ff7b72;
+	--syntax-string: #a5d6ff;
+	--syntax-number: #79c0ff;
+	--syntax-comment: #8b949e;
+	--syntax-function: #d2a8ff;
+	--syntax-operator: #ff7b72;
+
+	/* Layout */
+	--max-width: 1200px;
+	--content-padding: var(--spacing-lg);
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+	:root {
+		--bg-primary: #ffffff;
+		--bg-secondary: #f6f8fa;
+		--bg-tertiary: #eaeef2;
+		--bg-hover: #d0d7de;
+
+		--text-primary: #1f2328;
+		--text-secondary: #656d76;
+		--text-muted: #8c959f;
+
+		--accent-primary: #0969da;
+		--accent-success: #1a7f37;
+		--accent-secondary: #1a7f37;
+		--accent-warning: #9a6700;
+		--accent-error: #cf222e;
+		--accent-viz: #1a7f37;
+
+		--border-default: #d0d7de;
+		--border-muted: #eaeef2;
+
+		--syntax-keyword: #cf222e;
+		--syntax-string: #0a3069;
+		--syntax-number: #0550ae;
+		--syntax-comment: #6e7781;
+		--syntax-function: #8250df;
+		--syntax-operator: #cf222e;
+	}
+}
+
+/* Reset */
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	min-height: 100vh;
+}
+
+body {
+	font-family: var(--font-sans);
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--text-primary);
+	background-color: var(--bg-primary);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus styles */
+:focus-visible {
+	outline: 2px solid var(--accent-primary);
+	outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--border-default);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--text-muted);
+}
+
+/* Selection */
+::selection {
+	background-color: var(--accent-primary);
+	color: var(--bg-primary);
+}
+
+/* Code/mono text */
+code, pre {
+	font-family: var(--font-mono);
+}
+
+/* Utility classes */
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Button base */
+button {
+	font-family: inherit;
+	font-size: inherit;
+	cursor: pointer;
+	border: none;
+	background: none;
+	color: inherit;
+	padding: 0;
+}
+
+button:disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+/* Links */
+a {
+	color: var(--accent-primary);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+h1 {
+	font-size: 2.5rem;
+}
+
+h2 {
+	font-size: 1.75rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+}
+
+p {
+	margin: 0 0 var(--spacing-md) 0;
+}
