@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import Logo from '$lib/components/Logo/Logo.svelte';
 </script>
 
 <header class="header">
 	<div class="header-inner">
 		<a href="/" class="logo-link">
-			<img src="/logo.svg" alt="NKIDO" class="logo" />
+			<Logo size={32} />
 			<span class="logo-text">nkido</span>
 		</a>
 
@@ -50,11 +51,6 @@
 
 	.logo-link:hover {
 		text-decoration: none;
-	}
-
-	.logo {
-		width: 32px;
-		height: 32px;
 	}
 
 	.logo-text {
