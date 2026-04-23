@@ -1,0 +1,36 @@
+# Link checker config. Invoked on the built output under `build/`.
+# Internal links are checked in full; external links are limited to the
+# domains we actually care about linking to so we don't ping the whole
+# world on every CI run.
+
+# Maximum number of retries (exponential backoff).
+max_retries = 2
+# Exclude mailto: (checker can't dial SMTP).
+exclude_mail = true
+# Don't error on rate limits (429) — most common on github.com, fine to warn.
+accept = [200, 206, 429]
+# Timeout per request, in seconds.
+timeout = 30
+# Cache results between runs so consecutive CI runs are fast.
+cache = true
+max_cache_age = "24h"
+
+# Internal: full-graph.
+# External: only the handful of domains we intentionally link to.
+include = [
+    "file://",
+    "https://github.com/mlaass",
+    "https://github.com/sponsors/mlaass",
+    "https://ko-fi.com/mlaass",
+    "https://live.nkido.cc",
+    "https://datatracker.ietf.org/doc/html/rfc1855",
+]
+
+# Skip verifying anything else external — we don't want the CI to flap
+# because medium.com or an inline-example host had a bad 2 seconds.
+exclude = [
+    "^https?://(?!github\\.com/mlaass|github\\.com/sponsors/mlaass|ko-fi\\.com/mlaass|live\\.nkido\\.cc|datatracker\\.ietf\\.org/doc/html/rfc1855).*",
+]
+
+# Skip common site anchors that link-check tools trip on.
+exclude_all_private = true
