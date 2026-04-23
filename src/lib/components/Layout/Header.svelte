@@ -40,7 +40,9 @@
 	<div class="header-inner">
 		<a href="/" class="logo-link" onclick={close}>
 			<Logo size={32} />
-			<span class="logo-text">nkido</span>
+			{#if false}
+			<span class="logo-text">NKIDO</span>
+			{/if}
 		</a>
 
 		<nav class="nav-desktop">
