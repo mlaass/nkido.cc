@@ -11,9 +11,9 @@
 </svelte:head>
 
 <div style="display: flex; flex-direction: column; min-height: 100vh;">
-	<Header />
+	<div data-pagefind-ignore><Header /></div>
 	<div style="flex: 1; display: flex; flex-direction: column;">
 		{@render children()}
 	</div>
-	<Footer />
+	<div data-pagefind-ignore><Footer /></div>
 </div>
