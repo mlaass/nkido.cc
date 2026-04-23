@@ -19,6 +19,7 @@ export type Post = {
 	excerpt: string;
 	description?: string;
 	tag?: string;
+	draft?: boolean;
 };
 
 type FrontmatterModule = {
@@ -76,6 +77,7 @@ function toMarkdownPost(path: string, mod: FrontmatterModule): Post | null {
 					: ''
 	};
 	if (typeof fm.description === 'string') post.description = fm.description;
+	if (fm.draft === true) post.draft = true;
 	return post;
 }
 
@@ -103,6 +105,13 @@ const mdPosts: Post[] = Object.entries(mdModules)
 
 const releasePosts: Post[] = (releasesData as ReleasesFile).releases.map(toReleasePost);
 
-export const posts: Post[] = [...mdPosts, ...releasePosts].sort((a, b) =>
-	b.date.localeCompare(a.date)
+// Drafts exist as routes (so you can preview via direct URL) but aren't
+// listed on /blog or in the sitemap. Flip `draft: false` (or drop the field)
+// in frontmatter to publish.
+export const posts: Post[] = [...mdPosts, ...releasePosts]
+	.filter((p) => p.draft !== true)
+	.sort((a, b) => b.date.localeCompare(a.date));
+
+export const allPostsIncludingDrafts: Post[] = [...mdPosts, ...releasePosts].sort(
+	(a, b) => b.date.localeCompare(a.date)
 );

@@ -6,6 +6,7 @@ date: 2026-04-21
 author: mlaass
 category: post
 excerpt: Docker-wrapped IDF builds, an ES8388 brought up by hand, and a VM that lives in PSRAM because it doesn't fit anywhere else.
+draft: true
 ---
 
 When I started the ESP32 port, the main question was: is there even room? Cedar on desktop is generous with itself — buffer pools, probe rings, multiple state variants, a stereo pipeline plus mono fallback. Audio decoders. Soundfonts. A `std::aligned_alloc` call that (it turns out) doesn't exist in xtensa libstdc++. The mainline build happily consumes a couple of megabytes for the runtime VM and doesn't think twice about it.

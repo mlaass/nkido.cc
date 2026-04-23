@@ -6,6 +6,7 @@ date: 2026-04-23
 author: mlaass
 category: post
 excerpt: The code that lets you rewrite a running nkido patch without clicking, popping, or dropping a sample.
+draft: true
 ---
 
 If you've live-coded audio before, you've heard this sound: you hit re-run, and every oscillator snaps back to phase zero. It's a click, or a weird pop, or — if the patch is chord-sized — a brief chord of phase-aligned sawtooths that sounds like a tiny digital bleep. Not great.

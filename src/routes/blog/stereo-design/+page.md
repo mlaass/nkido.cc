@@ -6,6 +6,7 @@ date: 2026-04-22
 author: mlaass
 category: post
 excerpt: Designing stereo support that's both type-safe and invisible — you write mono code, it auto-lifts to stereo where it has to.
+draft: true
 ---
 
 The first pass at stereo in nkido was bad. You had two patches running, one per channel, mixed at the output. Width controls lived in parallel code. If you wanted a slightly wider reverb, you wrote the delay lines twice, hoped they stayed in sync, and cursed when they didn't.
