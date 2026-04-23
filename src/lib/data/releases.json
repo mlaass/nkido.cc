@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-04-23T21:24:38.244Z",
+  "releases": [
+    {
+      "tag": "v0.2.0",
+      "title": "v0.2.0",
+      "body": "### Added\n- Stereo signal semantics: automatic mono→stereo lifting, `mono()` downmix, stereo-aware builtin catalog with STEREO_INPUT flag\n- `bpm` and `sr` builtin variables (desugar through ENV_GET, no new opcodes)\n- `>>` and `@` as aliases for `|>` (pipe) and `%` (hole)\n- Underscore placeholder (`_`) for skipping positional arguments to use their defaults\n- Size-optimized Cedar build configuration and ESP32/Xtensa cross-compile support\n- `cedar-size-report.sh` for tracking binary size across feature configurations\n- `gm_medium` (FluidR3Mono, 14MB) and `gm_large` (MuseScore, 39MB) soundfont tiers\n\n### Changed\n- Rebranded web UI with orange accent and neutral grey palette\n- Renamed project from enkido to nkido (canonical name going forward)\n- Default soundfont switched from MuseScore_General (39MB) to TimGM6mb (2.6MB SF3)\n\n### Fixed\n- Windows and macOS portability blockers across build and runtime\n- WASM build failure from missing project version in Cedar compile definitions\n",
+      "date": "2026-04-23",
+      "prerelease": false,
+      "url": "https://github.com/mlaass/nkido/releases/tag/v0.2.0"
+    }
+  ]
+}

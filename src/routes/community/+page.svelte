@@ -82,7 +82,10 @@
 			</ul>
 			<p>
 				For non-trivial changes, please open an issue first to discuss the approach.
-				PRs that include tests for new behavior are merged faster.
+				PRs that include tests for new behavior are merged faster. The full contribution
+				guide (build env, opcode-add walk-through, release process) lives at
+				<a href="/community/contributing">the CONTRIBUTING guide</a> — mirrored from the
+				<code>nkido</code> repo on each build.
 			</p>
 		</section>
 
