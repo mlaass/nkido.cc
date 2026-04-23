@@ -109,12 +109,12 @@
 		<section class="card">
 			<div class="card-head">
 				<Github size={20} />
-				<h2>Code of Conduct</h2>
+				<h2>How we talk</h2>
 			</div>
 			<p>
-				Be kind, be patient, assume good faith. Harassment, personal attacks, and
-				targeted discrimination are not tolerated in any NKIDO space (issues, PRs,
-				discussions, sponsor channels). If you have a concern, email
+				Be useful, be patient, assume good faith. If you want a longer version of that,
+				<a href="https://datatracker.ietf.org/doc/html/rfc1855" target="_blank" rel="noopener">RFC 1855 (Netiquette Guidelines, 1995)</a>
+				still holds up. Questions or concerns go to
 				<a href="mailto:moritz.laass@gmail.com">moritz.laass@gmail.com</a>.
 			</p>
 		</section>
