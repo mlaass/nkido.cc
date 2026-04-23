@@ -3,257 +3,221 @@
 </script>
 
 <svelte:head>
-	<title>ESP32 Port — NKIDO</title>
-	<meta name="description" content="Run NKIDO on ESP32-A1S Audio Kit for embedded audio projects." />
-	<meta property="og:title" content="NKIDO for ESP32" />
-	<meta property="og:description" content="Run NKIDO on ESP32-A1S Audio Kit for embedded audio projects." />
+	<title>NKIDO on embedded hardware: ESP32 port</title>
+	<meta
+		name="description"
+		content="Cedar runs on a $10 ESP32. Proof that nkido is in range for guitar pedals, Eurorack modules, and custom instruments."
+	/>
+	<meta property="og:title" content="NKIDO on embedded hardware" />
+	<meta
+		property="og:description"
+		content="Cedar runs on a $10 ESP32. Proof that nkido is in range for guitar pedals, Eurorack modules, and custom instruments."
+	/>
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="https://nkido.cc/esp32" />
 </svelte:head>
 
 <section class="page">
 	<div class="page-inner">
-		<h1>NKIDO for ESP32</h1>
+		<h1>NKIDO on embedded hardware</h1>
 		<p class="intro">
-			Cedar running bare-metal on the AI-Thinker ESP32-A1S Audio Kit. Live-push patches over
-			UART, drive six buttons as params, and hot-swap without dropping a sample.
+			Cedar runs on a $10 ESP32. That puts nkido in range of guitar pedals, Eurorack modules,
+			stompboxes, and custom instruments. Anywhere you want live-coded audio without a laptop
+			in the loop.
 		</p>
 
 		<div class="status-banner">
 			<Cpu size={16} />
 			<span class="status-badge">Phase 3</span>
-			<span>Boot + UART bytecode loader + KEY1–6 scanner all running on hardware</span>
+			<span>Reference build runs on AI-Thinker ESP32-A1S Audio Kit: boot, live-push, six-key control</span>
 		</div>
 
 		<section>
-			<h2 id="hardware">Hardware</h2>
+			<h2 id="proof-of-concept">Proof of concept, not a product</h2>
 			<p>
-				The port targets the <strong>AI-Thinker ESP32-A1S Audio Kit 2.2</strong> — a classic
-				ESP32 (LX6, not S3/C3) paired with an ES8388 stereo codec, onboard amplifier, and six
-				tact switches. Other ESP32+ES8388 boards will likely work but aren't tested.
+				The ESP32 port is about showing that the cedar VM (hot-swap, live-coded patches, all
+				the pieces that make nkido feel the way it does) fits on a chip that's cheap and
+				widely available. Once that's true, the interesting question shifts from "does it
+				work?" to "what do you build with it?"
 			</p>
 
-			<h3>Pin map (board revision 2.2)</h3>
-			<table class="api-table">
-				<thead><tr><th>Signal</th><th>GPIO</th><th>Notes</th></tr></thead>
-				<tbody>
-					<tr><td>I2C SDA (ES8388 config)</td><td>33</td><td>Codec I2C address <code>0x10</code></td></tr>
-					<tr><td>I2C SCL</td><td>32</td><td></td></tr>
-					<tr><td>I2S MCLK</td><td>0</td><td>256·f<sub>s</sub> = 12.288 MHz @ 48 kHz</td></tr>
-					<tr><td>I2S BCLK</td><td>27</td><td></td></tr>
-					<tr><td>I2S WS / LRCK</td><td>25</td><td></td></tr>
-					<tr><td>I2S DOUT (ESP → codec)</td><td>26</td><td>ADC (GPIO 35) unused in Phase 1</td></tr>
-					<tr><td>PA_EN (speaker amp)</td><td>21</td><td>Drive high for speakers; headphones fine with low</td></tr>
-					<tr><td>LED D4</td><td>22</td><td>Active-low</td></tr>
-					<tr><td>KEY1</td><td>36</td><td>Input-only; board has external pull-up</td></tr>
-					<tr><td>KEY2</td><td>13</td><td>Internal pull-up</td></tr>
-					<tr><td>KEY3</td><td>19</td><td>Internal pull-up</td></tr>
-					<tr><td>KEY4</td><td>23</td><td>Internal pull-up</td></tr>
-					<tr><td>KEY5</td><td>18</td><td>Internal pull-up</td></tr>
-					<tr><td>KEY6</td><td>5</td><td>Internal pull-up</td></tr>
-				</tbody>
-			</table>
+			<div class="sketch-grid">
+				<article class="sketch">
+					<h3>Guitar pedal</h3>
+					<p>
+						Pair the chip with a pedal-grade audio frontend, wire footswitches to GPIO and
+						an expression pedal to the ADC, and you have a programmable effect box. The
+						same live-push workflow applies: edit a patch, stomp, the sound changes.
+					</p>
+				</article>
+				<article class="sketch">
+					<h3>Eurorack module</h3>
+					<p>
+						Map CV inputs to patch parameters, gate inputs to envelope triggers, and fit
+						the result into a few HP of front panel. Cedar's live-push means the module's
+						voice can be redefined without a firmware flash.
+					</p>
+				</article>
+				<article class="sketch">
+					<h3>Standalone instrument</h3>
+					<p>
+						Battery, a small screen, a handful of physical controls. No host required. The
+						last-pushed patch persists across reboots, so the device boots straight into
+						whatever sound it was making.
+					</p>
+				</article>
+			</div>
+
 			<p class="caveat">
-				The onboard record button is wired to GPIO 36 as KEY1 — that pin is input-only with
-				no internal pull-up, which is why the board carries an external one. Don't try to
-				drive GPIO 36 as an output.
+				None of those are built yet. The port gets us to the starting line: running cedar on
+				a cheap chip, with the nkido workflow intact.
 			</p>
 		</section>
 
 		<section>
-			<h2 id="build">Build &amp; flash</h2>
+			<h2 id="whats-running">What's running today</h2>
 			<p>
-				The repo ships a Docker-based build that pins ESP-IDF to <code>release-v5.3</code> so
-				you don't have to install a toolchain locally. Native builds work too if you already
-				have IDF set up.
+				The reference build targets the <strong>AI-Thinker ESP32-A1S Audio Kit 2.2</strong>,
+				a classic ESP32 paired with an ES8388 stereo codec, a headphone amp, and six onboard
+				tactile switches. It boots, plays a 440 Hz sine out the jack, accepts patch pushes
+				over USB serial, and binds the six buttons to the running patch's parameters. Other
+				ESP32 + ES8388 boards will probably work with little or no modification; different
+				codecs or chips need a new driver and sensible config changes.
 			</p>
+			<p>
+				The full story of the port (what fought me, the decisions behind each phase, and what
+				turned out easier than expected) is in the <a href="/blog/esp32-port-story">dev journal</a>.
+			</p>
+		</section>
 
-			<h3>Docker (recommended)</h3>
+		<section>
+			<h2 id="try-it">Try it</h2>
+			<p>
+				If you have an A1S Audio Kit and a USB cable, the fastest path is the Docker build.
+				No toolchain install required.
+			</p>
 			<div class="code-block">
 				<pre><code>git clone --recursive https://github.com/mlaass/cedar-esp32.git
 cd cedar-esp32
-
-# Build akkado-cli on the host, compile assets/demo.akk to .cbc, then run idf.py build
 ./scripts/docker-build.sh
-
-# Flash + open the monitor (USB path is typically /dev/ttyUSB0 on Linux)
 ./scripts/docker-flash.sh /dev/ttyUSB0</code></pre>
 			</div>
-
-			<h3>Native ESP-IDF</h3>
-			<div class="code-block">
-				<pre><code>. $IDF_PATH/export.sh
-idf.py set-target esp32
-idf.py build
-idf.py -p /dev/ttyUSB0 flash monitor</code></pre>
-			</div>
 			<p>
-				First build takes a few minutes; subsequent incremental builds are ~10 s. A successful
-				boot prints the demo patch's state dump and immediately produces a 440 Hz sine on
-				the codec output (verified on hardware).
-			</p>
-
-			<h3>Important <code>sdkconfig.defaults</code></h3>
-			<table class="api-table">
-				<thead><tr><th>Key</th><th>Value</th><th>Why</th></tr></thead>
-				<tbody>
-					<tr><td><code>CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ</code></td><td>240</td><td>Not 160 — realtime DSP budget</td></tr>
-					<tr><td><code>CONFIG_SPIRAM</code></td><td>y</td><td>VM heap lives in PSRAM; ~1.15 MB</td></tr>
-					<tr><td><code>CONFIG_COMPILER_OPTIMIZATION_PERF</code></td><td>y</td><td>-O2, not -Os</td></tr>
-					<tr><td><code>CONFIG_COMPILER_CXX_EXCEPTIONS</code></td><td>y</td><td>Cedar uses them; revisit if footprint becomes a problem</td></tr>
-					<tr><td><code>CONFIG_FREERTOS_HZ</code></td><td>1000</td><td>1 ms tick for key scanning</td></tr>
-					<tr><td><code>CONFIG_BT_ENABLED</code> / <code>CONFIG_ESP_WIFI_ENABLED</code></td><td>n</td><td>Save flash; not used yet</td></tr>
-				</tbody>
-			</table>
-		</section>
-
-		<section>
-			<h2 id="uart-loader">Live-push over UART</h2>
-			<p>
-				Once the board is booted, push new patches to it without re-flashing. The host CLI
-				lives at <code>tools/cedar-push/</code> and talks a tiny framed protocol over UART0
-				(the same line <code>idf.py monitor</code> uses — stop the monitor first).
+				Once it's running, push a new patch over serial:
 			</p>
 			<div class="code-block">
-				<pre><code># Compile an Akkado patch to .cbc (bytecode + param metadata)
-./third_party/nkido/build-host/tools/akkado-cli/akkado-cli \
-    my-patch.akk -o my-patch.cedar
-python3 tools/pack_cedar.py my-patch.cedar -o my-patch.cbc
-
-# Push it — the device hot-swaps at the next block boundary
-python3 -m cedar_push /dev/ttyUSB0 my-patch.cbc</code></pre>
-			</div>
-
-			<h3>Protocol at a glance</h3>
-			<p>
-				Frames are: 2-byte magic <code>0xCE 0xDA</code>, 4-byte LE length, 1-byte type,
-				payload, 4-byte LE CRC32 (IEEE 802.3, compatible with Python's <code>zlib.crc32</code>).
-				Baud is 115200 today; a bump to 460800 is tracked in the port's PRD.
-			</p>
-			<table class="api-table">
-				<thead><tr><th>Type</th><th>Direction</th><th>Payload</th></tr></thead>
-				<tbody>
-					<tr><td><code>0x01 SWAP</code></td><td>host → device</td><td>.cbc container (or raw .cedar)</td></tr>
-					<tr><td><code>0x02 SET_PARAM</code></td><td>host → device</td><td>slot u8 + value f32 LE</td></tr>
-					<tr><td><code>0x03 PING</code></td><td>host → device</td><td>—</td></tr>
-					<tr><td><code>0x04 PERF_QUERY</code></td><td>host → device</td><td>top_n u8</td></tr>
-					<tr><td><code>0x80 ACK</code></td><td>device → host</td><td>—</td></tr>
-					<tr><td><code>0x81 NACK</code></td><td>device → host</td><td>reason u8 (CRC_FAIL, PROGRAM_TOO_LARGE, …)</td></tr>
-				</tbody>
-			</table>
-		</section>
-
-		<section>
-			<h2 id="buttons">Buttons as patch params</h2>
-			<p>
-				Any patch that declares <code>param()</code>, <code>button()</code>, or
-				<code>toggle()</code> automatically binds to KEY1…KEY6 in declaration order (up to
-				six). No glue code needed on the device side.
-			</p>
-			<ul>
-				<li><strong>param</strong>: each press steps the value by <code>(max − min) / 20</code>; wraps at the top.</li>
-				<li><strong>button</strong>: momentary — pressed = 1.0, released = 0.0; gate-tight (slew 0).</li>
-				<li><strong>toggle</strong>: each press flips between 0.0 and 1.0; also slew 0.</li>
-			</ul>
-			<p>Example <code>assets/demo_keys.akk</code>:</p>
-			<div class="code-block">
-				<pre><code>cutoff = param("cutoff", 800, 100, 8000)  # KEY1 steps ±390 Hz
-trigger = button("trigger")               # KEY2 momentary gate
-mute = toggle("mute", false)              # KEY3 flip-flops
-
-osc("saw", 220) * 0.3
-  |> lp(%, cutoff, 0.4)
-  |> mul(%, 1.0 - mute)
-  |> adsr(trigger, 0.01, 0.2, 0.4, 0.5)
-  |> out(%, %)</code></pre>
+				<pre><code>python3 -m cedar_push --port /dev/ttyUSB0 my-patch.cbc</code></pre>
 			</div>
 			<p>
-				Scan interval is 5 ms with a 15 ms debounce (3 stable reads). When a new program is
-				loaded, the device rebinds the keys based on the fresh param table — so every .cbc
-				push re-maps the board's interface automatically.
+				For native ESP-IDF builds, pin maps, board-specific config, and the full reference,
+				see the
+				<a href="https://github.com/mlaass/cedar-esp32#readme" target="_blank" rel="noopener">repo README</a>
+				and
+				<a href="https://github.com/mlaass/cedar-esp32/blob/main/docs/build-docker.md" target="_blank" rel="noopener">build-docker.md</a>.
 			</p>
 		</section>
 
 		<section>
-			<h2 id="sizes">Footprint</h2>
+			<h2 id="how-it-works">How it works</h2>
+
+			<h3>Live patch push</h3>
 			<p>
-				Current firmware (Phase 3) weighs in at ~377 KB on flash, taking about 10 % of the
-				factory partition. The cedar VM itself — ~1.15 MB of state pools, buffers, and
-				per-opcode storage — is heap-allocated in PSRAM; only a pointer sits in DRAM.
+				The host compiles an Akkado patch to bytecode with parameter metadata, wraps it in a
+				small <code>.cbc</code> container, and sends it over USB serial. Cedar's built-in
+				crossfade handles the transition at the next audio block, so patches swap without
+				dropping samples. End-to-end latency is under 50 ms. Wire format and frame types are
+				in
+				<a href="https://github.com/mlaass/cedar-esp32/blob/main/docs/uart-protocol.md" target="_blank" rel="noopener">docs/uart-protocol.md</a>.
 			</p>
+
+			<h3>Controls bind to the patch, not the board</h3>
 			<p>
-				To fit in embedded budgets, several cedar features are compiled out in the ESP32
-				build: audio decoders, SoundFont support, FFT, generic file I/O, MinBLEP, and the
-				debug probe ring buffer. Fixed-point opcodes are also disabled in favor of float-only
-				builds. See <a href="https://github.com/mlaass/cedar-esp32/blob/main/docs/size-baseline.md" target="_blank" rel="noopener">docs/size-baseline.md</a>
-				for the full memory breakdown.
+				Patches declare parameters. The device binds the first six declarations to the six
+				onboard buttons in order, and each new patch re-maps them. This is the key insight
+				for embedded deployment: a pedal or module's front panel can be wired to patch
+				parameters the same way, and the patch stays portable between hardware targets.
+			</p>
+
+			<h3>VM in slow memory, hot path in fast memory</h3>
+			<p>
+				The cedar VM's working state (around 1.15 MB of buffer pools, state pools, and reverb
+				buffers) lives in the ESP32's PSRAM, the chip's slower external memory. Internal SRAM
+				is reserved for the audio-rate code path. That split is what makes the footprint budget
+				work on a chip with only ~128 KB of fast memory.
+			</p>
+
+			<h3>Persistence</h3>
+			<p>
+				The most recent pushed patch is stored in on-chip flash and loaded at boot. Send
+				<code>cedar-push --reset-program</code> to revert to the built-in demo.
 			</p>
 		</section>
 
 		<section>
-			<h2 id="troubleshooting">Troubleshooting</h2>
-
-			<h3>Boot prints "demo bytecode rejected — audio task will output silence"</h3>
+			<h2 id="footprint">Footprint</h2>
 			<p>
-				The baked-in demo failed <code>cedar::VM::load_program</code>. Usually means the demo
-				was compiled against a newer Cedar than the one linked in. Re-run
-				<code>./scripts/docker-build.sh</code> to regenerate <code>main/generated/demo_bytecode.h</code>.
+				The Phase 3 firmware weighs in at about <strong>306 KB</strong>, roughly 10% of the
+				app partition. To make that budget work, several cedar features are compiled out of
+				the embedded build: audio decoders, SoundFont support, FFT, generic file I/O, MinBLEP
+				oscillators, and the debug probe ring. Most come back in Phase 4 once on-device sample
+				playback is wired up.
 			</p>
-
-			<h3>Boot loops / brown-out resets</h3>
 			<p>
-				Especially likely when powering from a weak USB-C source, or with the on-board amp
-				enabled and speakers plugged in. Try a 2 A supply, or drive PA_EN low to disable the
-				amp while debugging.
-			</p>
-
-			<h3>No I2C ack from the codec</h3>
-			<p>
-				Check the ES8388 I2C pair (GPIO 32/33) with a logic analyzer — some clone boards use
-				a different I2C address or swap SDA/SCL. The ES8388 init lives inline in
-				<code>main/es8388.c</code> (about 150 lines) rather than pulling in ESP-ADF; easy to
-				adjust for a fork.
-			</p>
-
-			<h3>UART push gets NACK: CRC_FAIL</h3>
-			<p>
-				Your monitor probably still has the serial port open. Close it first
-				(<code>Ctrl+]</code> in <code>idf.py monitor</code>, or <code>pkill</code> minicom)
-				before pushing.
-			</p>
-
-			<h3>Audio clicks / dropouts</h3>
-			<p>
-				CPU usage above ~80 % on core 1 triggers glitches. The device supports a per-opcode
-				profiler — send a <code>PERF_QUERY</code> frame (or <code>cedar_push --perf</code>)
-				and it dumps a hot-path histogram over UART.
-			</p>
-
-			<h3>Persisted patch won't clear</h3>
-			<p>
-				The device stores the last-pushed program in SPIFFS and loads it on next boot. To
-				force a fresh start with the baked-in demo:
-				<code>python3 -m cedar_push /dev/ttyUSB0 --reset-program</code>.
+				Full size breakdown, per-opcode profiler output, and the regression rule are in
+				<a href="https://github.com/mlaass/cedar-esp32/blob/main/docs/size-baseline.md" target="_blank" rel="noopener">docs/size-baseline.md</a>.
 			</p>
 		</section>
 
 		<section class="links">
 			<h2 id="links">More</h2>
-			<a href="https://github.com/mlaass/cedar-esp32" class="link-button" target="_blank" rel="noopener">
+			<a href="/blog/esp32-port-story" class="link-button">
+				Dev journal: what it took to fit cedar on ESP32
+			</a>
+			<a
+				href="https://github.com/mlaass/cedar-esp32"
+				class="link-button"
+				target="_blank"
+				rel="noopener"
+			>
 				<Github size={18} />
 				cedar-esp32 on GitHub
 				<ExternalLink size={14} />
 			</a>
-			<a href="https://github.com/mlaass/cedar-esp32/blob/main/docs/uart-protocol.md" class="link-button" target="_blank" rel="noopener">
-				Full UART protocol spec
+			<a
+				href="https://github.com/mlaass/cedar-esp32/blob/main/docs/uart-protocol.md"
+				class="link-button"
+				target="_blank"
+				rel="noopener"
+			>
+				UART protocol spec
 				<ExternalLink size={14} />
 			</a>
-			<a href="https://github.com/mlaass/cedar-esp32/blob/main/docs/a1s-pinout.md" class="link-button" target="_blank" rel="noopener">
-				A1S pinout reference
+			<a
+				href="https://github.com/mlaass/cedar-esp32/blob/main/docs/a1s-pinout.md"
+				class="link-button"
+				target="_blank"
+				rel="noopener"
+			>
+				A1S pin map &amp; hardware notes
 				<ExternalLink size={14} />
 			</a>
-			<a href="/blog/esp32-port-story" class="link-button">
-				Dev-journal: what it took to fit cedar on ESP32
+			<a
+				href="https://github.com/mlaass/cedar-esp32/blob/main/docs/size-baseline.md"
+				class="link-button"
+				target="_blank"
+				rel="noopener"
+			>
+				Memory &amp; footprint breakdown
+				<ExternalLink size={14} />
+			</a>
+			<a
+				href="https://github.com/mlaass/cedar-esp32/blob/main/docs/vectorization-feasibility.md"
+				class="link-button"
+				target="_blank"
+				rel="noopener"
+			>
+				SIMD feasibility (ESP32 / S3 / C3 / P4)
+				<ExternalLink size={14} />
 			</a>
 		</section>
 	</div>
@@ -319,16 +283,6 @@ osc("saw", 220) * 0.3
 		margin-bottom: var(--spacing-md);
 	}
 
-	section ul {
-		color: var(--text-secondary);
-		padding-left: var(--spacing-lg);
-		margin-bottom: var(--spacing-md);
-	}
-
-	section li {
-		padding: var(--spacing-xs) 0;
-	}
-
 	.caveat {
 		font-size: 0.875rem;
 		color: var(--accent-warning, var(--text-secondary));
@@ -353,35 +307,30 @@ osc("saw", 220) * 0.3
 		font-size: 0.875rem;
 	}
 
-	.api-table {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 0.875rem;
-		margin-bottom: var(--spacing-md);
+	.sketch-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: var(--spacing-md);
+		margin: var(--spacing-md) 0;
 	}
 
-	.api-table th,
-	.api-table td {
-		text-align: left;
-		padding: var(--spacing-xs) var(--spacing-sm);
-		border-bottom: 1px solid var(--border-muted);
-		vertical-align: top;
+	.sketch {
+		padding: var(--spacing-md);
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-muted);
+		border-radius: 8px;
 	}
 
-	.api-table th {
+	.sketch h3 {
+		margin-top: 0;
+		margin-bottom: var(--spacing-sm);
+		font-size: 1rem;
 		color: var(--text-primary);
-		font-weight: 600;
 	}
 
-	.api-table td {
-		color: var(--text-secondary);
-	}
-
-	.api-table code {
-		background: var(--bg-tertiary);
-		padding: 1px 5px;
-		border-radius: 3px;
-		font-size: 0.875em;
+	.sketch p {
+		margin: 0;
+		font-size: 0.9375rem;
 	}
 
 	.links {

@@ -1,107 +1,80 @@
 ---
 layout: blog
 title: "Cedar on ESP32: what it took to put nkido on a $10 board"
-description: Docker-wrapped IDF builds, an ES8388 brought up by hand, and a VM that lives in PSRAM because it doesn't fit anywhere else.
+description: "The ESP32 port, phase by phase: what fit, what didn't, and what it means for getting nkido into guitar pedals and modular racks."
 date: 2026-04-21
 author: mlaass
 category: post
-excerpt: Docker-wrapped IDF builds, an ES8388 brought up by hand, and a VM that lives in PSRAM because it doesn't fit anywhere else.
+excerpt: "The ESP32 port, phase by phase: what fit, what didn't, and what it means for getting nkido into guitar pedals and modular racks."
 draft: true
 ---
 
-When I started the ESP32 port, the main question was: is there even room? Cedar on desktop is generous with itself. Buffer pools, probe rings, multiple state variants, a stereo pipeline plus a mono fallback. Audio decoders. Soundfonts. A `std::aligned_alloc` call that, it turns out, doesn't exist in xtensa libstdc++. The mainline build happily consumes a couple of megabytes for the runtime VM and doesn't think twice about it.
+When I started the ESP32 port, the main question was simple: does nkido even fit? Cedar on desktop is generous with itself. It uses as much memory as it wants, pulls in audio decoders and soundfont support and a pile of analysis code, and never has to think about the sub-megabyte budgets of a small chip. The ESP32 is designed to check wifi packets, not run realtime DSP graphs. It has a small amount of fast memory, a slower pile of external memory, and a few megabytes of flash to hold the firmware.
 
-The ESP32-A1S Audio Kit has 128 KB of internal SRAM split into a handful of regions, a couple of megabytes of PSRAM if you're lucky, and a 3 MB app partition. "A couple of megabytes" sounds fine until you realize it's also where your bytecode, your persisted programs, and any sample you want to play live.
-
-So: could it fit? Yes, with some sanding. Here's what that sanding looked like.
+So, could it fit? Yes, with some sanding. Here's what that sanding looked like.
 
 ## Phase 1: boot a sine wave
 
-The first goal was tiny. Boot the board, init the ES8388 codec, get a 440 Hz sine out the headphone jack. No live-coding, no UART, no buttons. Just sound.
+The first goal was the smallest useful thing. Boot the board, get the codec running, play a 440 Hz sine out the headphone jack. No live-coding, no buttons, no protocols. Just sound coming out.
 
-Three things fought me immediately.
+Three things fought me.
 
-**The ES8388 codec driver.** ESP-ADF (Espressif's audio framework) ships one. It does sample-rate negotiation, MIC/line input routing, hardware volume, and a dozen other things I didn't need. I wrote the init inline in `main/es8388.c` instead. It's about 150 lines: register-level I2C, set up a 256·f<sub>s</sub> MCLK (12.288 MHz for 48 kHz audio), point the DAC at GPIO 26, enable PA_EN for the speaker amp. One-shot at boot. The whole file is short enough to read in a sitting.
+The first was the codec driver. Espressif ships an audio framework with a driver for the ES8388 codec chip included, but it does a dozen things the port doesn't need (sample-rate negotiation, microphone routing, hardware volume ramps) and it pulls in a lot of code to do them. I wrote my own init inline instead, around 150 lines of register-level I2C setup. Smaller, simpler, and easy to understand at a glance when something goes wrong.
 
-**`std::aligned_alloc` doesn't exist.** Cedar uses it for state-pool allocations. Xtensa's libstdc++ ships without it. The fix is the build flag `CEDAR_USE_POSIX_MEMALIGN=1`, which routes allocations through `posix_memalign` instead. Took me an afternoon to find; the error was a linker failure buried in a 10k-line IDF build log.
+The second was a missing function in the C++ standard library. Cedar uses an aligned-allocation call that the version of libstdc++ shipping for the ESP32 doesn't provide. Cedar already has an escape hatch for that case, a build flag that routes through a POSIX function instead. I just had to find it. The finding took an afternoon of staring at a ten-thousand-line linker error.
 
-**Format specifiers blow up warnings.** `uint32_t` is `unsigned long` on xtensa, so cedar's debug printfs that use `%u` get warned at, loudly, and with `-Werror` loud becomes fatal. I added `-Wno-error=format` for the cedar component and moved on. The proper fix is to gate the debug prints behind a flag upstream; silence works for now.
+The third was compiler warnings getting promoted to errors. A handful of cedar's debug printfs use integer format specifiers that don't quite match the ESP32's type widths, and the build's strict warning flag turned them into build failures. I relaxed that one warning for the cedar component and moved on. The proper fix is to gate those prints behind a debug flag upstream.
 
-By the end of Phase 1, the main task stack was also bumped from 3584 to 8192. Cedar's init path had grown enough that the default overflowed, and the symptom was the most satisfying kind of bug report: the board reboots on boot, with no error message. If it had left any breadcrumbs I'd have found it in an hour instead of two.
+At the very end of Phase 1, one more thing: I had to bump the main task's stack size. Cedar's initialization path had grown since the framework defaults were set, and the symptom was the board silently rebooting during boot, no error message, no core dump, nothing. Two hours to figure out, one line to fix.
 
-## Phase 2: live-push over UART
+## Phase 2: live-push patches over the serial line
 
-Flashing takes ~15 seconds. That's fine for firmware work, but hot-swapping a patch after re-flashing is a joke. The whole point of nkido is that edits land without killing audio, so Phase 2 was a tiny framed protocol on UART0.
+Reflashing the whole firmware takes about fifteen seconds. That's fine for firmware work, but it ruins the entire experience of nkido. The point of the language is that patches change while audio keeps playing. Phase 2 was about getting that back.
 
-Frame shape, for reference:
+The answer was a small protocol over the board's USB serial connection. The design is boring on purpose: a magic header, a length, a type byte, a payload, a checksum. The host sends a compiled patch, the device acknowledges it, and cedar's existing hot-swap crossfade handles the transition at the next audio block. End-to-end latency from "push" to "sound is different" is under 50 milliseconds, and most of that is USB enumeration.
 
-```
-2 bytes  magic 0xCE 0xDA
-4 bytes  payload length, little-endian
-1 byte   frame type
-N bytes  payload
-4 bytes  CRC32 (IEEE 802.3, matches zlib.crc32)
-```
+The payload format is a small container I called `.cbc`. It bundles patch bytecode with metadata about the patch's parameters: which knobs exist, their ranges, their defaults. That metadata matters because the device needs to wire parameters to physical controls without understanding the source language. More on that in Phase 3.
 
-Type codes: `0x01` SWAP (push a program), `0x02` SET_PARAM (change a runtime value), `0x03` PING, `0x04` PERF_QUERY (dump a profiler snapshot). Device responds with `0x80` ACK or `0x81 reason` NACK.
+The whole spec and the command-line client live in [the repo docs](https://github.com/mlaass/cedar-esp32/blob/main/docs/uart-protocol.md). There's one awkwardness worth mentioning: the protocol shares the serial line with the debug monitor, so you can't watch logs and push at the same time. A future revision will split them onto separate channels.
 
-The payload is either a raw cedar bytecode blob or a `.cbc` container, which is my own little format that prepends parameter metadata. That way the device knows "slot 0 is a filter cutoff ranging 100–8000 with default 1200, maps to KEY1" without having to parse Akkado source.
+## Phase 3: six buttons become the interface
 
-Host-side CLI lives in `tools/cedar-push/`. `python3 -m cedar_push --port /dev/ttyUSB0 patch.cbc` and the new program is rendering by the next audio block, with the hot-swap crossfade covering any state differences. Latency from keypress to sound-changing is under 50 ms on the hardware I've measured it on, and most of that is USB enumeration.
+With live-push working I could iterate patches fast. But the next question was harder. What does the device actually do, standalone, without a host computer attached? The A1S board has six tactile buttons on it. I wanted those to feel like part of the patch, not hardcoded to a fixed schema.
 
-`PERF_QUERY` is the other thing worth calling out. It asks the device for a snapshot of the per-opcode profiler and the per-stage CPU meter (dsp / conv / i2s, measured via the CCOUNT register). `cedar-push --perf` on the host prints it. Handy when a patch starts dropping blocks and you want to know whether it's the DSP graph or the I2S sink that's starving.
+So the binding is automatic: whichever parameters the patch declares first, those bind to the first free buttons in order. A patch whose first declaration is a filter cutoff gets that cutoff on KEY1. A patch that instead declares an oscillator trigger gets a one-shot gate on KEY1. Push a different patch, the buttons re-bind to its parameters. The patch is the source of truth; the hardware just follows.
 
-One subtle thing about UART0: it's shared with `idf.py monitor`, so you can't push and monitor at the same time. I've thought about moving to UART1 or using USB-CDC on a revised board, but closing the monitor before pushing is fine enough that I haven't.
+Press behavior depends on how the parameter was declared. A ranged parameter steps through its range on each press. A momentary button acts as a gate while held. A toggle flips between two states. Every press logs over the serial line so you can watch the value change from a host terminal.
 
-## Phase 3: the six buttons become the interface
-
-With live-push working, the question became: what does the device itself do? It has six buttons, KEY1 through KEY6. You could wire them to a fixed schema (KEY1 = volume, KEY2 = filter, and so on) but that's boring, and patches differ.
-
-Instead: when a `.cbc` arrives with parameter metadata, the device binds the first six `param()` / `button()` / `toggle()` declarations to the six buttons, in declaration order. The scanner polls GPIO every 5 ms with a three-read debounce (so a 15 ms stable window) and routes presses through a uniform `handle_edge` function.
-
-`param` presses step the value by `(max − min) / 20` and wrap around. `button` is momentary with slew 0, so gates stay tight. `toggle` flips between 0.0 and 1.0, also with slew 0. Every press logs to UART so you can watch values update in the monitor.
-
-The scanner also computes a signature hash of the bound slots after each program load. That's how the device knows a push changed the binding rather than just updating the bytecode. Rebinding happens atomically; the scanner task never touches the audio thread's state.
-
-`assets/demo_keys.akk` is the one I keep coming back to. It's a five-note ocarina: KEY1..KEY5 drive sine-plus-AR-envelope voices tuned to an A minor pentatonic (A4, C5, D5, E5, G5), and KEY6 toggles a freeverb tail on top of the dry mix. There's a slow 5 Hz tremolo on the wet signal so the reverb tail shimmers instead of just sitting there. Plug in headphones, push `demo_keys.cbc`, and the board becomes a tiny chord-stacking thing with a reverb switch.
+The demo patch I keep coming back to is a five-note ocarina: five keys drive sine voices tuned to an A minor pentatonic, and the sixth layers a slightly wobbling reverb tail on top. Hold a key, get a note. Hold three, get a chord. Flip the sixth, get atmosphere. It's cheesy, and it's the thing I reach for to show people what a $10 board running cedar actually feels like.
 
 ## The memory story
 
-Cedar's VM wants about 1.15 MB of working state. That's state pools (one per opcode family: oscillator phase, filter biquad registers, envelope levels, and so on), buffer pools for inter-instruction data, and per-opcode reverb tables. None of that fits in the ESP32's internal SRAM.
+This is the part that most determines whether the port is viable at all.
 
-PSRAM solves it: 4–8 MB, autodetected, accessed through the cache. `main/cedar_host.cpp` heap-allocates the VM on first access, and from then on it's a pointer. Internal DRAM's BSS section stays tiny (barely 4 KB) because the hot path lives in IRAM (~61 KB, about 48% of the IRAM budget) and the rest sits out in PSRAM.
+Cedar's VM wants about 1.15 megabytes of working state at runtime: oscillator phases, filter coefficients, envelope levels, reverb buffers, the whole zoo. That does not fit in the ESP32's fast internal memory, which tops out around 128 KB. It does fit in the chip's slower external PSRAM, so that's where the VM lives. Only a single pointer to it sits in fast memory. The audio code path still runs from fast memory, so the penalty for keeping the state chest in PSRAM is fine in practice.
 
-To fit even the compiled-out cedar in flash, several features are turned off in the ESP32 build:
+Fitting the VM's own *code* in flash is the other half. I turned off a pile of features I don't currently need on the embedded side: sample decoders, soundfont support, spectral analysis, generic file I/O, a couple of variants of oscillator anti-aliasing, and the debug probe ring. Each costs flash space; none are load-bearing for the demos I want to run today. Most will come back in Phase 4 once decoders are wired up properly.
 
-- **`CEDAR_NO_AUDIO_DECODERS`**: no WAV/Ogg decoders. Sample loading comes back in Phase 4 via ESP-ADF.
-- **`CEDAR_NO_SOUNDFONT`**: SF2 support is ~200 KB of code plus big lookup tables. Off.
-- **`CEDAR_NO_FFT`**: no spectral analysis on-device. `visualization` opcodes that need it are stubs.
-- **`CEDAR_NO_FILE_IO`**: no local FS support compiled into cedar. SPIFFS is wired separately for program persistence.
-- **`CEDAR_NO_MINBLEP`**: aliasing goes up, flash goes down. A trade, not a win.
-- **`CEDAR_FLOAT_ONLY`**: drop the fixed-point opcode variants.
-- **`CEDAR_NO_PROBE`**: the debug probe ring buffer drops `DSPState` from 4.1 KB to 800 B per node. Huge win on a per-instruction basis.
+After all that, the firmware binary is about 306 KB, or roughly 10% of the app partition. That leaves comfortable headroom for the Phase 4 work. For reference, there's an earlier 146 KB number floating around in older notes; that was a host-side compiled archive, not the actual firmware. Real budgets are easier to reason about when they're measured end-to-end.
 
-Flash after all of that, on the Phase 3 baseline: ~306 KB, about 10% of the 3008 KB factory partition. That's not 146 KB (the number I quoted early on, which turned out to be the host-only cedar archive, not the xtensa firmware), but it leaves plenty of headroom for Phase 4's decoders. The regression rule: any commit that adds more than 10 KB to the bin needs a one-line justification. I've had to write that justification three times so far. Twice I kept the change.
-
-One related tune I'll mention: `MAX_BUFFERS` got bumped from 80 to 96 once the profiler landed. That keeps the VM comfortably in DRAM while giving an extra 13 slots of crossfade headroom for patches with deeper graphs. Worth it.
+One regression rule I try to live by: any commit that grows the binary by more than 10 KB needs a one-line justification in the message. I've had to write that justification three times so far. Twice I kept the change anyway, once I reverted. The device also ships with a small on-board profiler that reports per-opcode CPU usage back to the host, which is what makes informed tuning possible in the first place.
 
 ## What's still missing
 
-The Phase 4 list:
+Things I'd like to get to in Phase 4, roughly in priority order:
 
-- **ESP-ADF audio decoders** so sample-heavy patches work without the host.
-- **Console UART at 460 800 baud.** Currently still 115 200. The `sdkconfig.defaults` line I wrote for it is silently ignored: `CONFIG_ESP_CONSOLE_UART_BAUDRATE` is a Kconfig *choice*, not a plain int, so the bump needs `CONFIG_ESP_CONSOLE_UART_BAUDRATE_CUSTOM=y` plus a matching `_VALUE`. Easy fix, just hasn't hit the top of the list. Big `.cbc` files take noticeable seconds to push at 115 200.
-- **Stereo codec output verified end-to-end.** The mono path works, stereo is compiled in, I just haven't sat down with a scope and an actual pair of speakers.
-- **Multiple persisted programs.** SPIFFS at offset 0x300000 currently keeps the last pushed program across reboots (that part landed a couple of days ago), but only one slot. A proper pack format would let you keep a small set and switch between them.
-- **A second I/O channel** (USB CDC, MIDI, OSC over Wi-Fi with a watchdog) that isn't shared with the IDF monitor.
-- **SIMD for S3 and P4 variants.** I wrote up a feasibility note in `docs/vectorization.md` covering the ESP32 / S3 / C3 / P4 delta. Not urgent, but the P4 especially looks fun.
+- **Audio decoders**, so sample-based patches work without a host in the loop.
+- **Faster serial link.** Pushing big patches at the current baud rate takes noticeable seconds.
+- **More than one persisted patch.** The board remembers the most recent pushed patch across reboots, but only that one. A small on-device library would be nicer.
+- **A second I/O channel** for control that isn't shared with the debug monitor. USB-CDC, MIDI, or OSC over wifi are all plausible.
+- **SIMD on the newer ESP chips.** I wrote up [a feasibility note](https://github.com/mlaass/cedar-esp32/blob/main/docs/vectorization-feasibility.md) on this. The P4 variant especially looks fun.
 
-Each of those individually is a weekend. All of them together probably isn't.
+Each of these individually is a weekend. All of them together probably isn't.
 
-## Hot-swap is the part I expected to bite
+## The part that worked
 
-It didn't. You push a new `.cbc`, the crossfade lands at the next block, your reverb tail keeps decaying through the edit. I was mildly skeptical that the semantic-ID machinery would survive the trip to a platform with a different stdlib and a much smaller memory budget, but it did, without modification. On a $10 board.
+Hot-swap. I expected this to be the thing that bit me. The machinery that lets cedar preserve state across patch edits (reverb tails continuing through an edit, envelopes staying consistent, oscillators not clicking) is the most intricate part of the VM, and I figured at least one assumption in there would die on a different platform. It didn't. You push a new patch, the crossfade lands at the next audio block, your reverb tail keeps decaying through the edit. On a $10 board.
 
-Everything that was painful in the port was platform plumbing: toolchain, codec driver, format specifiers, the Kconfig choice that isn't. Everything that was actually audible (live-coded edits, button-driven parameters, seamless patch swaps) was the desktop experience, running on a cheap board sitting on my desk. Which is the point: the architecture is portable, and what's left is just making the trim fit.
+That's the part I'll take away from the port, I think. Everything painful was platform plumbing: toolchain, codec driver, compiler warnings, stack sizes. Everything audible (live-coded edits, button-driven parameters, seamless patch swaps) worked out of the box, the same as the desktop. The architecture ported; only the edges needed trimming.
 
-If you want to try it, [cedar-esp32 is on GitHub](https://github.com/mlaass/cedar-esp32). Read [the /esp32 page](/esp32) for the build-and-flash how-to, or jump straight to the UART protocol in the repo's `docs/`.
+If you want to try it, [cedar-esp32 is on GitHub](https://github.com/mlaass/cedar-esp32). The [/esp32 page](/esp32) has the build-and-flash instructions and a longer note on where this is heading.
