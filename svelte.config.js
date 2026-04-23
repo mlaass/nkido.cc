@@ -2,6 +2,7 @@ import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex, escapeSvelte } from 'mdsvex';
 import { createHighlighter } from 'shiki';
+import rehypeSlug from 'rehype-slug';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -19,6 +20,7 @@ const mdsvexConfig = {
 		blog: resolve(__dirname, 'src/lib/layouts/BlogLayout.svelte'),
 		_: resolve(__dirname, 'src/lib/layouts/DocLayout.svelte')
 	},
+	rehypePlugins: [rehypeSlug],
 	highlight: {
 		highlighter: async (code, lang = 'text') => {
 			const langId = ['akk', 'akkado'].includes(lang) ? 'js' : lang;

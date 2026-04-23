@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { BookOpen, ArrowLeft, ExternalLink } from 'lucide-svelte';
+	import { BookOpen, ArrowLeft, ArrowRight } from 'lucide-svelte';
+	import manifest from '$lib/data/docs-manifest.json';
 
 	interface Props {
 		title: string;
@@ -18,6 +19,23 @@
 		referenceKeyword,
 		children
 	}: Props = $props();
+
+	type ManifestEntry = { title: string; slug: string; url: string; keywords: string[] };
+	type Manifest = { entries: Record<string, ManifestEntry[]> };
+
+	const referenceMatch = $derived.by(() => {
+		if (!referenceKeyword) return null;
+		const keyword = referenceKeyword.toLowerCase();
+		const all = Object.values((manifest as Manifest).entries).flat();
+		const exact = all.find(
+			(e) => e.slug === keyword || e.keywords?.some((k) => k.toLowerCase() === keyword)
+		);
+		if (exact) return exact;
+		const partial = all.find(
+			(e) => e.keywords?.some((k) => k.toLowerCase().includes(keyword))
+		);
+		return partial ?? null;
+	});
 </script>
 
 <svelte:head>
@@ -46,16 +64,12 @@
 			{@render children()}
 		</div>
 
-		{#if referenceKeyword}
+		{#if referenceMatch}
 			<footer class="doc-footer">
-				<a
-					href="https://live.nkido.cc/?docs={encodeURIComponent(referenceKeyword)}"
-					target="_blank"
-					rel="noopener"
-				>
+				<a href={referenceMatch.url}>
 					<BookOpen size={16} />
-					Open reference for <code>{referenceKeyword}</code> in the IDE
-					<ExternalLink size={14} />
+					Reference: <code>{referenceMatch.title}</code>
+					<ArrowRight size={14} />
 				</a>
 			</footer>
 		{/if}

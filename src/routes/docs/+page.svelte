@@ -1,49 +1,46 @@
 <script lang="ts">
-	import { Layers, Code, Zap, type Icon as IconType } from 'lucide-svelte';
+	import { Layers, Code, Zap } from 'lucide-svelte';
+	import manifest from '$lib/data/docs-manifest.json';
 
-	type DocItem = { title: string; href: string };
-	type DocSection = {
-		title: string;
-		icon: typeof Layers;
-		description: string;
-		href: string;
-		external?: boolean;
-		items?: DocItem[];
-	};
+	type ManifestEntry = { title: string; url: string };
+	type Manifest = { entries: Record<string, ManifestEntry[]> };
 
-	const docsSections: DocSection[] = [
+	const m = manifest as Manifest;
+	const referenceTotal =
+		(m.entries['reference/builtins']?.length ?? 0) +
+		(m.entries['reference/language']?.length ?? 0) +
+		(m.entries['reference/mini-notation']?.length ?? 0);
+	const tutorialsTotal = m.entries['tutorials']?.length ?? 0;
+	const firstTutorial = m.entries['tutorials']?.[0]?.url ?? '/docs/tutorials';
+
+	const sections = [
 		{
 			title: 'Concepts',
 			icon: Layers,
-			description: 'Understand the core ideas behind NKIDO.',
+			description: 'The mental model: signals, DAGs, hot-swap, and mini-notation.',
 			href: '/docs/concepts',
-			items: [
-				{ title: 'Signals & DAGs', href: '/docs/concepts/signals' },
-				{ title: 'Hot-swap explained', href: '/docs/concepts/hot-swap' },
-				{ title: 'Mini-notation', href: '/docs/concepts/mini-notation' }
-			]
+			linkLabel: 'Start reading →'
 		},
 		{
-			title: 'Tutorials',
+			title: `Tutorials (${tutorialsTotal})`,
 			icon: Zap,
-			description: 'Step-by-step guides from first sound to advanced patterns.',
-			href: '/docs/tutorials/hello-sine',
-			items: [
-				{ title: 'Hello Sine', href: '/docs/tutorials/hello-sine' }
-			]
+			description: 'Step-by-step guides from first sound to testing a progression.',
+			href: '/docs/tutorials',
+			linkLabel: `Open tutorials →`
 		},
 		{
-			title: 'Reference',
+			title: `Reference (${referenceTotal})`,
 			icon: Code,
-			description: 'Full opcode and builtin reference, opened in the live IDE.',
-			href: 'https://live.nkido.cc/?docs=',
-			external: true,
-			items: [
-				{ title: 'osc', href: 'osc' },
-				{ title: 'filter', href: 'filter' },
-				{ title: 'reverb', href: 'reverb' }
-			]
+			description: 'Every builtin, operator, and mini-notation token, searchable and linkable.',
+			href: '/docs/reference',
+			linkLabel: 'Open reference →'
 		}
+	];
+
+	const jumpStart = [
+		{ title: 'Hello Sine', href: firstTutorial, kind: 'tutorial' },
+		{ title: 'Signals & DAGs', href: '/docs/concepts/signals', kind: 'concept' },
+		{ title: 'Oscillators', href: '/docs/reference/builtins/oscillators', kind: 'reference' }
 	];
 </script>
 
@@ -55,36 +52,27 @@
 <section class="page">
 	<div class="page-inner">
 		<h1>Documentation</h1>
-		<p class="intro">
-			Learn NKIDO from the ground up.
-		</p>
+		<p class="intro">Learn NKIDO from the ground up.</p>
 
 		<div class="docs-grid">
-			{#each docsSections as section}
-				<div class="docs-card">
+			{#each sections as section}
+				<a href={section.href} class="docs-card">
 					<div class="docs-icon">
 						<svelte:component this={section.icon} size={24} />
 					</div>
 					<h2>{section.title}</h2>
 					<p>{section.description}</p>
-					{#if section.items}
-						<ul class="docs-items">
-							{#each section.items as item}
-								<li>
-									{#if section.external}
-										<a href="{section.href}{encodeURIComponent(item.href)}" target="_blank" rel="noopener">
-											{item.title} →
-										</a>
-									{:else}
-										<a href={item.href}>{item.title} →</a>
-									{/if}
-								</li>
-							{/each}
-						</ul>
-					{/if}
-				</div>
+					<span class="cta">{section.linkLabel}</span>
+				</a>
 			{/each}
 		</div>
+
+		<h2 class="jump-heading">Jump in</h2>
+		<ul class="jump-list">
+			{#each jumpStart as item}
+				<li><a href={item.href}>{item.title}</a> <span class="kind">{item.kind}</span></li>
+			{/each}
+		</ul>
 	</div>
 </section>
 
@@ -115,10 +103,19 @@
 	}
 
 	.docs-card {
+		display: block;
 		padding: var(--spacing-lg);
 		background: var(--bg-secondary);
 		border: 1px solid var(--border-muted);
 		border-radius: 12px;
+		text-decoration: none;
+		color: var(--text-primary);
+		transition: border-color var(--transition-fast);
+	}
+
+	.docs-card:hover {
+		border-color: var(--border-default);
+		text-decoration: none;
 	}
 
 	.docs-icon {
@@ -137,18 +134,35 @@
 		margin-bottom: var(--spacing-md);
 	}
 
-	.docs-items {
+	.cta {
+		color: var(--accent-primary);
+		font-size: 0.875rem;
+	}
+
+	.jump-heading {
+		margin-top: var(--spacing-3xl);
+		margin-bottom: var(--spacing-sm);
+		font-size: 1.125rem;
+	}
+
+	.jump-list {
 		list-style: none;
 		padding: 0;
 		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-xs);
 	}
 
-	.docs-items li {
-		padding: var(--spacing-xs) 0;
-	}
-
-	.docs-items a {
+	.jump-list li {
 		font-size: 0.9375rem;
+	}
+
+	.kind {
+		display: inline-block;
+		font-size: 0.75rem;
+		color: var(--text-muted);
+		margin-left: var(--spacing-sm);
 	}
 
 	@media (max-width: 640px) {
