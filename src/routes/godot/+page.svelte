@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Godot Addon — NKIDO</title>
+	<title>Godot Addon | NKIDO</title>
 	<meta name="description" content="Embed NKIDO in your Godot 4.x games for dynamic music and sound design." />
 	<meta property="og:title" content="NKIDO for Godot" />
 	<meta property="og:description" content="Embed NKIDO in your Godot 4.x games for dynamic music and sound design." />
@@ -15,21 +15,21 @@
 	<div class="page-inner">
 		<h1>NKIDO for Godot</h1>
 		<p class="intro">
-			Live-coded audio synthesis as a Godot 4.x AudioStream resource. Ships as a GDExtension —
+			Live-coded audio synthesis as a Godot 4.x AudioStream resource. Ships as a GDExtension:
 			compile your Akkado source at runtime, drive it with parameters, and visualize the output
 			straight from GDScript.
 		</p>
 
 		<div class="status-banner">
 			<span class="status-badge">v0.1</span>
-			<span>Status: MVP — hot-swap, params, samples, and waveform viz work end-to-end</span>
+			<span>Status: MVP. Hot-swap, params, samples, and waveform viz work end-to-end</span>
 		</div>
 
 		<section>
 			<h2 id="install">Install</h2>
 			<p>
 				The addon is a GDExtension with prebuilt binaries for Linux, Windows, and macOS
-				(debug + release). Godot <strong>4.1 or later</strong> required; developed against 4.6.
+				(debug + release). Godot <strong>4.1 or later</strong> required; developed against 4.5.
 			</p>
 			<h3>From a release zip</h3>
 			<div class="code-block">
@@ -37,18 +37,24 @@
 curl -LO https://github.com/mlaass/godot-nkido-addon/releases/latest/download/nkido.zip
 unzip nkido.zip -d your-project/addons/</code></pre>
 			</div>
-			<h3>From source (submodule)</h3>
+			<h3>From source</h3>
 			<p>
 				Use this if you want to build for an unsupported platform or track the bleeding edge.
-				Requires CMake 3.22+ and a C++20 toolchain.
+				Requires CMake 3.22+ and a C++20 toolchain. The build expects
+				<code>godot-cpp</code> and <code>nkido</code> as sibling directories next to the addon.
 			</p>
 			<div class="code-block">
-				<pre><code>cd your-project/addons
-git clone --recursive https://github.com/mlaass/godot-nkido-addon.git nkido
-cd nkido
+				<pre><code>git clone https://github.com/mlaass/godot-nkido-addon.git
+git clone -b godot-4.5-stable https://github.com/godotengine/godot-cpp.git
+git clone https://github.com/mlaass/nkido.git
+cd godot-nkido-addon
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j$(nproc)</code></pre>
 			</div>
+			<p>
+				Paths can be overridden with <code>-DGODOT_CPP_PATH=...</code> and
+				<code>-DNKIDO_PATH=...</code>.
+			</p>
 			<p>
 				After install, open Project → Reload the project. The NKIDO editor plugin adds a
 				bottom panel for compiling and previewing patches.
@@ -58,7 +64,8 @@ cmake --build build -j$(nproc)</code></pre>
 		<section>
 			<h2 id="quickstart">Quickstart</h2>
 			<p>Attach an <code>AudioStreamPlayer</code> with its <code>stream</code> set to a new
-			<code>NkidoAudioStream</code>. From GDScript, set the source and call <code>compile()</code>:</p>
+			<code>NkidoAudioStream</code>. From GDScript, assign a <code>NkidoAkkadoSource</code> and
+			call <code>compile()</code>:</p>
 			<div class="code-block">
 				<pre><code>extends Node
 
@@ -66,12 +73,14 @@ cmake --build build -j$(nproc)</code></pre>
 
 func _ready() -> void:
     var stream: NkidoAudioStream = player.stream
-    stream.source = """
+    var akkado := NkidoAkkadoSource.new()
+    akkado.source_code = """
         cutoff = param("cutoff", 1200, 100, 8000)
         osc("saw", 220) * 0.3
           |> lp(%, cutoff, 0.4)
           |> out(%, %)
     """
+    stream.akkado_source = akkado
     stream.compilation_finished.connect(_on_compiled)
     stream.compile()
 
@@ -83,9 +92,8 @@ func _on_compiled(success: bool, errors: Array) -> void:
     player.play()</code></pre>
 			</div>
 			<p>
-				Load from a <code>.akk</code> file instead by setting <code>stream.source_file</code>,
-				or by dragging a <code>NkidoAkkadoSource</code> resource into the inspector.
-				<code>source_file</code> takes priority over inline <code>source</code>.
+				Load from a <code>.akk</code> file by dragging a <code>NkidoAkkadoSource</code> resource
+				into the inspector; <code>.akk</code> files are loaded as first-class Godot resources.
 			</p>
 		</section>
 
@@ -98,12 +106,10 @@ func _on_compiled(success: bool, errors: Array) -> void:
 			<table class="api-table">
 				<thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
 				<tbody>
-					<tr><td><code>source</code></td><td>String</td><td>""</td><td>Inline Akkado source.</td></tr>
-					<tr><td><code>source_file</code></td><td>String</td><td>""</td><td>Path to a <code>.akk</code> file. Overrides <code>source</code> if set.</td></tr>
-					<tr><td><code>akkado_source</code></td><td>NkidoAkkadoSource</td><td>null</td><td>Optional resource wrapper for the source.</td></tr>
+					<tr><td><code>akkado_source</code></td><td>NkidoAkkadoSource</td><td>null</td><td>Resource holding the Akkado source code (inline <code>source_code</code> string or loaded from a <code>.akk</code> file).</td></tr>
 					<tr><td><code>sample_pack</code></td><td>Resource</td><td>null</td><td>Optional bundle of samples referenced by the patch.</td></tr>
 					<tr><td><code>bpm</code></td><td>float</td><td>120.0</td><td>Tempo used by pattern builtins.</td></tr>
-					<tr><td><code>crossfade_blocks</code></td><td>int</td><td>3</td><td>Hot-swap crossfade length, in audio blocks (1–10).</td></tr>
+					<tr><td><code>crossfade_blocks</code></td><td>int</td><td>3</td><td>Hot-swap crossfade length, in audio blocks (1 to 10).</td></tr>
 				</tbody>
 			</table>
 
@@ -111,7 +117,7 @@ func _on_compiled(success: bool, errors: Array) -> void:
 			<table class="api-table">
 				<thead><tr><th>Method</th><th>Returns</th><th>Description</th></tr></thead>
 				<tbody>
-					<tr><td><code>compile()</code></td><td>bool</td><td>Compile <code>source</code> / <code>source_file</code>. Hot-swaps the running program if already playing.</td></tr>
+					<tr><td><code>compile()</code></td><td>bool</td><td>Compile the assigned <code>akkado_source</code>. Hot-swaps the running program if already playing.</td></tr>
 					<tr><td><code>is_compiled()</code></td><td>bool</td><td>Whether a valid program is loaded.</td></tr>
 					<tr><td><code>get_diagnostics()</code></td><td>Array</td><td>List of <code>&lbrace;line, column, message&rbrace;</code> dicts from the last compile.</td></tr>
 				</tbody>
@@ -132,7 +138,7 @@ func _on_compiled(success: bool, errors: Array) -> void:
 			<table class="api-table">
 				<thead><tr><th>Method</th><th>Description</th></tr></thead>
 				<tbody>
-					<tr><td><code>load_sample(name, path) -&gt; bool</code></td><td>Register a WAV/Ogg by logical name, reachable from <code>play_sample("name")</code>.</td></tr>
+					<tr><td><code>load_sample(name, path) -&gt; bool</code></td><td>Register a WAV, OGG, FLAC, or MP3 file by logical name, reachable from pattern strings like <code>pat("name")</code>.</td></tr>
 					<tr><td><code>load_soundfont(name, path) -&gt; bool</code></td><td>Register an SF2 soundfont.</td></tr>
 					<tr><td><code>clear_samples() / clear_soundfonts()</code></td><td>Drop all currently loaded assets.</td></tr>
 					<tr><td><code>get_loaded_samples() / get_loaded_soundfonts()</code></td><td>Inspect what's currently bound.</td></tr>
@@ -143,7 +149,7 @@ func _on_compiled(success: bool, errors: Array) -> void:
 			<h3>Visualization</h3>
 			<p>
 				<code>get_waveform_data()</code> returns a <code>PackedFloat32Array</code> of 1024
-				interleaved L/R frames from the last rendered block — enough to drive a scope widget
+				interleaved L/R frames from the last rendered block, enough to drive a scope widget
 				without reaching into the audio thread.
 			</p>
 
@@ -152,7 +158,7 @@ func _on_compiled(success: bool, errors: Array) -> void:
 				<thead><tr><th>Signal</th><th>Payload</th></tr></thead>
 				<tbody>
 					<tr><td><code>compilation_finished</code></td><td><code>(success: bool, errors: Array)</code></td></tr>
-					<tr><td><code>params_changed</code></td><td><code>(params: Array)</code> — emitted when <code>get_param_decls()</code> would change (hot-swap across different param sets).</td></tr>
+					<tr><td><code>params_changed</code></td><td><code>(params: Array)</code>. Emitted when <code>get_param_decls()</code> would change (hot-swap across different param sets).</td></tr>
 				</tbody>
 			</table>
 		</section>
@@ -188,7 +194,7 @@ func _on_compiled(success: bool, _errors: Array) -> void:
 			<h3>"No class named NkidoAudioStream"</h3>
 			<p>The GDExtension didn't load. Check that the binary for your platform exists under
 			<code>addons/nkido/bin/</code>. The naming convention is
-			<code>libnkido.&lt;platform&gt;.template_&lt;mode&gt;.&lt;arch&gt;.&lt;ext&gt;</code> — a debug Linux build is
+			<code>libnkido.&lt;platform&gt;.template_&lt;mode&gt;.&lt;arch&gt;.&lt;ext&gt;</code>. A debug Linux build is
 			<code>libnkido.linux.template_debug.x86_64.so</code>. Godot prints the missing path to
 			the console; double-check it against <code>nkido.gdextension</code>'s library table.</p>
 
@@ -199,7 +205,7 @@ func _on_compiled(success: bool, _errors: Array) -> void:
 			<h3>Audio clicks every time I edit</h3>
 			<p>Raise <code>crossfade_blocks</code>. Default is 3 blocks (~8 ms at 48 kHz / 128-sample
 			blocks). Values up to 10 are fine; above that the swap lag becomes audible. If clicks
-			persist after raising it, the node's semantic ID is changing on every edit — see
+			persist after raising it, the node's semantic ID is changing on every edit. See
 			<a href="/docs/concepts/hot-swap">Hot-swap explained</a> for what keeps state.</p>
 
 			<h3>Sample rate mismatch</h3>
@@ -208,9 +214,10 @@ func _on_compiled(success: bool, _errors: Array) -> void:
 			48000 and reload.</p>
 
 			<h3>Building from source fails finding godot-cpp</h3>
-			<p>Use <code>git clone --recursive</code> or run <code>git submodule update --init --recursive</code>
-			after cloning. The addon vendors <code>godot-cpp</code> and the nkido engine sources as
-			submodules.</p>
+			<p>The build expects <code>godot-cpp</code> and <code>nkido</code> as sibling directories
+			next to <code>godot-nkido-addon</code>. Clone both, or override the paths with
+			<code>-DGODOT_CPP_PATH=...</code> and <code>-DNKIDO_PATH=...</code> when running
+			<code>cmake</code>.</p>
 		</section>
 
 		<section class="links">
