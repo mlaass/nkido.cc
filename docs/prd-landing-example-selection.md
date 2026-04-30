@@ -11,7 +11,7 @@ The landing page currently embeds a single patch (`hello-sine`) via a click-to-a
 Key decisions made during planning:
 
 - **Single iframe, tabs swap content.** Clicking a tab changes which patch is loaded inside the same iframe — no multiple iframes.
-- **PostMessage with ack handshake.** The landing page sends `{ type: 'switch-patch', patch: '<slug>' }` to the iframe. The iframe responds with `{ type: 'patch-loaded' }` or `{ type: 'error' }`. This avoids reloading the WASM runtime on every tab switch.
+- **PostMessage with ack handshake.** The landing page sends `{ type: 'nkido:switch-patch', patch: '<slug>' }` to the iframe. The iframe responds with `{ type: 'nkido:patch-loaded' }` or `{ type: 'nkido:patch-error' }`. This avoids reloading the WASM runtime on every tab switch.
 - **Examples built as new patches** in the nkido repo under `web/static/patches/`, extending the existing patch system (same `index.json` convention).
 - **Poster updates with tab selection.** Before activation, the click-to-activate poster shows the currently-selected example's name. After activation, tab switches are instant with no loading indicator.
 - **URL param for shareability.** The selected tab is encoded as `?demo=<slug>` so visitors can share links to specific examples.
@@ -77,7 +77,7 @@ This component will be **replaced** entirely by the new `ExampleSelector` compon
 3. Below the tabs, a poster shows the selected example's name with a "Click to play" CTA.
 4. Visitor clicks the poster → iframe loads (~4s WASM load) → audio plays.
 5. Visitor clicks a different tab → postMessage sends patch-switch command → iframe swaps the patch instantly → new audio plays.
-6. Visitor copies the URL (now contains `?demo=fm-synth`) and shares it. Recipient opens the link → the correct tab is pre-selected → poster shows that example → click to play.
+6. Visitor copies the URL (now contains `?demo=fm-piano`) and shares it. Recipient opens the link → the correct tab is pre-selected → poster shows that example → click to play.
 
 ---
 
@@ -206,16 +206,19 @@ This is **additive** — the existing `?patch=<name>` URL-param behavior is unch
 
 ### 6.5 URL State
 
-- On tab change (before activation): update URL with `?demo=<slug>` via `URLSearchParams` (no full navigation).
+- On tab change (before activation): update URL with `?demo=<slug>` via `history.replaceState` and `URLSearchParams` (no full navigation).
+- On tab change (after activation): same behavior — URL continues to update with `?demo=<slug>` via `history.replaceState`. The URL always reflects the currently-selected tab.
 - On page load: read `?demo=<slug>` from the URL and pre-select that tab.
 - If `?demo` references an unknown slug: fall back to the default tab (`fm-piano`).
 - Default tab (no `?demo` param): `fm-piano`.
 
 ### 6.6 Tab Bar Responsive Behavior
 
-- **Desktop (≥ 768px):** single centered row of tabs.
-- **Tablet (< 768px):** tabs wrap to 2 centered rows.
-- **Mobile (< 480px):** tabs wrap to 3+ centered rows, tab text size slightly reduced.
+- **Desktop (≥ 768px):** single centered row of tabs (CSS `flex-wrap: nowrap`).
+- **Tablet (< 768px):** tabs wrap to 2 centered rows (CSS `flex-wrap: wrap` with `max-width` constraint on the tab container).
+- **Mobile (< 480px):** tabs wrap to 3+ centered rows, tab text size slightly reduced via media query.
+
+Wrapping is handled by CSS `flex-wrap` on the tab container — no JavaScript breakpoint detection. The tab bar uses `display: flex`, `justify-content: center`, `flex-wrap: wrap`, and `gap` for consistent spacing across all breakpoints. Tab font size is reduced at the <480px breakpoint via a media query.
 
 No horizontal scroll, no dropdown, no "More" button. Tabs are always fully visible.
 
@@ -251,8 +254,8 @@ No changes to:
 | `src/routes/+page.svelte` | Replace `<LiveEmbed patch="hello-sine" />` with `<ExampleSelector />`. |
 | `src/lib/components/Home/LiveEmbed.svelte` | **Deleted.** Superseded. |
 | `src/lib/components/Home/ExampleSelector.svelte` | **New.** Orchestrates tabs, poster, iframe, postMessage, URL state. Reads patch metadata from a local manifest (fetched at build time or hardcoded). |
-| `src/lib/components/Home/ExampleTabs.svelte` | **New.** Renders the tab bar with responsive CSS wrapping. Accepts `examples: { slug, label }[]` and `active: string` props. Emits `select` event. |
-| `src/lib/data/landing-examples.ts` | **New.** Hardcoded manifest of the 10 landing examples (slug, label, description). Mirrors the `index.json` entries from the nkido repo so the website doesn't need a build-time fetch. |
+| `src/lib/components/Home/ExampleTabs.svelte` | **New.** Renders the tab bar with CSS flex-wrap responsive layout. Props: `examples: { slug: string; label: string }[]` (from landing-examples.ts), `active: string` (current slug). Event: `select` (custom DOM event `{ detail: { slug: string } }`). Styling: flex container with `justify-content: center`, `flex-wrap: wrap`, `gap: var(--spacing-xs)`. Active tab uses `var(--accent-primary)` background with contrasting text color; inactive tabs use transparent background with `var(--text-primary)` text. Hover state: `var(--bg-tertiary)` background. Focus ring: `outline: 2px solid var(--accent-primary); outline-offset: 2px`. Tab text size: default, reduced to `0.875rem` at <480px breakpoint. |
+| `src/lib/data/landing-examples.ts` | **New.** Hardcoded manifest array of 10 landing examples. Shape: `{ slug: string; label: string; description: string }[]` where `slug` matches the `.akk` filename (e.g. `fm-piano`), `label` matches the `title` from `index.json` (e.g. `FM Synth`), and `description` is a short one-liner for accessibility/poster text. This file mirrors the `index.json` entries from the nkido repo but is a separate, manually-maintained copy (see Edge Case 10). Exported as a const array, not a function. |
 
 ### 8.2 nkido repo (live app)
 
@@ -349,18 +352,18 @@ No changes to:
 
 ## 11. Testing / Verification Strategy
 
-### 11.1 Automated (website repo)
+### 11.1 Automated (blocking in CI)
 
 - **`bun run check`** — type-check, must pass.
 - **`bun run build`** — must succeed; no new route regressions.
-- **Lighthouse CI** — perf ≥ 95 on `/` (no regression from tab addition).
+- **Lighthouse CI** — perf ≥ 95 on `/` (no regression from tab addition), matching the thresholds in `lighthouserc.json` from prd-launch-hardening.md.
 
 ### 11.2 Automated (nkido repo)
 
 - **`bun run check`** + **`bun run build`** — must pass with new patches.
 - **Patch validation script** (new or existing): verify each `.akk` file compiles without errors and `index.json` entries reference existing files.
 
-### 11.3 Manual (cross-repo)
+### 11.3 Manual (run on a Netlify preview before merge)
 
 - **PostMessage round-trip test:**
   1. Open `nkido.cc` in browser.
@@ -413,7 +416,7 @@ Each of the 10 new patches should be reviewed for:
 
 4. **What exact microtonal tuning system should `microtonal-raga.akk` use?** The microtonal PRD is NOT STARTED but the user confirmed the feature is implemented. Need to verify the actual API (is it `tune()`, a custom scale definition, or something else?) before authoring the patch.
 
-5. **Should the postMessage protocol be namespaced under `nkido:`** (as proposed: `nkido:switch-patch`) or use a different convention?** The `nkido:` prefix avoids collisions with other iframes that might be embedded on the page in the future.
+5. ~~**Should the postMessage protocol be namespaced under `nkido:`** (as proposed: `nkido:switch-patch`) or use a different convention?**~~ **Resolved:** §6.3 already specifies the `nkido:` prefix for all message types. This avoids collisions with other iframes that might be embedded on the page in the future.
 
 ---
 
@@ -432,6 +435,6 @@ Each of the 10 new patches should be reviewed for:
 ## 14. Related Work
 
 - [`prd-project-website.md`](./prd-project-website.md) — v1 PRD; specified the original `LiveEmbed` with single-patch iframe (§4.2, §8).
-- [`prd-launch-hardening.md`](./prd-launch-hardening.md) — launch hardening PRD; replaced the dead iframe with a static screenshot (`LandingDemo`). This PRD supersedes that replacement with a live, multi-example embed.
+- [`prd-launch-hardening.md`](./prd-launch-hardening.md) — launch hardening PRD; replaced the dead iframe with a static screenshot (`LandingDemo`, §4.3). This PRD **supersedes** that replacement: instead of a static screenshot, the landing page gets a live, multi-example tabbed embed. `LandingDemo.svelte` is never created; `LiveEmbed.svelte` is replaced directly by `ExampleSelector.svelte`.
 - `web/static/patches/` in the nkido repo — existing patch directory with 4 patches + `index.json`. This PRD extends the same system.
 - `web/src/routes/embed/+page.svelte` in the nkido repo — existing embed route. This PRD adds postMessage handling to it.
