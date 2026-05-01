@@ -115,9 +115,9 @@
 				<h2>How we talk</h2>
 			</div>
 			<p>
-				Be useful, be patient, assume good faith. If you want a longer version of that,
-				<a href="https://datatracker.ietf.org/doc/html/rfc1855" target="_blank" rel="noopener">RFC 1855 (Netiquette Guidelines, 1995)</a>
-				still holds up. Questions or concerns go to
+				First, do no harm. Be polite, criticize the code rather than the coder, and assume good faith. The full version is the
+				<a href="https://github.com/mlaass/nkido/blob/master/CODE_OF_CONDUCT.md" target="_blank" rel="noopener">Hippocratic Code of Conduct</a>
+				in the main repo. Questions or concerns go to
 				<a href="mailto:moritz.laass@gmail.com">moritz.laass@gmail.com</a>.
 			</p>
 		</section>
