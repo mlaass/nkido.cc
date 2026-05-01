@@ -1,4 +1,4 @@
-// Blog index — merges hand-authored posts (frontmatter on +page.md files) with
+// Blog index. Merges hand-authored posts (frontmatter on +page.md files) with
 // GitHub releases fetched at build time into src/lib/data/releases.json.
 //
 // A post is either:

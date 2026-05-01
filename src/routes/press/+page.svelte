@@ -3,8 +3,8 @@
 </script>
 
 <svelte:head>
-	<title>Press Kit — NKIDO</title>
-	<meta name="description" content="Press kit for NKIDO — logos, screenshots, and descriptions for writers." />
+	<title>Press Kit | NKIDO</title>
+	<meta name="description" content="Press kit for NKIDO. Logos, screenshots, and descriptions for writers." />
 </svelte:head>
 
 <section class="page">
@@ -41,8 +41,8 @@
 				NKIDO is an open source audio synthesis platform consisting of two main components:
 			</p>
 			<ul>
-				<li><strong>Akkado</strong> — a domain-specific language for live-coding musical patterns, combining Strudel/Tidal-style mini-notation with functional DAG-based audio processing</li>
-				<li><strong>Cedar</strong> — a graph-based audio synthesis engine with a stack-based bytecode VM, designed for real-time DSP with zero allocations</li>
+				<li><strong>Akkado</strong>: a domain-specific language for live-coding musical patterns, combining Strudel/Tidal-style mini-notation with functional DAG-based audio processing</li>
+				<li><strong>Cedar</strong>: a graph-based audio synthesis engine with a stack-based bytecode VM, designed for real-time DSP with zero allocations</li>
 			</ul>
 			<p>
 				Nkido runs everywhere: web (via WASM), native CLI, Godot addon, and ESP32. MIT licensed.

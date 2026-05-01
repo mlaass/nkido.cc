@@ -26,7 +26,7 @@ A pattern string is a space-separated list of events that evenly fill one cycle 
 
 ## Combining with signals
 
-Patterns in NKIDO are regular signals — you pipe them into oscillators just like you'd pipe a control signal.
+Patterns in NKIDO are regular signals. You pipe them into oscillators just like you'd pipe a control signal.
 
 ```akk
 note("c4 e4 g4 b4")
@@ -35,16 +35,16 @@ note("c4 e4 g4 b4")
   |> out()
 ```
 
-The `note()` builtin turns a pattern string into a frequency signal. When the pattern advances, the oscillator's frequency updates on the beat — and because of hot-swap, the phase keeps going across pitch changes.
+The `note()` builtin turns a pattern string into a frequency signal. When the pattern advances, the oscillator's frequency updates on the beat. Because of hot-swap, the phase keeps going across pitch changes.
 
 ## Effects within the pattern
 
 Mini-notation supports a handful of inline effects:
 
-- `x!3` — replicate `x` three times inline.
-- `x@2` — `x` takes twice as long as the others.
-- `x?` — play `x` with 50% probability.
-- `[a,b]` — play `a` and `b` in parallel.
+- `x!3`: replicate `x` three times inline.
+- `x@2`: `x` takes twice as long as the others.
+- `x?`: play `x` with 50% probability.
+- `[a,b]`: play `a` and `b` in parallel.
 
 ## Example: a two-bar riff
 
@@ -57,9 +57,9 @@ note("<c4 eb4> g4 [bb4 c5] a4")
   |> out()
 ```
 
-> Every slot in the pattern is itself a signal, so you can modulate per-slot parameters — velocity, filter, pan — by writing a parallel pattern and multiplying.
+> Every slot in the pattern is itself a signal, so you can modulate per-slot parameters (velocity, filter, pan) by writing a parallel pattern and multiplying.
 
 ## Next
 
-- [Signals & DAGs →](/docs/concepts/signals)
-- [Tutorial: Hello Sine →](/docs/tutorials/hello-sine)
+- [Signals and DAGs](/docs/concepts/signals)
+- [Tutorial: Hello Sine](/docs/tutorials/hello-sine)

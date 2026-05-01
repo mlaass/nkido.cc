@@ -15,7 +15,7 @@
 		{
 			icon: Globe,
 			title: 'Runs everywhere',
-			description: 'Native, web, Godot addon, ESP32 — one codebase, any platform.'
+			description: 'Native, web, Godot addon, ESP32. One codebase, any platform.'
 		},
 		{
 			icon: Box,

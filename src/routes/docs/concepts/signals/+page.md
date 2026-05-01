@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: Signals & DAGs
+title: Signals and DAGs
 description: How audio flows through NKIDO's directed acyclic graph.
 backHref: /docs/concepts
 backLabel: Concepts
@@ -10,7 +10,7 @@ order: 1
 keywords: [signal, DAG, dsp, graph, pipe]
 ---
 
-A **signal** in NKIDO is any value that changes over time — typically audio, but also control values like envelopes or LFOs. Every patch is just a graph of signals flowing through operators.
+A **signal** in NKIDO is any value that changes over time. Usually audio, but also control values like envelopes or LFOs. Every patch is a graph of signals flowing through operators.
 
 ## Everything is a graph
 
@@ -45,10 +45,10 @@ NKIDO compiles this graph to bytecode that runs in a stack-based VM, one audio b
 
 Signals run at one of two rates:
 
-- **Audio-rate** — one value per sample (48 kHz typical). Oscillators, filters, delays, mixers all produce audio-rate signals.
-- **Control-rate** — one value per audio block (~128 samples). Cheaper; used for parameter modulation like LFOs and envelopes.
+- **Audio-rate**: one value per sample (48 kHz typical). Oscillators, filters, delays, mixers all produce audio-rate signals.
+- **Control-rate**: one value per audio block (~128 samples). Cheaper; used for parameter modulation like LFOs and envelopes.
 
-You rarely need to think about rates directly — operators coerce as needed — but control-rate modulation is how you get CPU-efficient sweeps and LFOs.
+You rarely need to think about rates directly (operators coerce as needed) but control-rate modulation is how you get CPU-efficient sweeps and LFOs.
 
 ## Why a DAG?
 
@@ -58,5 +58,5 @@ A DAG has no cycles, which means every signal can be computed in topological ord
 
 ## Next
 
-- [Hot-swap explained →](/docs/concepts/hot-swap)
-- [Tutorial: Hello Sine →](/docs/tutorials/hello-sine)
+- [Hot-swap explained](/docs/concepts/hot-swap)
+- [Tutorial: Hello Sine](/docs/tutorials/hello-sine)

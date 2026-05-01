@@ -28,7 +28,7 @@
 	async function loadPagefind() {
 		if (pagefind) return pagefind;
 		try {
-			// Dynamic import — file is emitted by the postbuild step, so we build
+			// Dynamic import. File is emitted by the postbuild step, so we build
 			// the URL at runtime to keep TS + Vite from trying to resolve it.
 			const url = '/pagefind/' + 'pagefind.js';
 			const mod = (await import(/* @vite-ignore */ url)) as {

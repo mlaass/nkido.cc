@@ -18,9 +18,9 @@
 </script>
 
 <svelte:head>
-	<title>{release.title} — NKIDO Release Notes</title>
+	<title>{release.title} | NKIDO Release Notes</title>
 	<meta name="description" content="Release notes for NKIDO {release.tag}." />
-	<meta property="og:title" content="{release.title} — NKIDO" />
+	<meta property="og:title" content="{release.title} | NKIDO" />
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="https://nkido.cc/blog/releases/{release.tag}" />
 </svelte:head>

@@ -19,7 +19,7 @@
 		},
 		{
 			title: `Language (${countIn('reference/language')})`,
-			description: 'Pipe operator, hole, variables, closures — the Akkado syntax reference.',
+			description: 'Pipe operator, hole, variables, closures: the Akkado syntax reference.',
 			url: '/docs/reference/language'
 		},
 		{

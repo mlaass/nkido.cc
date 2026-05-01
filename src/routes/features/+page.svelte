@@ -3,8 +3,8 @@
 </script>
 
 <svelte:head>
-	<title>Features — NKIDO</title>
-	<meta name="description" content="Explore NKIDO's features — live-coding patterns, 95+ DSP opcodes, hot-swapping, and more." />
+	<title>Features | NKIDO</title>
+	<meta name="description" content="NKIDO's features: live-coding patterns, 95+ DSP opcodes, hot-swapping, and more." />
 </svelte:head>
 
 <section class="page">
@@ -24,7 +24,7 @@
 					<p>
 						Write code that plays music. Akkado, our pattern DSL, combines the expressiveness
 						of Strudel/Tidal with a functional DAG-based audio pipeline. Change code while it
-						plays — no restart needed.
+						plays. No restart needed.
 					</p>
 				</div>
 			</div>
@@ -88,7 +88,7 @@
 					<h2>Hot-swap with preserved state</h2>
 					<p>
 						NKIDO's semantic ID system tracks DSP nodes across code changes.
-						Update your patch without glitches — parameter values, envelope states,
+						Update your patch without glitches. Parameter values, envelope states,
 						and delay lines persist through reloads.
 					</p>
 				</div>

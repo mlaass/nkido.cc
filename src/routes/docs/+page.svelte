@@ -17,7 +17,7 @@
 		{
 			title: 'Concepts',
 			icon: Layers,
-			description: 'The mental model: signals, DAGs, hot-swap, and mini-notation.',
+			description: 'Signals, DAGs, hot-swap, and mini-notation.',
 			href: '/docs/concepts',
 			linkLabel: 'Start reading →'
 		},
@@ -45,8 +45,8 @@
 </script>
 
 <svelte:head>
-	<title>Docs — NKIDO</title>
-	<meta name="description" content="NKIDO documentation — concepts, tutorials, and reference." />
+	<title>Docs | NKIDO</title>
+	<meta name="description" content="NKIDO documentation. Concepts, tutorials, and reference." />
 </svelte:head>
 
 <section class="page">

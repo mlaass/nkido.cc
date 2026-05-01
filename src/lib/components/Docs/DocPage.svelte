@@ -39,12 +39,12 @@
 </script>
 
 <svelte:head>
-	<title>{title} — NKIDO Docs</title>
+	<title>{title} | NKIDO Docs</title>
 	{#if description}
 		<meta name="description" content={description} />
 		<meta property="og:description" content={description} />
 	{/if}
-	<meta property="og:title" content="{title} — NKIDO" />
+	<meta property="og:title" content="{title} | NKIDO" />
 	<meta property="og:type" content="article" />
 </svelte:head>
 

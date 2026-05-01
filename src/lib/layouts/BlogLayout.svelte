@@ -33,7 +33,7 @@
 >
 	{#if draft}
 		<div class="draft-banner" role="note">
-			<strong>Draft.</strong> This post isn't published yet — it's visible only
+			<strong>Draft.</strong> This post isn't published yet. It's visible only
 			via its direct URL and not linked from <a href="/blog">/blog</a>. Review, then remove
 			<code>draft: true</code> from the frontmatter to publish.
 		</div>

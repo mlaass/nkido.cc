@@ -3,8 +3,8 @@
 </script>
 
 <svelte:head>
-	<title>Community — NKIDO</title>
-	<meta name="description" content="Join the NKIDO community — contribute, ask questions, and connect." />
+	<title>Community | NKIDO</title>
+	<meta name="description" content="Join the NKIDO community. Contribute, ask questions, and connect." />
 	<meta property="og:title" content="NKIDO Community" />
 	<meta property="og:description" content="Contribute, ask questions, and support the project." />
 	<meta property="og:type" content="article" />
@@ -28,13 +28,13 @@
 					<a href="https://github.com/mlaass/nkido/discussions" target="_blank" rel="noopener">
 						GitHub Discussions
 					</a>
-					— questions, ideas, "show and tell" patches.
+					for questions, ideas, and "show and tell" patches.
 				</li>
 				<li>
 					<a href="https://github.com/mlaass/nkido/issues" target="_blank" rel="noopener">
 						GitHub Issues
 					</a>
-					— bug reports and feature requests.
+					for bug reports and feature requests.
 				</li>
 			</ul>
 		</section>
@@ -61,30 +61,30 @@
 			<p>The codebase is split across a few repos:</p>
 			<ul>
 				<li>
-					<a href="https://github.com/mlaass/nkido" target="_blank" rel="noopener">mlaass/nkido</a>
-					— the engine (Cedar), the language (Akkado), and the web IDE.
+					<a href="https://github.com/mlaass/nkido" target="_blank" rel="noopener">mlaass/nkido</a>:
+					the engine (Cedar), the language (Akkado), and the web IDE.
 				</li>
 				<li>
 					<a href="https://github.com/mlaass/godot-nkido-addon" target="_blank" rel="noopener">
 						mlaass/godot-nkido-addon
-					</a> — Godot 4.x integration.
+					</a>: Godot 4.x integration.
 				</li>
 				<li>
 					<a href="https://github.com/mlaass/cedar-esp32" target="_blank" rel="noopener">
 						mlaass/cedar-esp32
-					</a> — ESP32 port.
+					</a>: ESP32 port.
 				</li>
 				<li>
 					<a href="https://github.com/mlaass/nkido.cc" target="_blank" rel="noopener">
 						mlaass/nkido.cc
-					</a> — this website.
+					</a>: this website.
 				</li>
 			</ul>
 			<p>
 				For non-trivial changes, please open an issue first to discuss the approach.
 				PRs that include tests for new behavior are merged faster. The full contribution
 				guide (build env, opcode-add walk-through, release process) lives at
-				<a href="/community/contributing">the CONTRIBUTING guide</a> — mirrored from the
+				<a href="/community/contributing">the CONTRIBUTING guide</a>, mirrored from the
 				<code>nkido</code> repo on each build.
 			</p>
 		</section>

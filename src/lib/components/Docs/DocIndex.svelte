@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-	<title>{title} — NKIDO Docs</title>
+	<title>{title} | NKIDO Docs</title>
 	{#if intro}<meta name="description" content={intro} />{/if}
 </svelte:head>
 

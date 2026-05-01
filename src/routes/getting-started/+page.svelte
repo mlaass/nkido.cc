@@ -3,8 +3,8 @@
 </script>
 
 <svelte:head>
-	<title>Getting Started — NKIDO</title>
-	<meta name="description" content="Get started with NKIDO — install the CLI, try the web IDE, or embed in your project." />
+	<title>Getting Started | NKIDO</title>
+	<meta name="description" content="Get started with NKIDO. Install the CLI, try the web IDE, or embed in your project." />
 	<meta property="og:title" content="Getting started with NKIDO" />
 	<meta property="og:description" content="Install the CLI, try the web IDE, or embed NKIDO in your project." />
 	<meta property="og:type" content="article" />
@@ -24,7 +24,7 @@
 					<Github size={32} />
 				</div>
 				<h2>Web IDE</h2>
-				<p>Try NKIDO right in your browser — no install required.</p>
+				<p>Try NKIDO in your browser. No install required.</p>
 				<a href="https://live.nkido.cc" class="path-link" target="_blank" rel="noopener">
 					Open in browser <ArrowRight size={16} />
 				</a>
@@ -49,10 +49,10 @@ cmake --build build
 		<section class="next-steps">
 			<h2>What's next?</h2>
 			<ul>
-				<li><a href="/docs">Learn the concepts</a> — signals, DAGs, hot-swap</li>
-				<li><a href="/features">Explore features</a> — full opcode reference</li>
-				<li><a href="/godot">Use in Godot</a> — the NKIDO Godot addon</li>
-				<li><a href="/esp32">Run on ESP32</a> — embedded audio hardware</li>
+				<li><a href="/docs">Learn the concepts</a>: signals, DAGs, hot-swap</li>
+				<li><a href="/features">Explore features</a>: full opcode reference</li>
+				<li><a href="/godot">Use in Godot</a>: the NKIDO Godot addon</li>
+				<li><a href="/esp32">Run on ESP32</a>: embedded audio hardware</li>
 			</ul>
 		</section>
 	</div>

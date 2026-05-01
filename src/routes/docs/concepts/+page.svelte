@@ -3,14 +3,14 @@
 
 	const concepts = [
 		{
-			title: 'Signals & DAGs',
+			title: 'Signals and DAGs',
 			href: '/docs/concepts/signals',
 			summary: "How audio flows through NKIDO's directed acyclic graph architecture."
 		},
 		{
 			title: 'Hot-swap explained',
 			href: '/docs/concepts/hot-swap',
-			summary: 'Preserving state across code changes — no glitches, no drops.'
+			summary: 'Preserving state across code changes. No glitches, no drops.'
 		},
 		{
 			title: 'Mini-notation',
@@ -21,8 +21,8 @@
 </script>
 
 <svelte:head>
-	<title>Concepts — NKIDO Docs</title>
-	<meta name="description" content="Learn the core concepts behind NKIDO: signals, DAGs, hot-swap, and mini-notation." />
+	<title>Concepts | NKIDO Docs</title>
+	<meta name="description" content="Core concepts behind NKIDO: signals, DAGs, hot-swap, and mini-notation." />
 </svelte:head>
 
 <section class="page">

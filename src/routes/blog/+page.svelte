@@ -12,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>Blog — NKIDO</title>
+	<title>Blog | NKIDO</title>
 	<meta name="description" content="News and updates from the NKIDO project." />
 </svelte:head>
 

@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>404 — Page Not Found — NKIDO</title>
+	<title>404 Page Not Found | NKIDO</title>
 </svelte:head>
 
 <section class="page">

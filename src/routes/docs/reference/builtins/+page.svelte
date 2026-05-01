@@ -10,7 +10,7 @@
 
 <DocIndex
 	title="Builtins"
-	intro="Oscillators, filters, delays, effects — the DSP primitives you combine into patches."
+	intro="Oscillators, filters, delays, effects: the DSP primitives you combine into patches."
 	backHref="/docs/reference"
 	backLabel="Reference"
 	{entries}
