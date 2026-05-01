@@ -8,26 +8,23 @@
 	} from '$lib/data/landing-examples';
 	import ExampleTabs from './ExampleTabs.svelte';
 
-	const EMBED_ORIGIN = 'https://live.nkido.cc';
+	const EMBED_ORIGIN =
+		import.meta.env.VITE_EMBED_ORIGIN ??
+		(import.meta.env.DEV ? 'http://localhost:8888' : 'https://live.nkido.cc');
 	const URL_PARAM = 'demo';
 	const LOAD_TIMEOUT_MS = 8000;
-	const ERROR_BANNER_MS = 3000;
 
 	let activeSlug = $state(DEFAULT_SLUG);
-	let previousSlug = $state(DEFAULT_SLUG);
 	let activated = $state(false);
 	let iframeLoaded = $state(false);
-	let embedReady = $state(false);
 	let failed = $state(false);
-	let pendingSlug = $state<string | null>(null);
-	let inflightSlug = $state<string | null>(null);
-	let errorMessage = $state<string | null>(null);
 	let loadTimer: ReturnType<typeof setTimeout> | null = null;
-	let errorTimer: ReturnType<typeof setTimeout> | null = null;
 	let iframeEl = $state<HTMLIFrameElement | null>(null);
 
 	const activeExample = $derived(findExample(activeSlug) ?? LANDING_EXAMPLES[0]);
-	const embedUrl = $derived(`${EMBED_ORIGIN}/embed?patch=${encodeURIComponent(activeSlug)}`);
+	const embedUrl = $derived(
+		`${EMBED_ORIGIN}/embed?patch=${encodeURIComponent(activeSlug)}&autoplay=1`
+	);
 	const fallbackUrl = $derived(`${EMBED_ORIGIN}/?patch=${encodeURIComponent(activeSlug)}`);
 
 	function readSlugFromUrl(): string {
@@ -45,10 +42,8 @@
 		window.history.replaceState({}, '', url);
 	}
 
-	function sendSwitch(slug: string) {
-		if (!iframeEl || !iframeEl.contentWindow) return;
-		inflightSlug = slug;
-		iframeEl.contentWindow.postMessage(
+	function postSwitch(slug: string) {
+		iframeEl?.contentWindow?.postMessage(
 			{ type: 'nkido:switch-patch', patch: slug },
 			EMBED_ORIGIN
 		);
@@ -56,18 +51,9 @@
 
 	function selectTab(slug: string) {
 		if (slug === activeSlug) return;
-		previousSlug = activeSlug;
 		activeSlug = slug;
 		writeSlugToUrl(slug);
-		clearError();
-
-		if (!activated) return;
-
-		if (embedReady && !inflightSlug) {
-			sendSwitch(slug);
-		} else {
-			pendingSlug = slug;
-		}
+		if (activated) postSwitch(slug);
 	}
 
 	function activate() {
@@ -86,69 +72,17 @@
 		}
 	}
 
-	function showError(msg: string) {
-		errorMessage = msg;
-		if (errorTimer) clearTimeout(errorTimer);
-		errorTimer = setTimeout(() => (errorMessage = null), ERROR_BANNER_MS);
-	}
-
-	function clearError() {
-		if (errorTimer) {
-			clearTimeout(errorTimer);
-			errorTimer = null;
-		}
-		errorMessage = null;
-	}
-
 	function handleMessage(event: MessageEvent) {
 		if (event.origin !== EMBED_ORIGIN) return;
-		const data = event.data;
-		if (!data || typeof data !== 'object') return;
-
-		switch (data.type) {
-			case 'nkido:embed-ready':
-				embedReady = true;
-				if (pendingSlug && pendingSlug !== inflightSlug) {
-					sendSwitch(pendingSlug);
-					pendingSlug = null;
-				} else if (activeSlug !== DEFAULT_SLUG && !inflightSlug) {
-					if (iframeEl) {
-						const iframeStartedWith = new URL(embedUrl).searchParams.get('patch');
-						if (iframeStartedWith !== activeSlug) sendSwitch(activeSlug);
-					}
-				}
-				break;
-
-			case 'nkido:patch-loaded':
-				if (data.patch === inflightSlug) {
-					inflightSlug = null;
-					if (pendingSlug && pendingSlug !== data.patch) {
-						const next = pendingSlug;
-						pendingSlug = null;
-						sendSwitch(next);
-					} else {
-						pendingSlug = null;
-					}
-				}
-				break;
-
-			case 'nkido:patch-error':
-				if (data.patch === inflightSlug) {
-					inflightSlug = null;
-					if (activeSlug === data.patch) {
-						activeSlug = previousSlug;
-						writeSlugToUrl(previousSlug);
-					}
-					showError("This example couldn't load. Try another tab.");
-					pendingSlug = null;
-				}
-				break;
-		}
+		if (event.data?.type !== 'nkido:embed-ready') return;
+		// If the user picked a different tab while the iframe was loading,
+		// sync the embed now that it's listening.
+		const startedWith = new URL(embedUrl).searchParams.get('patch');
+		if (startedWith !== activeSlug) postSwitch(activeSlug);
 	}
 
 	onMount(() => {
 		activeSlug = readSlugFromUrl();
-		previousSlug = activeSlug;
 		window.addEventListener('message', handleMessage);
 	});
 
@@ -157,7 +91,6 @@
 			window.removeEventListener('message', handleMessage);
 		}
 		if (loadTimer) clearTimeout(loadTimer);
-		if (errorTimer) clearTimeout(errorTimer);
 	});
 </script>
 
@@ -175,10 +108,6 @@
 			active={activeSlug}
 			onSelect={selectTab}
 		/>
-
-		{#if errorMessage}
-			<div class="error-banner" role="status">{errorMessage}</div>
-		{/if}
 
 		<div class="embed-frame" id="example-frame">
 			{#if !activated}
@@ -221,7 +150,7 @@
 		</div>
 
 		<div class="embed-footer">
-			<a href="https://live.nkido.cc" target="_blank" rel="noopener">
+			<a href={EMBED_ORIGIN} target="_blank" rel="noopener">
 				Open the full IDE <ExternalLink size={14} />
 			</a>
 		</div>
@@ -252,18 +181,6 @@
 	.embed-subtitle {
 		color: var(--text-secondary);
 		margin: 0;
-	}
-
-	.error-banner {
-		max-width: 480px;
-		margin: 0 auto var(--spacing-md);
-		padding: var(--spacing-sm) var(--spacing-md);
-		background: rgba(248, 81, 73, 0.12);
-		color: var(--accent-error);
-		border: 1px solid rgba(248, 81, 73, 0.3);
-		border-radius: 6px;
-		font-size: 0.875rem;
-		text-align: center;
 	}
 
 	.embed-frame {
