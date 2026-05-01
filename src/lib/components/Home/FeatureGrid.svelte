@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Zap, Layers, Globe, Box, RefreshCw, Scale } from 'lucide-svelte';
+	import { Zap, Layers, Globe, Box, RefreshCw, Scale, Sliders, Palette, BookOpen } from 'lucide-svelte';
 
 	const features = [
 		{
@@ -18,6 +18,21 @@
 			description: 'Native, web, Godot addon, ESP32. One codebase, any platform.'
 		},
 		{
+			icon: Sliders,
+			title: 'Runtime parameter controls',
+			description: 'Define sliders, toggles, buttons, and dropdowns in code, rendered as interactive UI controls in the web app.'
+		},
+		{
+			icon: Palette,
+			title: 'Customizable web UI',
+			description: '7 preset themes, custom theme editor, and CSS variable-based theming for personalized workflows.'
+		},
+		{
+			icon: BookOpen,
+			title: 'Instant documentation lookup',
+			description: 'Press F1 to search a pre-built keyword index with links to docs for builtins, mini-notation, and concepts.'
+		},
+		{
 			icon: Box,
 			title: 'Lightweight runtime',
 			description: 'Cedar is a standalone C++ library, easy to embed anywhere.'
@@ -31,7 +46,7 @@
 			icon: Scale,
 			title: 'MIT licensed',
 			description: 'Permissive open source, embed in closed-source projects.'
-		}
+		},
 	];
 </script>
 
