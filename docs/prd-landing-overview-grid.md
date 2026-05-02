@@ -1,6 +1,6 @@
 # PRD: Landing Page Runtime Overview Grid
 
-> **Status: Phase 2 complete** — Add a sectioned "What's in the box" grid as the final section of the landing page (after `RunsEverywhere`). Surfaces 36 cards across 6 groups (Instruments, Effects, Sequencing, Visualizations, Language, Tools), each linking to mirrored docs. Generated from `docs-manifest.json` with hardcoded group/icon rules. Phase 1 (upstream docs) and Phase 2 (mirror expansion + heading extraction) complete; remaining: grid component (Phase 3), tests + polish (Phase 4).
+> **Status: Phase 3 complete** — Sectioned "What's in the box" grid lives at the end of the landing page (after `RunsEverywhere`). Surfaces 36 cards across 6 groups (Instruments, Effects, Sequencing, Visualizations, Language, Tools), each linking to mirrored docs. Generated from `docs-manifest.json` with hardcoded group/icon rules. Phases 1 (upstream docs), 2 (mirror expansion), and 3 (grid component) complete; remaining: tests + a11y polish (Phase 4).
 >
 > **Phase 1 changes (vs original PRD):** Visualizations group expanded from 4 to 5 cards — `waveform` got its own split page rather than being merged into oscilloscope. Total cards: **36** (not 35). 12 new upstream docs pages authored (not 11): the original 11 plus `waveform.md`.
 

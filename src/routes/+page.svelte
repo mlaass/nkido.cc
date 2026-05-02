@@ -3,6 +3,7 @@
 	import ExampleSelector from '$lib/components/Home/ExampleSelector.svelte';
 	import FeatureGrid from '$lib/components/Home/FeatureGrid.svelte';
 	import RunsEverywhere from '$lib/components/Home/RunsEverywhere.svelte';
+	import OverviewGrid from '$lib/components/Home/OverviewGrid.svelte';
 </script>
 
 <svelte:head>
@@ -20,3 +21,4 @@
 <ExampleSelector />
 <FeatureGrid />
 <RunsEverywhere />
+<OverviewGrid />

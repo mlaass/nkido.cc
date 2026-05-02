@@ -12,6 +12,7 @@ import {
 	fallbackPath,
 	type MirrorEntry
 } from './mirror-index';
+import { buildOverviewFromDisk, writeOverview } from './build-overview';
 
 // Heading levels exposed as chip-resolvable anchors. Start narrow; widen if too
 // many keywords fail to resolve. H1 is excluded — DocPage renders the title from
@@ -306,6 +307,10 @@ async function main() {
 	console.log(
 		`✓ mirror: ${liveCount}/${tot} live, ${fallbackCount} fallback, ${missingCount} missing`
 	);
+
+	// Keep overview.json in sync with the manifest. Warnings go to stderr; the
+	// build is never blocked by chip-resolution or missing-slug issues.
+	writeOverview(buildOverviewFromDisk());
 }
 
 function writeManifest(results: MirrorResult[]): void {

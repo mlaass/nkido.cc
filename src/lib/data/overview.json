@@ -1,0 +1,990 @@
+{
+  "generatedAt": "2026-05-02T22:17:40.190Z",
+  "groups": [
+    {
+      "id": "instruments",
+      "heading": "Instruments",
+      "cards": [
+        {
+          "slug": "oscillators",
+          "title": "Oscillators",
+          "description": "Oscillators are the primary sound sources in synthesis. The osc() function is the unified interface for all oscillator types.",
+          "url": "/docs/reference/builtins/oscillators",
+          "icon": "Waves",
+          "chips": [
+            {
+              "keyword": "osc",
+              "anchor": "osc",
+              "href": "/docs/reference/builtins/oscillators#osc"
+            },
+            {
+              "keyword": "noise",
+              "anchor": "noise",
+              "href": "/docs/reference/builtins/oscillators#noise"
+            }
+          ]
+        },
+        {
+          "slug": "fm-synthesis",
+          "title": "FM Synthesis",
+          "description": "Frequency modulation (FM) synthesizes complex timbres by modulating the frequency of one oscillator (the carrier) with the output of another (the modulator).…",
+          "url": "/docs/reference/builtins/fm-synthesis",
+          "icon": "Radio",
+          "chips": [
+            {
+              "keyword": "carrier",
+              "anchor": "carrier",
+              "href": "/docs/reference/builtins/fm-synthesis#carrier"
+            },
+            {
+              "keyword": "modulator",
+              "anchor": "modulator",
+              "href": "/docs/reference/builtins/fm-synthesis#modulator"
+            },
+            {
+              "keyword": "ratio",
+              "anchor": "ratio",
+              "href": "/docs/reference/builtins/fm-synthesis#ratio"
+            },
+            {
+              "keyword": "index",
+              "anchor": "index",
+              "href": "/docs/reference/builtins/fm-synthesis#index"
+            },
+            {
+              "keyword": "sideband",
+              "anchor": "sideband",
+              "href": "/docs/reference/builtins/fm-synthesis#sideband"
+            }
+          ]
+        },
+        {
+          "slug": "samplers",
+          "title": "Samplers",
+          "description": "Samplers play recorded audio. The most common path is a sample pattern — pat(\"bd sd hh sd\") — which triggers events from the loaded sample bank. nkido ships…",
+          "url": "/docs/reference/builtins/samplers",
+          "icon": "Drum",
+          "chips": [
+            {
+              "keyword": "sample",
+              "anchor": "sample",
+              "href": "/docs/reference/builtins/samplers#sample"
+            },
+            {
+              "keyword": "sample_loop",
+              "anchor": "sample_loop",
+              "href": "/docs/reference/builtins/samplers#sample_loop"
+            },
+            {
+              "keyword": "bd",
+              "anchor": "bd",
+              "href": "/docs/reference/builtins/samplers#bd"
+            },
+            {
+              "keyword": "sd",
+              "anchor": "sd",
+              "href": "/docs/reference/builtins/samplers#sd"
+            },
+            {
+              "keyword": "hh",
+              "anchor": "hh",
+              "href": "/docs/reference/builtins/samplers#hh"
+            }
+          ]
+        },
+        {
+          "slug": "soundfonts",
+          "title": "SoundFonts",
+          "description": "SoundFonts (.sf2 / .sf3) are bundled instrument banks — typically General MIDI piano, strings, brass, drums. The soundfont() builtin plays a pattern through…",
+          "url": "/docs/reference/builtins/soundfonts",
+          "icon": "Piano",
+          "chips": [
+            {
+              "keyword": "soundfont",
+              "anchor": "soundfont",
+              "href": "/docs/reference/builtins/soundfonts#soundfont"
+            },
+            {
+              "keyword": "gm",
+              "anchor": "gm",
+              "href": "/docs/reference/builtins/soundfonts#gm"
+            },
+            {
+              "keyword": "preset",
+              "anchor": "preset",
+              "href": "/docs/reference/builtins/soundfonts#preset"
+            },
+            {
+              "keyword": "voice",
+              "anchor": "voice",
+              "href": "/docs/reference/builtins/soundfonts#voice"
+            },
+            {
+              "keyword": "polyphonic",
+              "anchor": "polyphonic",
+              "href": "/docs/reference/builtins/soundfonts#polyphonic"
+            }
+          ]
+        },
+        {
+          "slug": "samples-loading",
+          "title": "Samples Loading",
+          "description": "How user-supplied audio reaches the sampler at runtime. The samples() directive declares a bank URI to fetch before the program runs; the IDE also accepts dr…",
+          "url": "/docs/reference/builtins/samples-loading",
+          "icon": "FolderOpen",
+          "chips": [
+            {
+              "keyword": "samples",
+              "anchor": "samples",
+              "href": "/docs/reference/builtins/samples-loading#samples"
+            },
+            {
+              "keyword": "bank",
+              "anchor": "bank",
+              "href": "/docs/reference/builtins/samples-loading#bank"
+            },
+            {
+              "keyword": "github",
+              "anchor": "github",
+              "href": "/docs/reference/builtins/samples-loading#github"
+            },
+            {
+              "keyword": "http",
+              "anchor": "http",
+              "href": "/docs/reference/builtins/samples-loading#http"
+            },
+            {
+              "keyword": "url",
+              "anchor": "url",
+              "href": "/docs/reference/builtins/samples-loading#url"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "effects",
+      "heading": "Effects",
+      "cards": [
+        {
+          "slug": "filters",
+          "title": "Filters",
+          "description": "Filters shape the frequency content of signals by attenuating or boosting certain frequencies.",
+          "url": "/docs/reference/builtins/filters",
+          "icon": "Sliders",
+          "chips": [
+            {
+              "keyword": "lp",
+              "anchor": "lp",
+              "href": "/docs/reference/builtins/filters#lp"
+            },
+            {
+              "keyword": "hp",
+              "anchor": "hp",
+              "href": "/docs/reference/builtins/filters#hp"
+            },
+            {
+              "keyword": "bp",
+              "anchor": "bp",
+              "href": "/docs/reference/builtins/filters#bp"
+            },
+            {
+              "keyword": "moog",
+              "anchor": "moog",
+              "href": "/docs/reference/builtins/filters#moog"
+            }
+          ]
+        },
+        {
+          "slug": "envelopes",
+          "title": "Envelopes",
+          "description": "Envelopes shape the amplitude or other parameters of a sound over time. They respond to gates (sustained signals) or triggers (momentary pulses).",
+          "url": "/docs/reference/builtins/envelopes",
+          "icon": "Activity",
+          "chips": [
+            {
+              "keyword": "adsr",
+              "anchor": "adsr",
+              "href": "/docs/reference/builtins/envelopes#adsr"
+            },
+            {
+              "keyword": "ar",
+              "anchor": "ar",
+              "href": "/docs/reference/builtins/envelopes#ar"
+            }
+          ]
+        },
+        {
+          "slug": "delays",
+          "title": "Delays",
+          "description": "Delay effects create copies of a signal offset in time for echoes, rhythmic effects, and spatial depth.",
+          "url": "/docs/reference/builtins/delays",
+          "icon": "Repeat2",
+          "chips": [
+            {
+              "keyword": "delay",
+              "anchor": "delay",
+              "href": "/docs/reference/builtins/delays#delay"
+            },
+            {
+              "keyword": "delay_ms",
+              "anchor": "delay_ms",
+              "href": "/docs/reference/builtins/delays#delay_ms"
+            },
+            {
+              "keyword": "delay_smp",
+              "anchor": "delay_smp",
+              "href": "/docs/reference/builtins/delays#delay_smp"
+            },
+            {
+              "keyword": "tap_delay",
+              "anchor": "tap_delay",
+              "href": "/docs/reference/builtins/delays#tap_delay"
+            },
+            {
+              "keyword": "tap_delay_ms",
+              "anchor": "tap_delay_ms",
+              "href": "/docs/reference/builtins/delays#tap_delay_ms"
+            }
+          ]
+        },
+        {
+          "slug": "reverbs",
+          "title": "Reverbs",
+          "description": "Reverbs simulate acoustic spaces by generating many delayed, filtered reflections. Each algorithm has its own character.",
+          "url": "/docs/reference/builtins/reverbs",
+          "icon": "Wind",
+          "chips": [
+            {
+              "keyword": "freeverb",
+              "anchor": "freeverb",
+              "href": "/docs/reference/builtins/reverbs#freeverb"
+            },
+            {
+              "keyword": "dattorro",
+              "anchor": "dattorro",
+              "href": "/docs/reference/builtins/reverbs#dattorro"
+            },
+            {
+              "keyword": "fdn",
+              "anchor": "fdn",
+              "href": "/docs/reference/builtins/reverbs#fdn"
+            }
+          ]
+        },
+        {
+          "slug": "modulation",
+          "title": "Modulation Effects",
+          "description": "Modulation effects use time-varying delays to add movement and spatial width to sounds.",
+          "url": "/docs/reference/builtins/modulation",
+          "icon": "Wand2",
+          "chips": [
+            {
+              "keyword": "chorus",
+              "anchor": "chorus",
+              "href": "/docs/reference/builtins/modulation#chorus"
+            },
+            {
+              "keyword": "flanger",
+              "anchor": "flanger",
+              "href": "/docs/reference/builtins/modulation#flanger"
+            },
+            {
+              "keyword": "phaser",
+              "anchor": "phaser",
+              "href": "/docs/reference/builtins/modulation#phaser"
+            },
+            {
+              "keyword": "comb",
+              "anchor": "comb",
+              "href": "/docs/reference/builtins/modulation#comb"
+            }
+          ]
+        },
+        {
+          "slug": "distortion",
+          "title": "Distortion",
+          "description": "Distortion effects add harmonic content by clipping, saturating, or otherwise mangling signals.",
+          "url": "/docs/reference/builtins/distortion",
+          "icon": "Zap",
+          "chips": [
+            {
+              "keyword": "saturate",
+              "anchor": "saturate",
+              "href": "/docs/reference/builtins/distortion#saturate"
+            },
+            {
+              "keyword": "softclip",
+              "anchor": "softclip",
+              "href": "/docs/reference/builtins/distortion#softclip"
+            },
+            {
+              "keyword": "bitcrush",
+              "anchor": "bitcrush",
+              "href": "/docs/reference/builtins/distortion#bitcrush"
+            },
+            {
+              "keyword": "fold",
+              "anchor": "fold",
+              "href": "/docs/reference/builtins/distortion#fold"
+            },
+            {
+              "keyword": "tube",
+              "anchor": "tube",
+              "href": "/docs/reference/builtins/distortion#tube"
+            }
+          ]
+        },
+        {
+          "slug": "dynamics",
+          "title": "Dynamics",
+          "description": "Dynamics processors control the volume envelope of signals, reducing dynamic range or removing unwanted quiet sections.",
+          "url": "/docs/reference/builtins/dynamics",
+          "icon": "Gauge",
+          "chips": [
+            {
+              "keyword": "comp",
+              "anchor": "comp",
+              "href": "/docs/reference/builtins/dynamics#comp"
+            },
+            {
+              "keyword": "limiter",
+              "anchor": "limiter",
+              "href": "/docs/reference/builtins/dynamics#limiter"
+            },
+            {
+              "keyword": "gate",
+              "anchor": "gate",
+              "href": "/docs/reference/builtins/dynamics#gate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sequencing",
+      "heading": "Sequencing",
+      "cards": [
+        {
+          "slug": "basics",
+          "title": "Mini-Notation Basics",
+          "description": "Mini-notation is a compact syntax for describing musical patterns, inspired by TidalCycles and Strudel.",
+          "url": "/docs/reference/mini-notation/basics",
+          "icon": "Music",
+          "chips": [
+            {
+              "keyword": "alternation",
+              "anchor": "alternation",
+              "href": "/docs/reference/mini-notation/basics#alternation"
+            }
+          ]
+        },
+        {
+          "slug": "microtonal",
+          "title": "Microtonal Notation",
+          "description": "Akkado supports microtonal pitch notation through micro-step operators (^, v, +) and the tune() function, which selects how those operators map to frequency.",
+          "url": "/docs/reference/mini-notation/microtonal",
+          "icon": "KeyRound",
+          "chips": []
+        },
+        {
+          "slug": "chords",
+          "title": "Chords",
+          "description": "Two paths to chordal patterns: the chord() function with chord-symbol literals (Am7, Cmaj7), and inline chord brackets in pat() strings ([c4 e4 g4]). For voi…",
+          "url": "/docs/reference/mini-notation/chords",
+          "icon": "Music2",
+          "chips": [
+            {
+              "keyword": "chord",
+              "anchor": "chord",
+              "href": "/docs/reference/mini-notation/chords#chord"
+            },
+            {
+              "keyword": "voicing",
+              "anchor": "voicing",
+              "href": "/docs/reference/mini-notation/chords#voicing"
+            },
+            {
+              "keyword": "anchor",
+              "anchor": "anchor",
+              "href": "/docs/reference/mini-notation/chords#anchor"
+            },
+            {
+              "keyword": "mode",
+              "anchor": "mode",
+              "href": "/docs/reference/mini-notation/chords#mode"
+            },
+            {
+              "keyword": "addVoicings",
+              "anchor": "addvoicings",
+              "href": "/docs/reference/mini-notation/chords#addvoicings"
+            }
+          ]
+        },
+        {
+          "slug": "sequencing",
+          "title": "Sequencing & Timing",
+          "description": "Timing and sequencing functions create rhythmic patterns, triggers, and automation curves synchronized to the global clock.",
+          "url": "/docs/reference/builtins/sequencing",
+          "icon": "ListMusic",
+          "chips": [
+            {
+              "keyword": "lfo",
+              "anchor": "lfo",
+              "href": "/docs/reference/builtins/sequencing#lfo"
+            },
+            {
+              "keyword": "trigger",
+              "anchor": "trigger",
+              "href": "/docs/reference/builtins/sequencing#trigger"
+            },
+            {
+              "keyword": "euclid",
+              "anchor": "euclid",
+              "href": "/docs/reference/builtins/sequencing#euclid"
+            },
+            {
+              "keyword": "timeline",
+              "anchor": "timeline",
+              "href": "/docs/reference/builtins/sequencing#timeline"
+            },
+            {
+              "keyword": "clock",
+              "anchor": "clock",
+              "href": "/docs/reference/builtins/sequencing#clock"
+            }
+          ]
+        },
+        {
+          "slug": "polyphony",
+          "title": "Polyphony",
+          "description": "Voice allocation for patterns. poly() runs an instrument function per voice and sums the outputs. mono() and legato() are single-voice variants with differen…",
+          "url": "/docs/reference/builtins/polyphony",
+          "icon": "Layers",
+          "chips": [
+            {
+              "keyword": "poly",
+              "anchor": "poly",
+              "href": "/docs/reference/builtins/polyphony#poly"
+            },
+            {
+              "keyword": "mono",
+              "anchor": "mono",
+              "href": "/docs/reference/builtins/polyphony#mono"
+            },
+            {
+              "keyword": "legato",
+              "anchor": "legato",
+              "href": "/docs/reference/builtins/polyphony#legato"
+            },
+            {
+              "keyword": "spread",
+              "anchor": "spread",
+              "href": "/docs/reference/builtins/polyphony#spread"
+            },
+            {
+              "keyword": "voice",
+              "anchor": "voice",
+              "href": "/docs/reference/builtins/polyphony#voice"
+            }
+          ]
+        },
+        {
+          "slug": "timelines",
+          "title": "Timelines",
+          "description": "Breakpoint automation envelopes synced to the clock. Use timeline() to define smooth parameter curves with arbitrary shapes — slower than an lfo(), more expr…",
+          "url": "/docs/reference/builtins/timelines",
+          "icon": "Clock",
+          "chips": [
+            {
+              "keyword": "timeline",
+              "anchor": "timeline",
+              "href": "/docs/reference/builtins/timelines#timeline"
+            },
+            {
+              "keyword": "breakpoint",
+              "anchor": "breakpoint",
+              "href": "/docs/reference/builtins/timelines#breakpoint"
+            },
+            {
+              "keyword": "automation",
+              "anchor": "automation",
+              "href": "/docs/reference/builtins/timelines#automation"
+            },
+            {
+              "keyword": "curve",
+              "anchor": "curve",
+              "href": "/docs/reference/builtins/timelines#curve"
+            },
+            {
+              "keyword": "scheduled",
+              "anchor": "scheduled",
+              "href": "/docs/reference/builtins/timelines#scheduled"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visualizations",
+      "heading": "Visualizations",
+      "cards": [
+        {
+          "slug": "oscilloscope",
+          "title": "Oscilloscope",
+          "description": "A time-domain visualizer that draws the signal as a waveform with trigger stabilization. Inserted as a pass-through node in the signal chain — the audio pass…",
+          "url": "/docs/reference/builtins/oscilloscope",
+          "icon": "LineChart",
+          "chips": [
+            {
+              "keyword": "oscilloscope",
+              "anchor": "oscilloscope",
+              "href": "/docs/reference/builtins/oscilloscope#oscilloscope"
+            },
+            {
+              "keyword": "triggerLevel",
+              "anchor": "triggerlevel",
+              "href": "/docs/reference/builtins/oscilloscope#triggerlevel"
+            },
+            {
+              "keyword": "triggerEdge",
+              "anchor": "triggeredge",
+              "href": "/docs/reference/builtins/oscilloscope#triggeredge"
+            },
+            {
+              "keyword": "rising",
+              "anchor": "rising",
+              "href": "/docs/reference/builtins/oscilloscope#rising"
+            },
+            {
+              "keyword": "falling",
+              "anchor": "falling",
+              "href": "/docs/reference/builtins/oscilloscope#falling"
+            }
+          ]
+        },
+        {
+          "slug": "waveform",
+          "title": "Waveform",
+          "description": "A time-domain envelope visualizer that draws the min/max amplitude of the signal over time. Inserted as a pass-through node in the signal chain.",
+          "url": "/docs/reference/builtins/waveform",
+          "icon": "AudioWaveform",
+          "chips": [
+            {
+              "keyword": "waveform",
+              "anchor": "waveform",
+              "href": "/docs/reference/builtins/waveform#waveform"
+            },
+            {
+              "keyword": "scale",
+              "anchor": "scale",
+              "href": "/docs/reference/builtins/waveform#scale"
+            },
+            {
+              "keyword": "filled",
+              "anchor": "filled",
+              "href": "/docs/reference/builtins/waveform#filled"
+            }
+          ]
+        },
+        {
+          "slug": "spectrum",
+          "title": "Spectrum Analyzer",
+          "description": "A frequency-domain visualizer using FFT analysis. Inserted as a pass-through node in the signal chain.",
+          "url": "/docs/reference/builtins/spectrum",
+          "icon": "BarChart",
+          "chips": [
+            {
+              "keyword": "spectrum",
+              "anchor": "spectrum",
+              "href": "/docs/reference/builtins/spectrum#spectrum"
+            },
+            {
+              "keyword": "fft",
+              "anchor": "fft",
+              "href": "/docs/reference/builtins/spectrum#fft"
+            },
+            {
+              "keyword": "logScale",
+              "anchor": "logscale",
+              "href": "/docs/reference/builtins/spectrum#logscale"
+            },
+            {
+              "keyword": "minDb",
+              "anchor": "mindb",
+              "href": "/docs/reference/builtins/spectrum#mindb"
+            },
+            {
+              "keyword": "maxDb",
+              "anchor": "maxdb",
+              "href": "/docs/reference/builtins/spectrum#maxdb"
+            }
+          ]
+        },
+        {
+          "slug": "waterfall",
+          "title": "Waterfall",
+          "description": "A scrolling spectrogram visualizer: time on one axis, frequency on the other, color for amplitude. Inserted as a pass-through node in the signal chain.",
+          "url": "/docs/reference/builtins/waterfall",
+          "icon": "AreaChart",
+          "chips": [
+            {
+              "keyword": "waterfall",
+              "anchor": "waterfall",
+              "href": "/docs/reference/builtins/waterfall#waterfall"
+            },
+            {
+              "keyword": "gradient",
+              "anchor": "gradient",
+              "href": "/docs/reference/builtins/waterfall#gradient"
+            },
+            {
+              "keyword": "magma",
+              "anchor": "magma",
+              "href": "/docs/reference/builtins/waterfall#magma"
+            },
+            {
+              "keyword": "viridis",
+              "anchor": "viridis",
+              "href": "/docs/reference/builtins/waterfall#viridis"
+            },
+            {
+              "keyword": "inferno",
+              "anchor": "inferno",
+              "href": "/docs/reference/builtins/waterfall#inferno"
+            }
+          ]
+        },
+        {
+          "slug": "pianoroll",
+          "title": "Piano Roll",
+          "description": "A pattern-event visualizer that draws notes as rectangles on a pitch-time grid. Inserted as a pass-through node in the signal chain.",
+          "url": "/docs/reference/builtins/pianoroll",
+          "icon": "Grid3x3",
+          "chips": [
+            {
+              "keyword": "pianoroll",
+              "anchor": "pianoroll",
+              "href": "/docs/reference/builtins/pianoroll#pianoroll"
+            },
+            {
+              "keyword": "beats",
+              "anchor": "beats",
+              "href": "/docs/reference/builtins/pianoroll#beats"
+            },
+            {
+              "keyword": "showGrid",
+              "anchor": "showgrid",
+              "href": "/docs/reference/builtins/pianoroll#showgrid"
+            },
+            {
+              "keyword": "scale",
+              "anchor": "scale",
+              "href": "/docs/reference/builtins/pianoroll#scale"
+            },
+            {
+              "keyword": "chromatic",
+              "anchor": "chromatic",
+              "href": "/docs/reference/builtins/pianoroll#chromatic"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "language",
+      "heading": "Language",
+      "cards": [
+        {
+          "slug": "pipes",
+          "title": "Pipes & Holes",
+          "description": "The pipe operator (|>) and hole (%) define Akkado's signal flow model.",
+          "url": "/docs/reference/language/pipes",
+          "icon": "Plug",
+          "chips": []
+        },
+        {
+          "slug": "variables",
+          "title": "Variables & Assignment",
+          "description": "Variables store values for reuse throughout your patch.",
+          "url": "/docs/reference/language/variables",
+          "icon": "Variable",
+          "chips": [
+            {
+              "keyword": "scope",
+              "anchor": "scope",
+              "href": "/docs/reference/language/variables#scope"
+            }
+          ]
+        },
+        {
+          "slug": "operators",
+          "title": "Operators",
+          "description": "Akkado uses operators for arithmetic, comparison, logic, and signal flow.",
+          "url": "/docs/reference/language/operators",
+          "icon": "Calculator",
+          "chips": []
+        },
+        {
+          "slug": "closures",
+          "title": "Closures",
+          "description": "Closures are anonymous functions that capture their environment. They connect patterns to synthesis.",
+          "url": "/docs/reference/language/closures",
+          "icon": "Parentheses",
+          "chips": []
+        },
+        {
+          "slug": "conditionals",
+          "title": "Conditionals & Logic",
+          "description": "Signal-rate decision-making: compare signals, combine boolean signals with AND/OR/NOT, and pick between two signals based on a condition. Every operation run…",
+          "url": "/docs/reference/language/conditionals",
+          "icon": "GitBranch",
+          "chips": [
+            {
+              "keyword": "select",
+              "anchor": "select",
+              "href": "/docs/reference/language/conditionals#select"
+            },
+            {
+              "keyword": "gt",
+              "anchor": "gt",
+              "href": "/docs/reference/language/conditionals#gt"
+            },
+            {
+              "keyword": "lt",
+              "anchor": "lt",
+              "href": "/docs/reference/language/conditionals#lt"
+            },
+            {
+              "keyword": "gte",
+              "anchor": "gte",
+              "href": "/docs/reference/language/conditionals#gte"
+            },
+            {
+              "keyword": "lte",
+              "anchor": "lte",
+              "href": "/docs/reference/language/conditionals#lte"
+            }
+          ]
+        },
+        {
+          "slug": "arrays",
+          "title": "Arrays",
+          "description": "Arrays are ordered, fixed-size collections of values. They are the primary way to express parallel signal flows in Akkado: every element of an array becomes…",
+          "url": "/docs/reference/language/arrays",
+          "icon": "Brackets",
+          "chips": [
+            {
+              "keyword": "indexing",
+              "anchor": "indexing",
+              "href": "/docs/reference/language/arrays#indexing"
+            },
+            {
+              "keyword": "len",
+              "anchor": "len",
+              "href": "/docs/reference/language/arrays#len"
+            },
+            {
+              "keyword": "map",
+              "anchor": "map",
+              "href": "/docs/reference/language/arrays#map"
+            },
+            {
+              "keyword": "reduce",
+              "anchor": "reduce",
+              "href": "/docs/reference/language/arrays#reduce"
+            },
+            {
+              "keyword": "zipWith",
+              "anchor": "zipwith",
+              "href": "/docs/reference/language/arrays#zipwith"
+            }
+          ]
+        },
+        {
+          "slug": "methods",
+          "title": "Method Calls (UFCS)",
+          "description": "Akkado supports method-call syntax for any callable in scope, built-in or user-defined. The form",
+          "url": "/docs/reference/language/methods",
+          "icon": "Workflow",
+          "chips": []
+        }
+      ]
+    },
+    {
+      "id": "tools",
+      "heading": "Tools",
+      "cards": [
+        {
+          "slug": "math",
+          "title": "Math Functions",
+          "description": "Mathematical operations for signal processing and control logic.",
+          "url": "/docs/reference/builtins/math",
+          "icon": "Sigma",
+          "chips": [
+            {
+              "keyword": "add",
+              "anchor": "add",
+              "href": "/docs/reference/builtins/math#add"
+            },
+            {
+              "keyword": "sub",
+              "anchor": "sub",
+              "href": "/docs/reference/builtins/math#sub"
+            },
+            {
+              "keyword": "mul",
+              "anchor": "mul",
+              "href": "/docs/reference/builtins/math#mul"
+            },
+            {
+              "keyword": "div",
+              "anchor": "div",
+              "href": "/docs/reference/builtins/math#div"
+            },
+            {
+              "keyword": "pow",
+              "anchor": "pow",
+              "href": "/docs/reference/builtins/math#pow"
+            }
+          ]
+        },
+        {
+          "slug": "state",
+          "title": "State Cells",
+          "description": "State cells let you persist a single floating-point value across audio blocks from inside a closure. They are the building block for writing your own statefu…",
+          "url": "/docs/reference/builtins/state",
+          "icon": "Database",
+          "chips": [
+            {
+              "keyword": "state",
+              "anchor": "state",
+              "href": "/docs/reference/builtins/state#state"
+            },
+            {
+              "keyword": "get",
+              "anchor": "get",
+              "href": "/docs/reference/builtins/state#get"
+            },
+            {
+              "keyword": "set",
+              "anchor": "set",
+              "href": "/docs/reference/builtins/state#set"
+            }
+          ]
+        },
+        {
+          "slug": "utility",
+          "title": "Utility",
+          "description": "Utility functions for common audio tasks like output, MIDI conversion, and signal processing helpers.",
+          "url": "/docs/reference/builtins/utility",
+          "icon": "Wrench",
+          "chips": [
+            {
+              "keyword": "out",
+              "anchor": "out",
+              "href": "/docs/reference/builtins/utility#out"
+            },
+            {
+              "keyword": "mtof",
+              "anchor": "mtof",
+              "href": "/docs/reference/builtins/utility#mtof"
+            },
+            {
+              "keyword": "dc",
+              "anchor": "dc",
+              "href": "/docs/reference/builtins/utility#dc"
+            },
+            {
+              "keyword": "slew",
+              "anchor": "slew",
+              "href": "/docs/reference/builtins/utility#slew"
+            },
+            {
+              "keyword": "sah",
+              "anchor": "sah",
+              "href": "/docs/reference/builtins/utility#sah"
+            }
+          ]
+        },
+        {
+          "slug": "edge",
+          "title": "Edge Primitives",
+          "description": "Edge primitives detect transitions in trigger / control signals and accumulate counts. All four variants share one backing opcode (EDGE_OP) for cache localit…",
+          "url": "/docs/reference/builtins/edge",
+          "icon": "Triangle",
+          "chips": [
+            {
+              "keyword": "gateup",
+              "anchor": "gateup",
+              "href": "/docs/reference/builtins/edge#gateup"
+            },
+            {
+              "keyword": "gatedown",
+              "anchor": "gatedown",
+              "href": "/docs/reference/builtins/edge#gatedown"
+            },
+            {
+              "keyword": "counter",
+              "anchor": "counter",
+              "href": "/docs/reference/builtins/edge#counter"
+            },
+            {
+              "keyword": "sah",
+              "anchor": "sah",
+              "href": "/docs/reference/builtins/edge#sah"
+            }
+          ]
+        },
+        {
+          "slug": "stereo",
+          "title": "Stereo",
+          "description": "Stereo signal operations. Akkado tracks channel count (Mono vs Stereo) on every",
+          "url": "/docs/reference/builtins/stereo",
+          "icon": "Headphones",
+          "chips": [
+            {
+              "keyword": "stereo",
+              "anchor": "stereo",
+              "href": "/docs/reference/builtins/stereo#stereo"
+            },
+            {
+              "keyword": "mono",
+              "anchor": "mono",
+              "href": "/docs/reference/builtins/stereo#mono"
+            },
+            {
+              "keyword": "pan",
+              "anchor": "pan",
+              "href": "/docs/reference/builtins/stereo#pan"
+            },
+            {
+              "keyword": "width",
+              "anchor": "width",
+              "href": "/docs/reference/builtins/stereo#width"
+            },
+            {
+              "keyword": "pingpong",
+              "anchor": "pingpong",
+              "href": "/docs/reference/builtins/stereo#pingpong"
+            }
+          ]
+        },
+        {
+          "slug": "audio-input",
+          "title": "Audio Input",
+          "description": "The in() builtin exposes external audio as a signal source (microphone, tab/system audio, or an uploaded file) so any Cedar effect can process it. The host p…",
+          "url": "/docs/reference/builtins/audio-input",
+          "icon": "Mic",
+          "chips": [
+            {
+              "keyword": "in",
+              "anchor": "in",
+              "href": "/docs/reference/builtins/audio-input#in"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
