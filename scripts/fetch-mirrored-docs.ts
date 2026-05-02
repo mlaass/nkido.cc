@@ -1,12 +1,14 @@
 #!/usr/bin/env bun
-import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { mkdirSync, writeFileSync, readFileSync, existsSync, statSync } from 'node:fs';
+import { dirname, resolve as resolveFsPath, join as joinFsPath } from 'node:path';
 import matter from 'gray-matter';
 import { resolve as resolvePath, dirname as dirnamePath } from 'node:path/posix';
 import GithubSlugger from 'github-slugger';
 import {
 	MIRROR_INDEX,
 	MIRROR_BASE_URL,
+	MIRROR_LOCAL_PATH,
+	MIRROR_NO_LOCAL,
 	routePath,
 	urlPath,
 	fallbackPath,
@@ -24,15 +26,37 @@ const UPSTREAM_TO_URL: Record<string, string> = Object.fromEntries(
 	MIRROR_INDEX.map((e) => [e.upstream, urlPath(e)])
 );
 
+type MirrorSource = 'local' | 'live' | 'fallback';
+
 type MirrorResult = {
 	entry: MirrorEntry;
-	source: 'live' | 'fallback';
+	source: MirrorSource;
 	title: string;
 	description: string;
 	order: number;
 	keywords: string[];
 	headings: string[];
 };
+
+const localRoot = resolveFsPath(MIRROR_LOCAL_PATH);
+const useLocal = (() => {
+	if (MIRROR_NO_LOCAL) return false;
+	try {
+		return statSync(localRoot).isDirectory();
+	} catch {
+		return false;
+	}
+})();
+
+function loadLocalUpstream(entry: MirrorEntry): string | null {
+	const path = joinFsPath(localRoot, entry.upstream);
+	if (!existsSync(path)) return null;
+	try {
+		return readFileSync(path, 'utf8');
+	} catch {
+		return null;
+	}
+}
 
 const REQUIRED_FRONTMATTER = ['title'];
 const token = process.env.GITHUB_TOKEN;
@@ -239,7 +263,7 @@ function validateFrontmatter(entry: MirrorEntry, data: Record<string, unknown>):
 	}
 }
 
-function writeEntry(entry: MirrorEntry, raw: string, source: 'live' | 'fallback'): MirrorResult {
+function writeEntry(entry: MirrorEntry, raw: string, source: MirrorSource): MirrorResult {
 	const { data, content: body } = matter(raw);
 	validateFrontmatter(entry, data);
 
@@ -305,7 +329,7 @@ function writeEntry(entry: MirrorEntry, raw: string, source: 'live' | 'fallback'
 }
 
 type Outcome =
-	| { kind: 'ok'; result: MirrorResult; source: 'live' | 'fallback' }
+	| { kind: 'ok'; result: MirrorResult; source: MirrorSource }
 	| { kind: 'missing'; entry: MirrorEntry }
 	| { kind: 'error'; entry: MirrorEntry; error: Error };
 
@@ -314,18 +338,27 @@ async function main() {
 	const fetchWarnings: string[] = [];
 	let completed = 0;
 
-	process.stderr.write(`Mirroring ${total} docs from upstream...\n`);
+	const sourceLabel = useLocal ? `local clone at ${localRoot}` : 'upstream';
+	process.stderr.write(`Mirroring ${total} docs from ${sourceLabel}...\n`);
 	renderProgress(0, total);
 
 	const outcomes = await runWithConcurrency<MirrorEntry, Outcome>(
 		MIRROR_INDEX,
 		FETCH_CONCURRENCY,
 		async (entry) => {
-			let raw = await fetchUpstream(entry, fetchWarnings);
-			let source: 'live' | 'fallback' = 'live';
+			let raw: string | null = null;
+			let source: MirrorSource = 'fallback';
+			if (useLocal) {
+				raw = loadLocalUpstream(entry);
+				if (raw !== null) source = 'local';
+			}
+			if (raw === null) {
+				raw = await fetchUpstream(entry, fetchWarnings);
+				if (raw !== null) source = 'live';
+			}
 			if (raw === null) {
 				raw = loadFallback(entry);
-				source = 'fallback';
+				if (raw !== null) source = 'fallback';
 			}
 			let outcome: Outcome;
 			if (raw === null) {
@@ -350,26 +383,28 @@ async function main() {
 	for (const w of fetchWarnings) console.warn(w);
 
 	const results: MirrorResult[] = [];
+	let localCount = 0;
 	let liveCount = 0;
 	let fallbackCount = 0;
 	let missingCount = 0;
 	for (const o of outcomes) {
 		if (o.kind === 'missing') {
 			missingCount++;
-			console.error(`✗ ${o.entry.upstream}: no live source AND no fallback`);
+			console.error(`✗ ${o.entry.upstream}: no local clone, no live source, no fallback`);
 		} else if (o.kind === 'error') {
 			console.error(`✗ ${o.entry.upstream}: ${o.error.message}`);
 			process.exit(1);
 		} else {
 			results.push(o.result);
-			if (o.source === 'live') liveCount++;
+			if (o.source === 'local') localCount++;
+			else if (o.source === 'live') liveCount++;
 			else fallbackCount++;
 		}
 	}
 
 	if (missingCount > 0) {
 		if (isCI) {
-			console.error(`\n✗ ${missingCount} entries missing both live source and fallback in CI. Aborting.`);
+			console.error(`\n✗ ${missingCount} entries missing in CI. Aborting.`);
 			process.exit(1);
 		}
 		console.warn(`⚠ ${missingCount} entries missing — continuing in local dev`);
@@ -377,9 +412,12 @@ async function main() {
 
 	writeManifest(results);
 
-	console.log(
-		`✓ mirror: ${liveCount}/${total} live, ${fallbackCount} fallback, ${missingCount} missing`
-	);
+	const parts: string[] = [];
+	if (localCount) parts.push(`${localCount} local`);
+	if (liveCount) parts.push(`${liveCount} live`);
+	if (fallbackCount) parts.push(`${fallbackCount} fallback`);
+	if (missingCount) parts.push(`${missingCount} missing`);
+	console.log(`✓ mirror: ${parts.join(', ')}`);
 
 	// Keep overview.json in sync with the manifest. Warnings go to stderr; the
 	// build is never blocked by chip-resolution or missing-slug issues.

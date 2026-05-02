@@ -74,6 +74,15 @@ export const MIRROR_INDEX: MirrorEntry[] = [
 export const MIRROR_BASE_URL =
 	process.env.MIRROR_BASE_URL ?? 'https://raw.githubusercontent.com/mlaass/nkido/master';
 
+/**
+ * Path to a local clone of the upstream nkido repo. When this directory exists
+ * the fetch script reads docs from it directly instead of going to GitHub —
+ * faster, and picks up uncommitted edits during local dev. Set MIRROR_NO_LOCAL=1
+ * to force the GitHub path (e.g. to test what CI sees).
+ */
+export const MIRROR_LOCAL_PATH = process.env.MIRROR_LOCAL_PATH ?? '../nkido';
+export const MIRROR_NO_LOCAL = process.env.MIRROR_NO_LOCAL === '1';
+
 export function routePath(entry: MirrorEntry): string {
 	if (entry.subcategory) {
 		return `src/routes/docs/${entry.category}/${entry.subcategory}/${entry.slug}`;
