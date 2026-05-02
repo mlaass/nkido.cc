@@ -1,6 +1,6 @@
 # PRD: Landing Page Runtime Overview Grid
 
-> **Status: NOT STARTED** — Add a sectioned "What's in the box" grid as the final section of the landing page (after `RunsEverywhere`). Surfaces ~35 cards across 6 groups (Instruments, Effects, Sequencing, Visualizations, Language, Tools), each linking to mirrored docs. Generated from `docs-manifest.json` with hardcoded group/icon rules. Depends on a prior phase that authors 11 new upstream docs pages and expands the docs mirror.
+> **Status: NOT STARTED** — Add a sectioned "What's in the box" grid as the final section of the landing page (after `RunsEverywhere`). Surfaces 35 cards across 6 groups (Instruments, Effects, Sequencing, Visualizations, Language, Tools), each linking to mirrored docs. Generated from `docs-manifest.json` with hardcoded group/icon rules. Depends on a prior phase that authors 11 new upstream docs pages and expands the docs mirror.
 
 ---
 
@@ -10,7 +10,7 @@ The landing page currently ends with `RunsEverywhere` — a "runs on browser/nat
 
 This PRD proposes a new `OverviewGrid` section appended after `RunsEverywhere` that:
 
-- Lists ~35 cards organized into 6 named groups: **Instruments**, **Effects**, **Sequencing**, **Visualizations**, **Language**, **Tools**.
+- Lists 35 cards organized into 6 named groups: **Instruments**, **Effects**, **Sequencing**, **Visualizations**, **Language**, **Tools**.
 - Renders each card with icon + title + 1-line description + up to 5 tag chips. Card title links to the top of the corresponding mirrored doc; each tag chip deep-links to its anchor inside that doc.
 - Is **generated entirely from `src/lib/data/docs-manifest.json`** by a build-time script with hardcoded group rules and icon mappings — no hand-curated card list to drift out of sync.
 - Ships with a "View full reference →" footer CTA linking to `/docs/reference`.
@@ -18,10 +18,10 @@ This PRD proposes a new `OverviewGrid` section appended after `RunsEverywhere` t
 Key decisions made during planning:
 
 - **Source of truth: the existing mirrored manifest.** The manifest already includes title, description, keywords, slug, url, and order per page. Group assignment and icon are hardcoded in the build script keyed by `(category, slug)`.
-- **Cross-repo dependency: 11 new upstream docs pages must land first.** The grid needs cards for samplers, SoundFont, FM synthesis, polyphony, timelines, samples-loading, chords, and the 4 visualization split-outs. Phase 1 of this PRD writes those upstream and removes/replaces `visualizations.md`. Phase 2 expands the website's `MIRROR_INDEX` to pick them up plus 6 existing-but-unmirrored docs (`edge`, `state`, `audio-input`, `conditionals`, `methods`, `arrays`). Phase 3 builds the website grid.
+- **Cross-repo dependency: 11 new upstream docs pages must land first.** The grid needs cards for samplers, SoundFont, FM synthesis, polyphony, timelines, samples-loading, chords, and the 4 visualization split-outs. Phase 1 of this PRD writes those upstream alongside `visualizations.md`, which stays as a section overview. Phase 2 expands the website's `MIRROR_INDEX` to pick them up plus 6 existing-but-unmirrored docs (`edge`, `state`, `audio-input`, `conditionals`, `methods`, `arrays`). Phase 3 builds the website grid.
 - **35 cards across 6 sectioned groups.** Each group has its own header. Cards within a group are ordered by the manifest's `order` field.
 - **Tag chips link to anchors; chips with no matching heading are dropped.** A chip's keyword must match a markdown heading in the doc (case- and slug-insensitive); chips that do not resolve are silently omitted with a build warning. This is the primary build-time integrity check.
-- **Build degrades gracefully.** Cards whose slug is missing from the manifest log a warning and ship anyway with whatever data is available (placeholder description, top-of-doc link). The grid never blocks a build.
+- **Build degrades gracefully.** Cards whose slug is missing from the manifest log a warning and are silently omitted from `overview.json`; the badge count auto-tracks the actual number of resolved cards. The grid never blocks a build, and the page never ships known-broken links.
 - **Mobile is collapsible.** On `<768px`, group sections collapse closed by default; tapping a heading expands. On desktop, all sections are always open.
 - **Pagefind is not integrated.** Cards are static links; site-wide search remains via the existing global search. The grid is a navigation surface, not a search UI.
 
@@ -34,8 +34,8 @@ Key decisions made during planning:
 | Landing-page tail | Ends with `RunsEverywhere` | Adds `OverviewGrid` as the final section |
 | Capability narrative | `FeatureGrid` (9 cards): "95+ DSP opcodes", "Hot-swap preserved", etc. | Unchanged. New grid sits below `RunsEverywhere`, separate from `FeatureGrid` |
 | Doc discovery | Header nav → `/docs`; in-doc Pagefind search | Header nav + `OverviewGrid` cards on the landing page deep-link directly into the relevant doc/section |
-| Mirrored docs | 24 entries in `MIRROR_INDEX` (13 builtins + 4 language + 2 mini-notation + 5 tutorials) | 41 entries: +6 existing-but-unmirrored (`edge`, `state`, `audio-input`, `conditionals`, `methods`, `arrays`), +11 new pages (samplers, soundfonts, polyphony, timelines, fm-synthesis, samples-loading, chords, oscilloscope, spectrum, pianoroll, waterfall). `visualizations.md` is removed (split into 4 pages). Net +17 |
-| Upstream docs | 1 single `visualizations.md`; no standalone pages for samplers, SoundFonts, FM, polyphony, timelines, sample loading, or chords | 11 new pages authored upstream; `visualizations.md` deleted in favor of 4 split pages |
+| Mirrored docs | 24 entries in `MIRROR_INDEX` (13 builtins + 4 language + 2 mini-notation + 5 tutorials) | 41 entries: +6 existing-but-unmirrored (`edge`, `state`, `audio-input`, `conditionals`, `methods`, `arrays`), +11 new pages (samplers, soundfonts, polyphony, timelines, fm-synthesis, samples-loading, chords, oscilloscope, spectrum, pianoroll, waterfall). `visualizations.md` stays as a section overview. Net +17 |
+| Upstream docs | 1 single `visualizations.md`; no standalone pages for samplers, SoundFonts, FM, polyphony, timelines, sample loading, or chords | 11 new pages authored upstream; `visualizations.md` retained as the visualizations section overview, with sub-topic detail moved into the four split pages |
 | Tag-chip → anchor linking | N/A | New convention: every grid card derives anchor links from manifest `keywords` matched against markdown headings in the source `.md` |
 
 ### 2.1 What `FeatureGrid` does (and doesn't) cover today
@@ -68,7 +68,7 @@ The grid needs no new authored data per card. Group assignment and icon come fro
 
 ### 3.1 Goals
 
-1. **Add a sectioned overview grid** to the landing page, after `RunsEverywhere`, surfacing ~35 cards across 6 named groups.
+1. **Add a sectioned overview grid** to the landing page, after `RunsEverywhere`, surfacing 35 cards across 6 named groups.
 2. **Generate the grid data from `docs-manifest.json`** with hardcoded group + icon rules — no hand-curated card list.
 3. **Author 11 new upstream docs pages** in the nkido repo so every group has real content to link to.
 4. **Expand `MIRROR_INDEX`** by 17 entries to cover the new pages plus 6 existing-but-unmirrored docs needed by the Tools and Language groups.
@@ -109,9 +109,9 @@ On mobile (<768px):
 - Card grid drops to 1 column when expanded.
 
 If the manifest is missing entries for some cards (e.g. upstream rename hasn't propagated):
-- Affected cards show with a placeholder description ("Documentation coming soon") and link to `/docs/reference/<category>/<slug>` even if that page 404s.
+- Affected cards are silently omitted from the grid; the badge count auto-decrements.
 - A warning is logged to the build output: `⚠ overview: missing manifest entry for slug 'foo'`.
-- The page still renders successfully.
+- The page still renders successfully — visitors see fewer cards rather than known-broken links.
 
 ---
 
@@ -128,6 +128,8 @@ If the manifest is missing entries for some cards (e.g. upstream rename hasn't p
 | 5 | **Language** | Akkado syntax & data structures | 7 |
 | 6 | **Tools** | Math, state, plumbing | 6 |
 | | | **Total** | **35** |
+
+**Why these 6 groups (and not the manifest's category/subcategory)?** The mirror's structure (`reference/builtins`, `reference/language`, `reference/mini-notation`, `tutorials`) is organised by *file location upstream*, not by *what the user is trying to accomplish*. Using it directly would lump filters, oscillators, samplers, math utilities, sequencers, and visualisers into one giant "builtins" group of ~25 cards, hide visualisers behind a non-obvious `builtins/` prefix, and split sequencing across `builtins/` and `mini-notation/`. The 6 groups here are intent-shaped: a visitor scanning the page can find sound sources separately from signal processors separately from how-time-works. New docs slot into the group whose intent they match, which the implementer keys into the hardcoded `GROUP_MAPPING` table — never by inferring from path.
 
 ### 5.2 Card Mapping (slug → group)
 
@@ -256,7 +258,6 @@ type OverviewCard = {
                                     //   keyword: 'moog'
                                     //   anchor: 'moog'
                                     //   href: '/docs/reference/builtins/filters#moog'
-  placeholder?: boolean;            // true if manifest entry was missing
 };
 ```
 
@@ -279,11 +280,7 @@ type OverviewCard = {
 1. Read src/lib/data/docs-manifest.json.
 2. For each (group, slug) in the hardcoded GROUP_MAPPING table:
      - Find matching manifest entry by slug + category/subcategory.
-     - If missing → emit warning, build a placeholder card:
-         { slug, title: titleCase(slug), description: 'Documentation coming soon',
-           url: derivedUrl, icon: ICON_MAP[slug] || 'BookOpen',
-           chips: [], placeholder: true }
-       Continue.
+     - If missing → emit warning, skip this slug. The card does not appear.
      - Otherwise: build the card. Resolve up to 5 chips from manifest.keywords:
          - For each keyword (in order), look up the matching heading in the source .md.
          - If found → emit chip { keyword, anchor: slugify(heading), href: `${url}#${anchor}` }.
@@ -293,7 +290,7 @@ type OverviewCard = {
 4. Write overview.json to src/lib/data/.
 ```
 
-The script is invoked from `scripts/fetch-mirrored-docs.ts` after the manifest is updated, so the two stay in sync. A separate `bun run build:overview` task is added for local iteration.
+The script is invoked from `scripts/fetch-mirrored-docs.ts` at the end of its run, after the manifest is written, so the two stay in sync without an extra prebuild step. A standalone `bun run build:overview` task is also added for local iteration when the manifest hasn't changed.
 
 ### 6.5 Heading Extraction
 
@@ -307,14 +304,27 @@ To validate chip anchors, `fetch-mirrored-docs.ts` is extended to parse markdown
 }
 ```
 
-Anchor matching is **case-insensitive, slugified**: a keyword `Lowpass` matches a heading `## Lowpass` via `slugify('Lowpass') === 'lowpass'`. The slug rules match SvelteKit's default heading-slug algorithm so that anchor URLs resolve in the rendered HTML.
+**Heading-level range is configurable** via a constant at the top of `fetch-mirrored-docs.ts`:
+
+```ts
+// Heading levels to expose as chip-resolvable anchors.
+// Start narrow; widen if too many keywords fail to resolve.
+const HEADING_LEVELS = { min: 2, max: 5 } as const; // H2–H5
+```
+
+H1 is excluded by default because the page title comes from frontmatter and is rendered separately by `DocPage`. H6 is excluded because nothing in the current manifest's `keywords` arrays matches that depth. The range can be relaxed if upstream docs introduce structures that need it.
+
+Anchor matching is **case-insensitive, slugified**: a keyword `Lowpass` matches a heading `## Lowpass` via `slugify('Lowpass') === 'lowpass'`. The slug rules match SvelteKit's default heading-slug algorithm (via `rehype-slug`, already configured in `svelte.config.js`) so that anchor URLs resolve in the rendered HTML.
 
 ### 6.6 Mobile Collapse
 
+The collapse behaviour is **CSS-driven** so SSR and hydration stay in sync without per-viewport JS state. `openGroups` tracks user-toggled state only; the desktop-vs-mobile default comes from the stylesheet.
+
 ```svelte
 <script lang="ts">
+  // Per-group open state. Initial values are all `true` (the desktop default).
+  // On mobile, CSS hides cards regardless of this value until the user taps a heading.
   let openGroups = $state<Record<string, boolean>>(
-    // open by default on desktop; closed on mobile via CSS
     Object.fromEntries(overview.map(g => [g.id, true]))
   );
 </script>
@@ -322,28 +332,28 @@ Anchor matching is **case-insensitive, slugified**: a keyword `Lowpass` matches 
 {#each overview as group}
   <section class="group" data-open={openGroups[group.id]}>
     <button type="button" class="group-heading"
+            aria-expanded={openGroups[group.id]}
             onclick={() => openGroups[group.id] = !openGroups[group.id]}>
       {group.heading}
       <Chevron />
     </button>
-    {#if openGroups[group.id]}
-      <div class="cards"> ... </div>
-    {/if}
+    <div class="cards"> ... </div>
   </section>
 {/each}
 ```
 
-CSS handles the desktop-vs-mobile default state:
-
 ```css
+/* Desktop: cards always visible. */
+.group .cards { display: grid; }
+
 @media (max-width: 768px) {
-  /* On first paint at <768px, treat all groups as closed regardless of $state */
-  .group[data-open='true'] .cards { display: none; }
-  .group.expanded .cards          { display: grid; }
+  /* Mobile: cards hidden by default, shown only when the user has opened the group. */
+  .group .cards                   { display: none; }
+  .group[data-open='true'] .cards { display: grid; }
 }
 ```
 
-The component initialises `openGroups` to all-true and uses a `mounted` effect to reset it to all-false on mobile so SSR matches client. A small `prefers-reduced-motion` check disables the chevron transition.
+The cards `<div>` is always in the SSR output (no `{#if}` wrapping it), so server-rendered HTML matches the client's first paint regardless of viewport — only the CSS visibility differs. Tapping a heading toggles `data-open`; on desktop the toggle is a no-op visually (cards stay shown) but `aria-expanded` still reflects the state for screen readers, so the button has consistent semantics across viewports. A `prefers-reduced-motion` check disables the chevron rotation transition.
 
 ---
 
@@ -363,7 +373,7 @@ The component initialises `openGroups` to all-true and uses a `mounted` effect t
 | `scripts/mirror-index.ts` | **Modified** | +17 entries (6 existing-but-unmirrored docs + 11 new docs). |
 | `scripts/fetch-mirrored-docs.ts` | **Modified** | Extract markdown headings and persist to manifest. |
 | `scripts/build-overview.ts` | **New** | Merges manifest + hardcoded group/icon rules → `overview.json`. |
-| `package.json` | **Modified** | Add `"build:overview": "bun scripts/build-overview.ts"`. Wire into `prebuild` so CI regenerates. |
+| `package.json` | **Modified** | Add `"build:overview": "bun scripts/build-overview.ts"` for local iteration. No `prebuild` change — `fetch-mirrored-docs.ts` invokes the overview builder at the end of its run, and that script is already in `prebuild`/`predev`. Add `test`/`test:watch` scripts for the new Vitest setup. |
 | `static/_mirror-fallback/web/static/docs/reference/builtins/{11 new}.md` | **New** | Fallback copies of the new upstream docs. |
 | `web/static/docs/reference/builtins/samplers.md` (nkido repo) | **New** | Documents `samp` and sampler builtins. |
 | `web/static/docs/reference/builtins/soundfonts.md` (nkido repo) | **New** | Documents `gm` SoundFont and SoundFont playback. |
@@ -375,7 +385,7 @@ The component initialises `openGroups` to all-true and uses a `mounted` effect t
 | `web/static/docs/reference/builtins/spectrum.md` (nkido repo) | **New** | Split from `visualizations.md`. |
 | `web/static/docs/reference/builtins/pianoroll.md` (nkido repo) | **New** | Split from `visualizations.md`. |
 | `web/static/docs/reference/builtins/waterfall.md` (nkido repo) | **New** | Split from `visualizations.md`. |
-| `web/static/docs/reference/builtins/visualizations.md` (nkido repo) | **Removed** | Replaced by 4 split pages. Add a stub redirect note inside the IDE if any internal link still points here. |
+| `web/static/docs/reference/builtins/visualizations.md` (nkido repo) | **Modified** | Stays as the visualizations section overview; sub-topic detail moves into the four split pages, replaced by short summaries with cross-links. |
 | `web/static/docs/reference/mini-notation/chords.md` (nkido repo) | **New** | Chord literals + voicings split from `basics.md`. |
 | `web/src/lib/docs/manifest.ts` (nkido repo) | **Modified** | Auto-regenerated by upstream's `bun run build:docs` to include new pages. |
 
@@ -396,18 +406,20 @@ No changes to:
 |------|--------|
 | `src/routes/+page.svelte` | Add `import OverviewGrid from '$lib/components/Home/OverviewGrid.svelte';` and `<OverviewGrid />` after `<RunsEverywhere />`. |
 | `src/lib/components/Home/OverviewGrid.svelte` | **New.** Reads `overview.json`, renders `<section>` per group with collapsible heading on mobile. CSS grid `grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));`. Includes the title `"What's in the box"`, intro text, count badge, and footer CTA. |
-| `src/lib/components/Home/OverviewCard.svelte` | **New.** Props: `card: OverviewCard`. Renders icon (resolved via `<svelte:component this={iconMap[card.icon]} />`), `<a>` title, description, chip list. Title has `aria-label="<title> reference"`. Each chip is `<a class="chip">`. |
-| `src/lib/data/overview.json` | **New.** Generated artifact, checked into git. Regenerated on every build via `prebuild`. |
-| `src/lib/data/docs-manifest.json` | **Modified.** Each entry gains a `headings: string[]` field listing all `##`/`###` markdown headings (slugified). |
+| `src/lib/components/Home/OverviewCard.svelte` | **New.** Props: `card: OverviewCard`. Renders icon (resolved via `<svelte:component this={iconMap[card.icon]} />`), `<a>` title, description, chip list. Title has `aria-label="<title> reference"`. Each chip is `<a class="chip">`. No placeholder/coming-soon variant — missing-manifest cards are skipped at the build step (per §10 #1). |
+| `src/lib/data/overview.json` | **New.** Generated artifact, checked into git. Rebuilt by `fetch-mirrored-docs.ts` at the end of its run (so `prebuild`/`predev` regenerate it transitively). |
+| `src/lib/data/docs-manifest.json` | **Modified.** Each entry gains a `headings: string[]` field listing slugified markdown headings within the configured level range (default H2–H5; see §6.5). |
 | `scripts/mirror-index.ts` | **Modified.** Add 17 entries. See §8.3 for the full list. |
-| `scripts/fetch-mirrored-docs.ts` | **Modified.** After fetching/loading each `.md`, parse the markdown to extract `^#{1,6} ` headings, slugify, and write to the manifest as `headings`. |
-| `scripts/build-overview.ts` | **New.** Implements the algorithm in §6.4. Hardcoded `GROUP_MAPPING` (35 rows: slug → group) and `ICON_MAP` (35 rows: slug → Lucide icon name). Logs warnings to stderr; exits 0 always. |
-| `package.json` | **Modified.** Add scripts: `"build:overview": "bun scripts/build-overview.ts"`; modify `"prebuild"` to run `bun scripts/fetch-mirrored-docs.ts && bun scripts/build-overview.ts`. |
+| `scripts/fetch-mirrored-docs.ts` | **Modified.** Two changes: (1) After fetching/loading each `.md`, parse the markdown to extract headings within `HEADING_LEVELS` (default H2–H5; see §6.5), slugify, and write to the manifest as `headings`. (2) At end of `main()`, after `writeManifest`, invoke the overview builder so the two artifacts stay in sync. |
+| `scripts/build-overview.ts` | **New.** Implements the algorithm in §6.4. Hardcoded `GROUP_MAPPING` (35 rows: slug → group) and `ICON_MAP` (35 rows: slug → Lucide icon name). Exposes a `buildOverview()` function so `fetch-mirrored-docs.ts` can call it; also runs as a CLI entrypoint when invoked directly. Logs warnings to stderr; exits 0 always. |
+| `package.json` | **Modified.** Add `"build:overview": "bun scripts/build-overview.ts"` for local iteration. **No `prebuild` change needed** — `fetch-mirrored-docs.ts` (already in `prebuild` and `predev`) invokes the overview builder at the end of its run. Also add `"test": "vitest run"` and `"test:watch": "vitest"` scripts. |
+| `vitest.config.ts` | **New.** Minimal Vitest config wiring the Svelte plugin and pointing at `**/*.test.ts` under `scripts/` and `src/`. |
+| `package.json` (devDeps) | **Modified.** Add `vitest`, `@testing-library/svelte`, `jsdom` (or `happy-dom`) as devDependencies. |
 | `static/_mirror-fallback/web/static/docs/reference/builtins/{samplers,soundfonts,polyphony,timelines,fm-synthesis,samples-loading,oscilloscope,spectrum,pianoroll,waterfall}.md` | **New.** Fallback copies committed to this repo so builds succeed without GitHub access (matches existing fallback pattern). |
 | `static/_mirror-fallback/web/static/docs/reference/builtins/{edge,state,audio-input}.md` | **New.** Fallback copies for the existing-but-newly-mirrored builtins. |
 | `static/_mirror-fallback/web/static/docs/reference/language/{conditionals,methods,arrays}.md` | **New.** Fallback copies for the existing-but-newly-mirrored language docs. |
 | `static/_mirror-fallback/web/static/docs/reference/mini-notation/chords.md` | **New.** Fallback copy. |
-| `static/_mirror-fallback/web/static/docs/reference/builtins/visualizations.md` | **Removed.** Upstream file no longer exists. |
+| `static/_mirror-fallback/web/static/docs/reference/builtins/visualizations.md` | **Stays.** Upstream file is retained (kept as the visualizations section overview); existing fallback continues to apply. |
 
 ### 8.2 nkido repo (upstream)
 
@@ -423,12 +435,12 @@ No changes to:
 | `web/static/docs/reference/builtins/spectrum.md` | **New.** Split from `visualizations.md`. Document the spectrum analyzer. |
 | `web/static/docs/reference/builtins/pianoroll.md` | **New.** Split from `visualizations.md`. Document the pianoroll visualizer for note events. |
 | `web/static/docs/reference/builtins/waterfall.md` | **New.** Split from `visualizations.md`. Document the waterfall (spectrogram) view. |
-| `web/static/docs/reference/builtins/visualizations.md` | **Removed.** All content distributed across the four split pages. |
+| `web/static/docs/reference/builtins/visualizations.md` | **Modified.** Stays as a section overview / index page. Detailed sub-topic content moves into the four split pages; `visualizations.md` keeps short summaries with cross-links. |
 | `web/static/docs/reference/mini-notation/chords.md` | **New.** Move chord literals, inline chords, and voicing transforms (`anchor`, `mode`, `voicing`, `addVoicings`) from `basics.md`/`sequencing.md` into a dedicated mini-notation page. |
 | `web/static/docs/reference/builtins/sequencing.md` | **Modified.** Remove the moved-out sections (`poly`/`mono`/`legato`/`spread` → polyphony.md, `timeline` → timelines.md, voicing transforms → mini-notation/chords.md). Add cross-links. |
 | `web/static/docs/reference/builtins/oscillators.md` | **Modified.** Remove the FM synthesis subsection (now `fm-synthesis.md`). Cross-link. |
 | `web/static/docs/reference/mini-notation/basics.md` | **Modified.** Remove chord-related sections (now `chords.md`). Cross-link. |
-| `web/src/lib/docs/manifest.ts` | **Modified.** Auto-regenerated by `bun run build:docs` to include new pages, drop `visualizations`, restructure ordering. |
+| `web/src/lib/docs/manifest.ts` | **Modified.** Auto-regenerated by `bun run build:docs` to include new pages and pick up the trimmed `visualizations.md` overview. |
 
 ### 8.3 MIRROR_INDEX additions
 
@@ -454,8 +466,9 @@ No changes to:
 { upstream: 'web/static/docs/reference/builtins/waterfall.md',        category: 'reference', subcategory: 'builtins',     slug: 'waterfall' },
 { upstream: 'web/static/docs/reference/mini-notation/chords.md',      category: 'reference', subcategory: 'mini-notation', slug: 'chords' },
 
-// Removed
-// 'web/static/docs/reference/builtins/visualizations.md' — drop the row
+// `web/static/docs/reference/builtins/visualizations.md` — stays in MIRROR_INDEX
+// as the visualizations section overview; not added to GROUP_MAPPING (the four
+// split pages provide the per-card detail in the Visualizations group).
 ```
 
 ---
@@ -464,47 +477,46 @@ No changes to:
 
 ### Phase 1 — Upstream docs split & new pages (nkido repo)
 
-**Goal:** All 11 new docs pages exist upstream; `visualizations.md` is removed; affected pages have their moved-out sections cross-linked.
+**Goal:** All 11 new docs pages exist upstream; `visualizations.md` is trimmed to an overview; affected pages have their moved-out sections cross-linked.
 
 1. Author the 11 new `.md` files per §8.2.
 2. Modify `sequencing.md`, `oscillators.md`, `mini-notation/basics.md` to remove relocated content and add cross-links.
-3. Delete `visualizations.md`.
+3. Modify `visualizations.md`: trim sub-topic detail (now in the four split pages) and replace with short per-topic summaries plus cross-links. Keep the page as the section overview.
 4. Run `bun run build:docs` upstream to regenerate `web/src/lib/docs/manifest.ts`.
 5. Verify each new page renders in the IDE's docs viewer (F1 lookup) without errors.
-6. Verify each existing chip-anchor in `web/src/lib/docs/lookup.ts` still resolves; update entries that referenced `visualizations` → one of the four split pages.
+6. Verify each existing chip-anchor in `web/src/lib/docs/lookup.ts` still resolves; for any anchors that previously deep-linked into removed sub-sections of `visualizations.md`, update to point at the corresponding split page.
 
 **Verification:**
 - `bun run check` and `bun run build` succeed in nkido.
 - F1 lookup for `samplers`, `soundfonts`, `fm`, `polyphony`, `timeline`, `chords`, `oscilloscope`, `spectrum`, `pianoroll`, `waterfall` returns the right page.
-- F1 lookup for `visualizations` resolves to one of the four split pages (or shows a chooser).
+- F1 lookup for `visualizations` still resolves to `visualizations.md` (now the overview); deep-link anchors that previously pointed into removed sub-sections instead resolve to the relevant split page.
 
 ### Phase 2 — Mirror expansion + heading extraction (nkido.cc repo)
 
 **Goal:** `MIRROR_INDEX` covers all 41 entries; manifest includes `headings` per entry; fallbacks committed.
 
-1. Add 17 entries to `scripts/mirror-index.ts` per §8.3.
-2. Remove the `visualizations.md` row.
-3. Modify `scripts/fetch-mirrored-docs.ts` to extract markdown headings and write `headings: string[]` per manifest entry.
-4. Run `bun run fetch:docs` (or whichever existing task) to populate the live + fallback files.
-5. Commit the new `_mirror-fallback/...` files (14 new fallbacks).
-6. Verify `src/lib/data/docs-manifest.json` now contains 41 entries each with `headings`.
-7. Verify routes `/docs/reference/builtins/{new pages}`, `/docs/reference/language/{conditionals,methods,arrays}`, `/docs/reference/mini-notation/chords` all render in `bun run dev`.
+1. Add 17 entries to `scripts/mirror-index.ts` per §8.3. (`visualizations.md` row stays.)
+2. Modify `scripts/fetch-mirrored-docs.ts` to extract markdown headings (default H2–H5; configurable via `HEADING_LEVELS` constant) and write `headings: string[]` per manifest entry.
+3. Run the existing fetch script (`bun run scripts/fetch-mirrored-docs.ts`, also invoked transitively by `bun run predev` / `bun run prebuild`) to populate the live + fallback files.
+4. Commit the new `_mirror-fallback/...` files (14 new fallbacks).
+5. Verify `src/lib/data/docs-manifest.json` now contains 41 entries each with `headings`.
+6. Verify routes `/docs/reference/builtins/{new pages}`, `/docs/reference/language/{conditionals,methods,arrays}`, `/docs/reference/mini-notation/chords` all render in `bun run dev`.
 
 **Verification:**
 - `bun run check` and `bun run build` succeed.
-- Lychee link checker passes (no broken cross-links from the existing reference pages to deleted `visualizations.md`; updated cross-links resolve).
+- Lychee link checker passes for the rendered build (cross-links into `visualizations.md` and the four split pages all resolve).
 - Pagefind reindex picks up the new pages.
 
 ### Phase 3 — OverviewGrid component + build script (nkido.cc repo)
 
 **Goal:** The grid renders correctly on the landing page with all 35 cards, anchored chips, mobile collapse, and footer CTA.
 
-1. Implement `scripts/build-overview.ts` per §6.4. Hardcoded `GROUP_MAPPING` and `ICON_MAP`.
-2. Run `bun run build:overview` to produce `src/lib/data/overview.json`. Inspect output: 6 groups, 35 cards, ≤5 chips per card.
-3. Implement `OverviewCard.svelte` per §5.4.
-4. Implement `OverviewGrid.svelte` per §6.2 and §6.6 (mobile collapse).
-5. Add `<OverviewGrid />` to `src/routes/+page.svelte` after `<RunsEverywhere />`.
-6. Wire `build:overview` into `prebuild` so CI/Netlify regenerate on every build.
+1. Implement `scripts/build-overview.ts` per §6.4. Hardcoded `GROUP_MAPPING` and `ICON_MAP`. Export a `buildOverview()` function plus a CLI entrypoint.
+2. Wire `fetch-mirrored-docs.ts` to call `buildOverview()` at the end of `main()` (after `writeManifest`).
+3. Run `bun run build:overview` (or `bun run scripts/fetch-mirrored-docs.ts`) to produce `src/lib/data/overview.json`. Inspect output: 6 groups, 35 cards in steady state, ≤5 chips per card.
+4. Implement `OverviewCard.svelte` per §5.4.
+5. Implement `OverviewGrid.svelte` per §6.2 and §6.6 (CSS-driven mobile collapse).
+6. Add `<OverviewGrid />` to `src/routes/+page.svelte` after `<RunsEverywhere />`.
 
 **Verification:**
 - `bun run dev` — landing page shows 6 sectioned groups with 35 cards total.
@@ -531,7 +543,7 @@ No changes to:
 
 ## 10. Edge Cases
 
-1. **Manifest entry missing for a slug in `GROUP_MAPPING`** — emit warning to stderr; build a placeholder card (`description: 'Documentation coming soon'`, `placeholder: true`, no chips). Build succeeds. Card renders with muted styling. Useful while upstream docs are in flight between Phase 1 and Phase 2.
+1. **Manifest entry missing for a slug in `GROUP_MAPPING`** — emit warning to stderr; skip the card entirely (the slug does not appear in `overview.json`). Build succeeds. The group renders with whatever cards did resolve; the badge count auto-tracks and stays accurate. Useful while upstream docs are in flight between Phase 1 and Phase 2 — the page just shows fewer cards instead of shipping known-broken links.
 
 2. **Manifest entry has fewer than 5 keywords** — emit chips for all valid keywords (could be fewer than 5). The card simply has less tag content.
 
@@ -543,11 +555,11 @@ No changes to:
 
 6. **A chip-keyword resolves to multiple headings (e.g. both `## moog` and `### moog ladder`)** — pick the first match in document order. Document this in the build script comment.
 
-7. **Visualizations split removes anchors from old `visualizations.md` that downstream linked to** — any keyword in the manifest pointing at a visualizations heading must be redirected. The `lookup.ts` regeneration in Phase 1 handles this. For the website mirror, the manifest is rebuilt fresh in Phase 2; stale entries vanish.
+7. **Visualizations split moves sub-section content out of `visualizations.md`** — `visualizations.md` itself stays as the section overview, but any anchors that previously deep-linked into a sub-section (e.g. `visualizations.md#oscilloscope`) should be redirected to the corresponding split page (`oscilloscope.md`). The `lookup.ts` regeneration in Phase 1 handles this. For the website mirror, the manifest is rebuilt fresh in Phase 2; chip anchors that no longer resolve in `visualizations.md` are silently dropped per the standard chip-resolution rules.
 
 8. **`fetch:docs` fails (offline build, GitHub down)** — falls back to `_mirror-fallback/` files. The new fallbacks committed in Phase 2 ensure offline builds still produce a complete manifest. `overview.json` is rebuilt from the fallback-derived manifest. Build succeeds with `source: 'fallback'` in manifest entries.
 
-9. **A doc page gets renamed upstream without updating MIRROR_INDEX** — the fetch step logs a 404 warning; the entry uses the fallback. No grid drift unless the slug also moves; if it does, the card becomes a placeholder per Edge Case 1.
+9. **A doc page gets renamed upstream without updating MIRROR_INDEX** — the fetch step logs a 404 warning; the entry uses the fallback. No grid drift unless the slug also moves; if it does, the card is silently omitted per Edge Case 1.
 
 10. **Mobile collapse state leaks into desktop after viewport resize** — the component listens for `resize` and re-syncs `openGroups` to all-true if the viewport crosses ≥768px while running. Avoids visitors seeing collapsed groups on desktop after rotating their phone.
 
@@ -555,7 +567,7 @@ No changes to:
 
 12. **Tag chip count differs across cards in the same row, causing uneven card heights** — cards use `align-items: stretch` and a min-height; chip rows align to the bottom so titles and descriptions remain visually aligned across a row.
 
-13. **Group has zero cards (e.g. all five Instruments cards become placeholders pre-Phase 1)** — group still renders with its heading and the placeholder cards. Better than hiding the group, since visitors can see the structure.
+13. **Group has zero cards (e.g. every slug in Instruments is missing from the manifest pre-Phase 1)** — group still renders its heading with a single italic line ("Coming soon") in place of the cards grid. Better than hiding the group entirely, since visitors can see the intended structure and that more is on the way. In steady state (Phase 2 complete) this case shouldn't occur.
 
 14. **`prefers-reduced-motion` is set** — chevron rotation and any expand/collapse animations are disabled (instant snap).
 
@@ -568,18 +580,19 @@ No changes to:
 ### 11.1 Automated (blocking in CI)
 
 - **`bun run check`** — type-check.
-- **`bun run build`** — must succeed with `prebuild` running fetch + build-overview.
+- **`bun run build`** — must succeed; `prebuild` runs `fetch-mirrored-docs.ts`, which now invokes the overview builder at the end of its run.
 - **Lighthouse CI** — perf ≥ 95 on `/` (the grid adds DOM but no extra fonts, scripts, or images). a11y ≥ 95.
 - **lychee** — no broken links inside the rendered grid or across any of the 17 newly mirrored doc pages.
 
 ### 11.2 Build-script tests
 
 - **`scripts/build-overview.test.ts`** (new): unit tests for the script with mocked manifest input. Cases:
-  - Manifest entry missing → placeholder card emitted, warning logged.
+  - Manifest entry missing for a slug in `GROUP_MAPPING` → card omitted from output, warning logged.
   - All chips resolve → exactly 5 chips, in keyword order.
   - 3 of 5 chips fail anchor resolution → 2 chips emitted, warnings logged.
   - Group ordering matches manifest `order`.
   - Slug not in `GROUP_MAPPING` → entry skipped silently (e.g. `tutorials/hello-sine` does not appear).
+  - All slugs in a group missing → group has empty `cards: []` (renderer shows "Coming soon" per §10 #13).
 
 ### 11.3 Component snapshot
 
@@ -610,11 +623,11 @@ No changes to:
   1. Click "View full reference →".
   2. Confirm: navigates to `/docs/reference`.
 
-- **Placeholder fallback** (Phase-2 boundary):
+- **Skip-on-missing fallback** (Phase-2 boundary):
   1. Temporarily delete an entry from `docs-manifest.json` in a feature branch.
   2. Run `bun run build:overview`.
-  3. Confirm: corresponding card is marked `placeholder: true`, has the "Documentation coming soon" description, no chips.
-  4. Build succeeds; warning visible in stderr.
+  3. Confirm: corresponding card is absent from `overview.json`; the badge count auto-decrements.
+  4. Build succeeds; `⚠ overview: missing manifest entry for slug 'foo'` visible in stderr.
   5. Restore manifest before merge.
 
 - **Pagefind sanity**:
