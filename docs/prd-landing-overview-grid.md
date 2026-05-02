@@ -2,7 +2,7 @@
 
 > **Status: Complete** — Sectioned "What's in the box" grid lives at the end of the landing page (after `RunsEverywhere`). Surfaces 36 cards across 6 groups (Instruments, Effects, Sequencing, Visualizations, Language, Tools), each linking to mirrored docs. Generated from `docs-manifest.json` with hardcoded group/icon rules. All four phases shipped: upstream docs (1), mirror expansion + heading extraction (2), grid component (3), and Vitest tests + a11y polish (4).
 >
-> **Caveat:** Phase 1's upstream commit in `/home/moritz/workspace/nkido` was not made by Claude (sandbox denied a commit outside this repo). The 12 new doc files exist in the upstream working tree and are also in `_mirror-fallback/` here, so the website builds and ships correctly even before the upstream commit lands. The user should commit + push upstream when convenient — once that lands, the website's next fetch will swap from `source: 'fallback'` to `source: 'live'` for those 12 entries.
+> **Cross-repo state:** Upstream nkido commit `74f1c84` ships the 12 new docs + the trimmed visualizations/sequencing/oscillators/basics. Push when ready; the website's local-sibling fetch path (`MIRROR_LOCAL_PATH=../nkido`) already reads them, so dev iteration works regardless of push status.
 >
 > **Phase 1 changes (vs original PRD):** Visualizations group expanded from 4 to 5 cards — `waveform` got its own split page rather than being merged into oscilloscope. Total cards: **36** (not 35). 12 new upstream docs pages authored (not 11): the original 11 plus `waveform.md`.
 
