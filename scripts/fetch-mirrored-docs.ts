@@ -38,21 +38,62 @@ const REQUIRED_FRONTMATTER = ['title'];
 const token = process.env.GITHUB_TOKEN;
 const isCI = process.env.CI === 'true';
 
-async function fetchUpstream(entry: MirrorEntry): Promise<string | null> {
+async function fetchUpstream(
+	entry: MirrorEntry,
+	warnings: string[]
+): Promise<string | null> {
 	const url = `${MIRROR_BASE_URL}/${entry.upstream}`;
 	try {
 		const res = await fetch(url, {
 			headers: token ? { Authorization: `Bearer ${token}` } : {}
 		});
 		if (!res.ok) {
-			console.warn(`⚠ fetch ${entry.upstream}: HTTP ${res.status}`);
+			warnings.push(`⚠ fetch ${entry.upstream}: HTTP ${res.status}`);
 			return null;
 		}
 		return await res.text();
 	} catch (err) {
-		console.warn(`⚠ fetch ${entry.upstream}: ${(err as Error).message}`);
+		warnings.push(`⚠ fetch ${entry.upstream}: ${(err as Error).message}`);
 		return null;
 	}
+}
+
+const PROGRESS_BAR_WIDTH = 30;
+const isTTY = Boolean(process.stderr.isTTY);
+
+function renderProgress(done: number, total: number): void {
+	if (!isTTY) {
+		// Non-TTY (CI, piped): print a single line per 10% so logs stay readable.
+		const decile = Math.floor((done / total) * 10);
+		const lastDecile = Math.floor(((done - 1) / total) * 10);
+		if (done === total || decile > lastDecile) {
+			process.stderr.write(`  mirror: ${done}/${total}\n`);
+		}
+		return;
+	}
+	const filled = Math.floor((done / total) * PROGRESS_BAR_WIDTH);
+	const bar = '█'.repeat(filled) + '░'.repeat(PROGRESS_BAR_WIDTH - filled);
+	process.stderr.write(`\r  [${bar}] ${done}/${total}`);
+}
+
+const FETCH_CONCURRENCY = 16;
+
+async function runWithConcurrency<T, R>(
+	items: T[],
+	limit: number,
+	worker: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+	const results: R[] = new Array(items.length);
+	let next = 0;
+	const lanes = Array.from({ length: Math.min(limit, items.length) }, async () => {
+		while (true) {
+			const i = next++;
+			if (i >= items.length) return;
+			results[i] = await worker(items[i], i);
+		}
+	});
+	await Promise.all(lanes);
+	return results;
 }
 
 function loadFallback(entry: MirrorEntry): string | null {
@@ -263,33 +304,66 @@ function writeEntry(entry: MirrorEntry, raw: string, source: 'live' | 'fallback'
 	};
 }
 
+type Outcome =
+	| { kind: 'ok'; result: MirrorResult; source: 'live' | 'fallback' }
+	| { kind: 'missing'; entry: MirrorEntry }
+	| { kind: 'error'; entry: MirrorEntry; error: Error };
+
 async function main() {
+	const total = MIRROR_INDEX.length;
+	const fetchWarnings: string[] = [];
+	let completed = 0;
+
+	process.stderr.write(`Mirroring ${total} docs from upstream...\n`);
+	renderProgress(0, total);
+
+	const outcomes = await runWithConcurrency<MirrorEntry, Outcome>(
+		MIRROR_INDEX,
+		FETCH_CONCURRENCY,
+		async (entry) => {
+			let raw = await fetchUpstream(entry, fetchWarnings);
+			let source: 'live' | 'fallback' = 'live';
+			if (raw === null) {
+				raw = loadFallback(entry);
+				source = 'fallback';
+			}
+			let outcome: Outcome;
+			if (raw === null) {
+				outcome = { kind: 'missing', entry };
+			} else {
+				try {
+					const result = writeEntry(entry, raw, source);
+					outcome = { kind: 'ok', result, source };
+				} catch (err) {
+					outcome = { kind: 'error', entry, error: err as Error };
+				}
+			}
+			completed++;
+			renderProgress(completed, total);
+			return outcome;
+		}
+	);
+
+	if (isTTY) process.stderr.write('\n');
+
+	// Surface queued fetch warnings now that the progress bar has finished.
+	for (const w of fetchWarnings) console.warn(w);
+
 	const results: MirrorResult[] = [];
 	let liveCount = 0;
 	let fallbackCount = 0;
 	let missingCount = 0;
-
-	for (const entry of MIRROR_INDEX) {
-		let raw = await fetchUpstream(entry);
-		let source: 'live' | 'fallback' = 'live';
-		if (raw === null) {
-			raw = loadFallback(entry);
-			source = 'fallback';
-		}
-		if (raw === null) {
+	for (const o of outcomes) {
+		if (o.kind === 'missing') {
 			missingCount++;
-			console.error(`✗ ${entry.upstream}: no live source AND no fallback`);
-			continue;
-		}
-
-		try {
-			const result = writeEntry(entry, raw, source);
-			results.push(result);
-			if (source === 'live') liveCount++;
-			else fallbackCount++;
-		} catch (err) {
-			console.error(`✗ ${entry.upstream}: ${(err as Error).message}`);
+			console.error(`✗ ${o.entry.upstream}: no live source AND no fallback`);
+		} else if (o.kind === 'error') {
+			console.error(`✗ ${o.entry.upstream}: ${o.error.message}`);
 			process.exit(1);
+		} else {
+			results.push(o.result);
+			if (o.source === 'live') liveCount++;
+			else fallbackCount++;
 		}
 	}
 
@@ -298,14 +372,13 @@ async function main() {
 			console.error(`\n✗ ${missingCount} entries missing both live source and fallback in CI. Aborting.`);
 			process.exit(1);
 		}
-		console.warn(`\n⚠ ${missingCount} entries missing — continuing in local dev`);
+		console.warn(`⚠ ${missingCount} entries missing — continuing in local dev`);
 	}
 
 	writeManifest(results);
 
-	const tot = MIRROR_INDEX.length;
 	console.log(
-		`✓ mirror: ${liveCount}/${tot} live, ${fallbackCount} fallback, ${missingCount} missing`
+		`✓ mirror: ${liveCount}/${total} live, ${fallbackCount} fallback, ${missingCount} missing`
 	);
 
 	// Keep overview.json in sync with the manifest. Warnings go to stderr; the
