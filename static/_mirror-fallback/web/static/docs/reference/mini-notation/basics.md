@@ -2,14 +2,28 @@
 title: Mini-Notation Basics
 category: mini-notation
 order: 1
-keywords: [mini-notation, pattern, sequence, rhythm, pitch, chord, rest, tidal, strudel, modifier, speed, slow, repeat, chance, alternation]
+keywords: [mini-notation, pattern, sequence, rhythm, pitch, rest, tidal, strudel, modifier, speed, slow, repeat, chance, alternation]
 ---
 
 # Mini-Notation
 
 Mini-notation is a compact syntax for describing musical patterns, inspired by TidalCycles and Strudel.
 
-## Pitch Tokens
+## Typed prefixes
+
+Mini-notation strings carry a parse-mode prefix that disambiguates atom semantics:
+
+| Prefix | Atom semantics                              | Example                |
+|--------|---------------------------------------------|------------------------|
+| `v"…"` | Numeric only (raw scalars, no mtof)         | `v"<0 0.5 -0.5>"`      |
+| `n"…"` | Note names + bare MIDI ints (both → Hz)     | `n"c4 e4 g4"`          |
+| `s"…"` | Sample names                                | `s"bd ~ bd ~"`         |
+| `c"…"` | Chord symbols                               | `c"Am C G"`            |
+| `p"…"` | Auto-detect (legacy, still works)           | `p"c4 bd Am"`          |
+
+See [Pattern Literals](../pattern/literals.md) for full coverage of typed prefixes and the `scalar()` cast.
+
+## Pitch tokens
 
 Specify notes with letter name and octave:
 
@@ -40,29 +54,14 @@ pat("c4 e4 ~ g4")
 
 ## Chords
 
-Use the `chord()` function with standard chord symbols:
+For chord symbols (`Am7`, `Cmaj7`), inline chord brackets (`[c4 e4 g4]`), and voice-leading transforms (`anchor`, `mode`, `voicing`, `addVoicings`), see [Chords](chords).
 
 ```akk
-// Major chord
-chord("C")      // C major triad
-
-// Minor seventh
-chord("Am7")    // A minor seventh
-
-// Chord progression
-chord("Am C Dm G")  // One chord per beat
-
-// Available chord qualities:
-// m (minor), maj, 7, maj7, m7, dim, aug, sus2, sus4
-```
-
-## Inline Chords
-
-Play multiple notes simultaneously with square brackets:
-
-```akk
-// C major as inline chord
+// Inline chord — three notes at once
 pat("[c4 e4 g4]")
+
+// Chord-symbol progression
+chord("Am C G F")
 ```
 
 ## Grouping
@@ -157,7 +156,7 @@ pat("<c4 e4 g4>")
 pat("<[c4 e4] [g4 b4]>")
 ```
 
-## Modifier Placement
+## Modifier placement
 
 **Critical**: Pattern modifiers must be inside the pattern string:
 
@@ -169,7 +168,7 @@ pat("[bd sn]/2")   // Pattern plays over 2 cycles
 pat("bd sn")/2     // This divides the SIGNAL by 2, not the pattern!
 ```
 
-## Pattern Functions
+## Pattern functions
 
 ### pat()
 
@@ -179,7 +178,7 @@ Basic pattern playback:
 pat("c4 e4 g4") |> ((f) -> osc("sin", f)) |> out(%, %)
 ```
 
-## Practical Examples
+## Practical examples
 
 ```akk
 // Simple melody

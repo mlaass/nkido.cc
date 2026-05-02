@@ -23,8 +23,12 @@ export type MirrorEntry = {
 };
 
 export const MIRROR_INDEX: MirrorEntry[] = [
-	// reference / builtins (13)
+	// reference / builtins (25)
 	{ upstream: 'web/static/docs/reference/builtins/oscillators.md', category: 'reference', subcategory: 'builtins', slug: 'oscillators' },
+	{ upstream: 'web/static/docs/reference/builtins/fm-synthesis.md', category: 'reference', subcategory: 'builtins', slug: 'fm-synthesis' },
+	{ upstream: 'web/static/docs/reference/builtins/samplers.md', category: 'reference', subcategory: 'builtins', slug: 'samplers' },
+	{ upstream: 'web/static/docs/reference/builtins/soundfonts.md', category: 'reference', subcategory: 'builtins', slug: 'soundfonts' },
+	{ upstream: 'web/static/docs/reference/builtins/samples-loading.md', category: 'reference', subcategory: 'builtins', slug: 'samples-loading' },
 	{ upstream: 'web/static/docs/reference/builtins/filters.md', category: 'reference', subcategory: 'builtins', slug: 'filters' },
 	{ upstream: 'web/static/docs/reference/builtins/envelopes.md', category: 'reference', subcategory: 'builtins', slug: 'envelopes' },
 	{ upstream: 'web/static/docs/reference/builtins/delays.md', category: 'reference', subcategory: 'builtins', slug: 'delays' },
@@ -34,17 +38,31 @@ export const MIRROR_INDEX: MirrorEntry[] = [
 	{ upstream: 'web/static/docs/reference/builtins/modulation.md', category: 'reference', subcategory: 'builtins', slug: 'modulation' },
 	{ upstream: 'web/static/docs/reference/builtins/math.md', category: 'reference', subcategory: 'builtins', slug: 'math' },
 	{ upstream: 'web/static/docs/reference/builtins/sequencing.md', category: 'reference', subcategory: 'builtins', slug: 'sequencing' },
+	{ upstream: 'web/static/docs/reference/builtins/polyphony.md', category: 'reference', subcategory: 'builtins', slug: 'polyphony' },
+	{ upstream: 'web/static/docs/reference/builtins/timelines.md', category: 'reference', subcategory: 'builtins', slug: 'timelines' },
 	{ upstream: 'web/static/docs/reference/builtins/stereo.md', category: 'reference', subcategory: 'builtins', slug: 'stereo' },
 	{ upstream: 'web/static/docs/reference/builtins/utility.md', category: 'reference', subcategory: 'builtins', slug: 'utility' },
+	{ upstream: 'web/static/docs/reference/builtins/state.md', category: 'reference', subcategory: 'builtins', slug: 'state' },
+	{ upstream: 'web/static/docs/reference/builtins/edge.md', category: 'reference', subcategory: 'builtins', slug: 'edge' },
+	{ upstream: 'web/static/docs/reference/builtins/audio-input.md', category: 'reference', subcategory: 'builtins', slug: 'audio-input' },
 	{ upstream: 'web/static/docs/reference/builtins/visualizations.md', category: 'reference', subcategory: 'builtins', slug: 'visualizations' },
-	// reference / language (4)
+	{ upstream: 'web/static/docs/reference/builtins/oscilloscope.md', category: 'reference', subcategory: 'builtins', slug: 'oscilloscope' },
+	{ upstream: 'web/static/docs/reference/builtins/waveform.md', category: 'reference', subcategory: 'builtins', slug: 'waveform' },
+	{ upstream: 'web/static/docs/reference/builtins/spectrum.md', category: 'reference', subcategory: 'builtins', slug: 'spectrum' },
+	{ upstream: 'web/static/docs/reference/builtins/waterfall.md', category: 'reference', subcategory: 'builtins', slug: 'waterfall' },
+	{ upstream: 'web/static/docs/reference/builtins/pianoroll.md', category: 'reference', subcategory: 'builtins', slug: 'pianoroll' },
+	// reference / language (7)
 	{ upstream: 'web/static/docs/reference/language/pipes.md', category: 'reference', subcategory: 'language', slug: 'pipes' },
 	{ upstream: 'web/static/docs/reference/language/operators.md', category: 'reference', subcategory: 'language', slug: 'operators' },
 	{ upstream: 'web/static/docs/reference/language/variables.md', category: 'reference', subcategory: 'language', slug: 'variables' },
 	{ upstream: 'web/static/docs/reference/language/closures.md', category: 'reference', subcategory: 'language', slug: 'closures' },
-	// reference / mini-notation (2)
+	{ upstream: 'web/static/docs/reference/language/conditionals.md', category: 'reference', subcategory: 'language', slug: 'conditionals' },
+	{ upstream: 'web/static/docs/reference/language/methods.md', category: 'reference', subcategory: 'language', slug: 'methods' },
+	{ upstream: 'web/static/docs/reference/language/arrays.md', category: 'reference', subcategory: 'language', slug: 'arrays' },
+	// reference / mini-notation (3)
 	{ upstream: 'web/static/docs/reference/mini-notation/basics.md', category: 'reference', subcategory: 'mini-notation', slug: 'basics' },
 	{ upstream: 'web/static/docs/reference/mini-notation/microtonal.md', category: 'reference', subcategory: 'mini-notation', slug: 'microtonal' },
+	{ upstream: 'web/static/docs/reference/mini-notation/chords.md', category: 'reference', subcategory: 'mini-notation', slug: 'chords' },
 	// tutorials (5) — slug strips the numeric `NN-` prefix upstream uses for ordering
 	{ upstream: 'web/static/docs/tutorials/01-hello-sine.md', category: 'tutorials', subcategory: '', slug: 'hello-sine' },
 	{ upstream: 'web/static/docs/tutorials/02-filters.md', category: 'tutorials', subcategory: '', slug: 'filters' },

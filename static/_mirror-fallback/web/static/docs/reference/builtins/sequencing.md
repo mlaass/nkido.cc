@@ -2,12 +2,14 @@
 title: Sequencing & Timing
 category: builtins
 order: 4
-keywords: [sequencing, timing, lfo, trigger, euclid, euclidean, timeline, clock, rhythm, pattern]
+keywords: [sequencing, timing, lfo, trigger, euclid, euclidean, clock, rhythm, pattern, early, late, palindrome, compress, ply, linger, zoom, segment, swing, swingBy, iter, iterBack, run, binary, binaryN]
 ---
 
 # Sequencing & Timing
 
 Timing and sequencing functions create rhythmic patterns, triggers, and automation curves synchronized to the global clock.
+
+For voice allocation across notes (`poly`, `mono`, `legato`, `spread`), see [polyphony](polyphony). For breakpoint envelopes (`timeline`), see [timelines](timelines). For chord voicings (`anchor`, `mode`, `voicing`, `addVoicings`), see [chords](../mini-notation/chords).
 
 ## clock
 
@@ -114,23 +116,95 @@ osc("noise") |> hp(%, 6000) * ar(euclid(5, 8), 0.001, 0.03) |> out(%, %)
 osc("saw", 110) * ar(euclid(5, 16, 2)) |> lp(%, 800) |> out(%, %)
 ```
 
-Related: [trigger](#trigger), [timeline](#timeline)
+Related: [trigger](#trigger), [timelines](timelines)
 
----
+## Pattern transforms
 
-## timeline
+Compile-time event-list rewriters that wrap a pattern. All compose via dot-call (`pat(...).slow(2).rev()`) and the equivalent functional form.
 
-**Timeline** - Breakpoint automation envelope.
+### early
 
-| Param | Type | Default | Description |
-|-------|------|---------|-------------|
-| -     | -    | -       | Configured via pattern syntax |
-
-Creates smooth automation curves between breakpoints. Used for complex parameter automation synced to the clock.
+`early(pattern, amount)` shifts events earlier by `amount` cycles, wrapping within `[0, 1)`.
 
 ```akk
-// Volume automation
-osc("saw", 220) * timeline() |> out(%, %)
+pat("c4 e4 g4 b4").early(0.25)  // each event plays 1/4 cycle earlier
 ```
 
-Related: [lfo](#lfo), [trigger](#trigger)
+### late
+
+`late(pattern, amount)` shifts events later by `amount` cycles, wrapping.
+
+### palindrome
+
+`palindrome(pattern)` plays the pattern forward then reversed, doubling `cycle_length`.
+
+```akk
+pat("c4 e4 g4 b4").palindrome()  // c4 e4 g4 b4 b4 g4 e4 c4 over 2× cycles
+```
+
+### compress
+
+`compress(pattern, start, end)` squashes the entire pattern into the sub-window `[start, end)` of the cycle (silence outside).
+
+> Note: this name was previously aliased to the audio compressor; the audio compressor is now reachable as `comp(...)` or `compressor(...)`.
+
+### ply
+
+`ply(pattern, n)` repeats each event `n` times within its slot.
+
+### linger
+
+`linger(pattern, frac)` keeps the first `frac` of the pattern and loops it across the cycle (equivalent to `zoom(0, frac).fast(1/frac)`).
+
+### zoom
+
+`zoom(pattern, start, end)` plays only the `[start, end)` portion of the pattern, stretched to fill the full cycle. Events that straddle the window are clipped.
+
+### segment
+
+`segment(pattern, n)` samples the pattern at `n` evenly-spaced points and emits `n` equal-duration events carrying the value active at each sample.
+
+### swing / swingBy
+
+`swing(pattern, n=4)` applies a 1/3 swing on an `n`-slice grid (default 4). `swingBy(pattern, amount, n=4)` lets you set the swing amount explicitly.
+
+```akk
+pat("bd hh sd hh").swing()           // default 1/3 on 4 slices
+pat("bd hh sd hh").swingBy(0.5, 8)   // half-amount on 8 slices
+```
+
+### iter / iterBack
+
+`iter(pattern, n)` rotates the pattern's start by `1/n` per cycle (forward); `iterBack` rotates the opposite way. Implemented as a runtime rotation on the SequenceState; no compile-time event explosion.
+
+```akk
+pat("c4 e4 g4 b4").iter(4)  // advance start by 1/4 each cycle
+```
+
+## Pattern generators
+
+Pattern constructors that emit an event stream directly from numeric input. Compose with transforms via dot-call.
+
+### run
+
+`run(n)` produces `n` events at times `i/n` carrying values `0, 1, ..., n-1` each of duration `1/n`. Useful as a rising/integer index pattern.
+
+```akk
+run(8) |> mtof(% + 60) |> osc("saw", %)  // ascending chromatic from C4
+```
+
+### binary
+
+`binary(n)` produces a trigger pattern from the binary representation of `n` (MSB first; `bits = floor(log2(n)) + 1`). Set bits emit triggers, unset bits emit rests.
+
+```akk
+binary(178) |> sampler(%, "hh")  // 0b10110010 = 8-step rhythm
+```
+
+### binaryN
+
+`binaryN(n, bits)` is the zero-padded fixed-width form. Truncates `n` to the lower `bits` bits.
+
+```akk
+binaryN(5, 8)  // 00000101 = 8 events with bits at positions 5 and 7
+```

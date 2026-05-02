@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
 import matter from 'gray-matter';
 import { resolve as resolvePath, dirname as dirnamePath } from 'node:path/posix';
+import GithubSlugger from 'github-slugger';
 import {
 	MIRROR_INDEX,
 	MIRROR_BASE_URL,
@@ -11,6 +12,11 @@ import {
 	fallbackPath,
 	type MirrorEntry
 } from './mirror-index';
+
+// Heading levels exposed as chip-resolvable anchors. Start narrow; widen if too
+// many keywords fail to resolve. H1 is excluded — DocPage renders the title from
+// frontmatter, and the leading H1 is stripped from the body.
+const HEADING_LEVELS = { min: 2, max: 5 } as const;
 
 /** Upstream path → local URL, for rewriting cross-doc `.md` links. */
 const UPSTREAM_TO_URL: Record<string, string> = Object.fromEntries(
@@ -24,6 +30,7 @@ type MirrorResult = {
 	description: string;
 	order: number;
 	keywords: string[];
+	headings: string[];
 };
 
 const REQUIRED_FRONTMATTER = ['title'];
@@ -124,6 +131,41 @@ function escapeProseLTs(body: string): string {
 	return lines.join('\n');
 }
 
+/**
+ * Extract slugified markdown headings from the body, restricted to the level
+ * range in `HEADING_LEVELS`. Slug rules match `github-slugger`, which is what
+ * `rehype-slug` (configured in `svelte.config.js`) uses to generate anchor IDs
+ * in the rendered HTML — so chips that match a returned slug are guaranteed to
+ * resolve in the browser.
+ *
+ * Skips fenced code blocks so headings inside ```` ``` ```` aren't picked up.
+ */
+function extractHeadings(body: string): string[] {
+	const slugger = new GithubSlugger();
+	const slugs: string[] = [];
+	let inFence = false;
+	for (const line of body.split('\n')) {
+		if (/^```/.test(line.trimStart())) {
+			inFence = !inFence;
+			continue;
+		}
+		if (inFence) continue;
+		const m = line.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/);
+		if (!m) continue;
+		const level = m[1].length;
+		if (level < HEADING_LEVELS.min || level > HEADING_LEVELS.max) continue;
+		const text = m[2]
+			.replace(/`([^`]+)`/g, '$1')
+			.replace(/\*\*([^*]+)\*\*/g, '$1')
+			.replace(/\*([^*]+)\*/g, '$1')
+			.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+			.trim();
+		if (!text) continue;
+		slugs.push(slugger.slug(text));
+	}
+	return slugs;
+}
+
 function synthesizeDescription(body: string): string {
 	const lines = body.split('\n');
 	for (let i = 0; i < lines.length; i++) {
@@ -171,6 +213,8 @@ function writeEntry(entry: MirrorEntry, raw: string, source: 'live' | 'fallback'
 			? [data.keywords]
 			: [];
 
+	const headings = extractHeadings(body);
+
 	const backHref = entry.category === 'tutorials' ? '/docs/tutorials' : `/docs/reference/${entry.subcategory}`;
 	const backLabel = entry.category === 'tutorials' ? 'Tutorials' : entry.subcategory.replace('-', ' ');
 
@@ -213,7 +257,8 @@ function writeEntry(entry: MirrorEntry, raw: string, source: 'live' | 'fallback'
 		title: String(data.title),
 		description,
 		order,
-		keywords
+		keywords,
+		headings
 	};
 }
 
@@ -276,6 +321,7 @@ function writeManifest(results: MirrorResult[]): void {
 			slug: r.entry.slug,
 			order: r.order,
 			keywords: r.keywords,
+			headings: r.headings,
 			url: urlPath(r.entry),
 			source: r.source
 		});
