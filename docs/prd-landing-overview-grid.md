@@ -1,6 +1,8 @@
 # PRD: Landing Page Runtime Overview Grid
 
-> **Status: NOT STARTED** — Add a sectioned "What's in the box" grid as the final section of the landing page (after `RunsEverywhere`). Surfaces 35 cards across 6 groups (Instruments, Effects, Sequencing, Visualizations, Language, Tools), each linking to mirrored docs. Generated from `docs-manifest.json` with hardcoded group/icon rules. Depends on a prior phase that authors 11 new upstream docs pages and expands the docs mirror.
+> **Status: Phase 1 complete** — Add a sectioned "What's in the box" grid as the final section of the landing page (after `RunsEverywhere`). Surfaces 36 cards across 6 groups (Instruments, Effects, Sequencing, Visualizations, Language, Tools), each linking to mirrored docs. Generated from `docs-manifest.json` with hardcoded group/icon rules. Phase 1 (upstream docs) complete; remaining: mirror expansion (Phase 2), grid component (Phase 3), tests + polish (Phase 4).
+>
+> **Phase 1 changes (vs original PRD):** Visualizations group expanded from 4 to 5 cards — `waveform` got its own split page rather than being merged into oscilloscope. Total cards: **36** (not 35). 12 new upstream docs pages authored (not 11): the original 11 plus `waveform.md`.
 
 ---
 
@@ -10,7 +12,7 @@ The landing page currently ends with `RunsEverywhere` — a "runs on browser/nat
 
 This PRD proposes a new `OverviewGrid` section appended after `RunsEverywhere` that:
 
-- Lists 35 cards organized into 6 named groups: **Instruments**, **Effects**, **Sequencing**, **Visualizations**, **Language**, **Tools**.
+- Lists 36 cards organized into 6 named groups: **Instruments**, **Effects**, **Sequencing**, **Visualizations**, **Language**, **Tools**.
 - Renders each card with icon + title + 1-line description + up to 5 tag chips. Card title links to the top of the corresponding mirrored doc; each tag chip deep-links to its anchor inside that doc.
 - Is **generated entirely from `src/lib/data/docs-manifest.json`** by a build-time script with hardcoded group rules and icon mappings — no hand-curated card list to drift out of sync.
 - Ships with a "View full reference →" footer CTA linking to `/docs/reference`.
@@ -18,8 +20,8 @@ This PRD proposes a new `OverviewGrid` section appended after `RunsEverywhere` t
 Key decisions made during planning:
 
 - **Source of truth: the existing mirrored manifest.** The manifest already includes title, description, keywords, slug, url, and order per page. Group assignment and icon are hardcoded in the build script keyed by `(category, slug)`.
-- **Cross-repo dependency: 11 new upstream docs pages must land first.** The grid needs cards for samplers, SoundFont, FM synthesis, polyphony, timelines, samples-loading, chords, and the 4 visualization split-outs. Phase 1 of this PRD writes those upstream alongside `visualizations.md`, which stays as a section overview. Phase 2 expands the website's `MIRROR_INDEX` to pick them up plus 6 existing-but-unmirrored docs (`edge`, `state`, `audio-input`, `conditionals`, `methods`, `arrays`). Phase 3 builds the website grid.
-- **35 cards across 6 sectioned groups.** Each group has its own header. Cards within a group are ordered by the manifest's `order` field.
+- **Cross-repo dependency: 12 new upstream docs pages must land first.** The grid needs cards for samplers, SoundFont, FM synthesis, polyphony, timelines, samples-loading, chords, and the 5 visualization split-outs (oscilloscope, waveform, spectrum, waterfall, pianoroll). Phase 1 of this PRD writes those upstream alongside `visualizations.md`, which stays as a section overview. Phase 2 expands the website's `MIRROR_INDEX` to pick them up plus 6 existing-but-unmirrored docs (`edge`, `state`, `audio-input`, `conditionals`, `methods`, `arrays`). Phase 3 builds the website grid.
+- **36 cards across 6 sectioned groups.** Each group has its own header. Cards within a group are ordered by the manifest's `order` field.
 - **Tag chips link to anchors; chips with no matching heading are dropped.** A chip's keyword must match a markdown heading in the doc (case- and slug-insensitive); chips that do not resolve are silently omitted with a build warning. This is the primary build-time integrity check.
 - **Build degrades gracefully.** Cards whose slug is missing from the manifest log a warning and are silently omitted from `overview.json`; the badge count auto-tracks the actual number of resolved cards. The grid never blocks a build, and the page never ships known-broken links.
 - **Mobile is collapsible.** On `<768px`, group sections collapse closed by default; tapping a heading expands. On desktop, all sections are always open.
@@ -34,8 +36,8 @@ Key decisions made during planning:
 | Landing-page tail | Ends with `RunsEverywhere` | Adds `OverviewGrid` as the final section |
 | Capability narrative | `FeatureGrid` (9 cards): "95+ DSP opcodes", "Hot-swap preserved", etc. | Unchanged. New grid sits below `RunsEverywhere`, separate from `FeatureGrid` |
 | Doc discovery | Header nav → `/docs`; in-doc Pagefind search | Header nav + `OverviewGrid` cards on the landing page deep-link directly into the relevant doc/section |
-| Mirrored docs | 24 entries in `MIRROR_INDEX` (13 builtins + 4 language + 2 mini-notation + 5 tutorials) | 41 entries: +6 existing-but-unmirrored (`edge`, `state`, `audio-input`, `conditionals`, `methods`, `arrays`), +11 new pages (samplers, soundfonts, polyphony, timelines, fm-synthesis, samples-loading, chords, oscilloscope, spectrum, pianoroll, waterfall). `visualizations.md` stays as a section overview. Net +17 |
-| Upstream docs | 1 single `visualizations.md`; no standalone pages for samplers, SoundFonts, FM, polyphony, timelines, sample loading, or chords | 11 new pages authored upstream; `visualizations.md` retained as the visualizations section overview, with sub-topic detail moved into the four split pages |
+| Mirrored docs | 24 entries in `MIRROR_INDEX` (13 builtins + 4 language + 2 mini-notation + 5 tutorials) | 42 entries: +6 existing-but-unmirrored (`edge`, `state`, `audio-input`, `conditionals`, `methods`, `arrays`), +12 new pages (samplers, soundfonts, polyphony, timelines, fm-synthesis, samples-loading, chords, oscilloscope, waveform, spectrum, pianoroll, waterfall). `visualizations.md` stays as a section overview. Net +18 |
+| Upstream docs | 1 single `visualizations.md`; no standalone pages for samplers, SoundFonts, FM, polyphony, timelines, sample loading, or chords | 12 new pages authored upstream; `visualizations.md` retained as the visualizations section overview, with sub-topic detail moved into the five split pages |
 | Tag-chip → anchor linking | N/A | New convention: every grid card derives anchor links from manifest `keywords` matched against markdown headings in the source `.md` |
 
 ### 2.1 What `FeatureGrid` does (and doesn't) cover today
@@ -68,10 +70,10 @@ The grid needs no new authored data per card. Group assignment and icon come fro
 
 ### 3.1 Goals
 
-1. **Add a sectioned overview grid** to the landing page, after `RunsEverywhere`, surfacing 35 cards across 6 named groups.
+1. **Add a sectioned overview grid** to the landing page, after `RunsEverywhere`, surfacing 36 cards across 6 named groups.
 2. **Generate the grid data from `docs-manifest.json`** with hardcoded group + icon rules — no hand-curated card list.
-3. **Author 11 new upstream docs pages** in the nkido repo so every group has real content to link to.
-4. **Expand `MIRROR_INDEX`** by 17 entries to cover the new pages plus 6 existing-but-unmirrored docs needed by the Tools and Language groups.
+3. **Author 12 new upstream docs pages** in the nkido repo so every group has real content to link to.
+4. **Expand `MIRROR_INDEX`** by 18 entries to cover the new pages plus 6 existing-but-unmirrored docs needed by the Tools and Language groups.
 5. **Anchor-link tag chips** to specific sections within mirrored docs; silently drop chips whose anchors don't resolve.
 6. **Collapsible group sections on mobile** (<768px); always-expanded on desktop.
 7. **No build failures** from grid drift: missing manifest entries warn but ship.
@@ -95,7 +97,7 @@ The grid needs no new authored data per card. Group assignment and icon come fro
 A first-time visitor lands on `nkido.cc/`:
 
 1. Hero → ExampleSelector → FeatureGrid → RunsEverywhere → **OverviewGrid (new)**.
-2. They see a section heading: **"What's in the box"** with a 1-line intro and a small badge: *"95+ DSP opcodes · 35 reference pages"*.
+2. They see a section heading: **"What's in the box"** with a 1-line intro and a small badge: *"95+ DSP opcodes · 36 reference pages"*.
 3. Below the intro, six labeled subsections stack vertically: `Instruments`, `Effects`, `Sequencing`, `Visualizations`, `Language`, `Tools`. Each subsection has its own heading.
 4. Within each subsection, a responsive card grid (4–5 columns at desktop) shows individual reference pages: e.g. under `Effects`, cards for `Filters`, `Envelopes`, `Delays`, `Reverbs`, `Modulation`, `Distortion`, `Dynamics`.
 5. Each card shows: a Lucide icon, the title (`Filters`), a 1-line description from the manifest, and 5 tag chips (`moog`, `svf`, `lowpass`, `highpass`, `cutoff`).
@@ -124,10 +126,10 @@ If the manifest is missing entries for some cards (e.g. upstream rename hasn't p
 | 1 | **Instruments** | Sound sources | 5 |
 | 2 | **Effects** | Signal processors | 7 |
 | 3 | **Sequencing** | Time, patterns, voice allocation | 6 |
-| 4 | **Visualizations** | Inline editor visualizers | 4 |
+| 4 | **Visualizations** | Inline editor visualizers | 5 |
 | 5 | **Language** | Akkado syntax & data structures | 7 |
 | 6 | **Tools** | Math, state, plumbing | 6 |
-| | | **Total** | **35** |
+| | | **Total** | **36** |
 
 **Why these 6 groups (and not the manifest's category/subcategory)?** The mirror's structure (`reference/builtins`, `reference/language`, `reference/mini-notation`, `tutorials`) is organised by *file location upstream*, not by *what the user is trying to accomplish*. Using it directly would lump filters, oscillators, samplers, math utilities, sequencers, and visualisers into one giant "builtins" group of ~25 cards, hide visualisers behind a non-obvious `builtins/` prefix, and split sequencing across `builtins/` and `mini-notation/`. The 6 groups here are intent-shaped: a visitor scanning the page can find sound sources separately from signal processors separately from how-time-works. New docs slot into the group whose intent they match, which the implementer keys into the hardcoded `GROUP_MAPPING` table — never by inferring from path.
 
@@ -140,7 +142,7 @@ The generator hardcodes this mapping. If a manifest entry's slug is not in the t
 | Instruments | `oscillators`, `fm-synthesis`, `samplers`, `soundfonts`, `samples-loading` | reference/builtins |
 | Effects | `filters`, `envelopes`, `delays`, `reverbs`, `modulation`, `distortion`, `dynamics` | reference/builtins |
 | Sequencing | `sequencing`, `polyphony`, `timelines`, `basics`, `microtonal`, `chords` | builtins (3) + mini-notation (3) |
-| Visualizations | `oscilloscope`, `spectrum`, `pianoroll`, `waterfall` | reference/builtins |
+| Visualizations | `oscilloscope`, `waveform`, `spectrum`, `waterfall`, `pianoroll` | reference/builtins |
 | Language | `pipes`, `variables`, `operators`, `closures`, `arrays`, `methods`, `conditionals` | reference/language |
 | Tools | `math`, `utility`, `state`, `edge`, `stereo`, `audio-input` | reference/builtins |
 
@@ -167,7 +169,7 @@ Icons are imported from `lucide-svelte`, matching the icon style already used in
 | `timelines` | `Clock` | `spectrum` | `BarChart` |
 | `basics` | `Music` | `pianoroll` | `Grid3x3` |
 | `microtonal` | `KeyRound` | `waterfall` | `AreaChart` |
-| `chords` | `Music2` | | |
+| `chords` | `Music2` | `waveform` | `AudioWaveform` |
 
 (Specific Lucide icon names are suggestions; the implementer may swap to better matches as long as one icon exists per slug.)
 
@@ -218,7 +220,7 @@ scripts/
 │                                                                      │
 │   What's in the box                                                  │
 │   Every instrument, effect, and tool — straight to its docs.         │
-│   [ 95+ DSP opcodes · 35 reference pages ]                           │
+│   [ 95+ DSP opcodes · 36 reference pages ]                           │
 │                                                                      │
 │   ── Instruments ─────────────────────────────────────────────────   │
 │   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐            │
@@ -382,6 +384,7 @@ The cards `<div>` is always in the SSR output (no `{#if}` wrapping it), so serve
 | `web/static/docs/reference/builtins/timelines.md` (nkido repo) | **New** | `timeline` builtin and curve notation split from `sequencing.md`. |
 | `web/static/docs/reference/builtins/samples-loading.md` (nkido repo) | **New** | How to load and reference user-supplied samples + built-in sample banks. |
 | `web/static/docs/reference/builtins/oscilloscope.md` (nkido repo) | **New** | Split from `visualizations.md`. |
+| `web/static/docs/reference/builtins/waveform.md` (nkido repo) | **New** | Split from `visualizations.md`. |
 | `web/static/docs/reference/builtins/spectrum.md` (nkido repo) | **New** | Split from `visualizations.md`. |
 | `web/static/docs/reference/builtins/pianoroll.md` (nkido repo) | **New** | Split from `visualizations.md`. |
 | `web/static/docs/reference/builtins/waterfall.md` (nkido repo) | **New** | Split from `visualizations.md`. |
@@ -411,11 +414,11 @@ No changes to:
 | `src/lib/data/docs-manifest.json` | **Modified.** Each entry gains a `headings: string[]` field listing slugified markdown headings within the configured level range (default H2–H5; see §6.5). |
 | `scripts/mirror-index.ts` | **Modified.** Add 17 entries. See §8.3 for the full list. |
 | `scripts/fetch-mirrored-docs.ts` | **Modified.** Two changes: (1) After fetching/loading each `.md`, parse the markdown to extract headings within `HEADING_LEVELS` (default H2–H5; see §6.5), slugify, and write to the manifest as `headings`. (2) At end of `main()`, after `writeManifest`, invoke the overview builder so the two artifacts stay in sync. |
-| `scripts/build-overview.ts` | **New.** Implements the algorithm in §6.4. Hardcoded `GROUP_MAPPING` (35 rows: slug → group) and `ICON_MAP` (35 rows: slug → Lucide icon name). Exposes a `buildOverview()` function so `fetch-mirrored-docs.ts` can call it; also runs as a CLI entrypoint when invoked directly. Logs warnings to stderr; exits 0 always. |
+| `scripts/build-overview.ts` | **New.** Implements the algorithm in §6.4. Hardcoded `GROUP_MAPPING` (36 rows: slug → group) and `ICON_MAP` (36 rows: slug → Lucide icon name). Exposes a `buildOverview()` function so `fetch-mirrored-docs.ts` can call it; also runs as a CLI entrypoint when invoked directly. Logs warnings to stderr; exits 0 always. |
 | `package.json` | **Modified.** Add `"build:overview": "bun scripts/build-overview.ts"` for local iteration. **No `prebuild` change needed** — `fetch-mirrored-docs.ts` (already in `prebuild` and `predev`) invokes the overview builder at the end of its run. Also add `"test": "vitest run"` and `"test:watch": "vitest"` scripts. |
 | `vitest.config.ts` | **New.** Minimal Vitest config wiring the Svelte plugin and pointing at `**/*.test.ts` under `scripts/` and `src/`. |
 | `package.json` (devDeps) | **Modified.** Add `vitest`, `@testing-library/svelte`, `jsdom` (or `happy-dom`) as devDependencies. |
-| `static/_mirror-fallback/web/static/docs/reference/builtins/{samplers,soundfonts,polyphony,timelines,fm-synthesis,samples-loading,oscilloscope,spectrum,pianoroll,waterfall}.md` | **New.** Fallback copies committed to this repo so builds succeed without GitHub access (matches existing fallback pattern). |
+| `static/_mirror-fallback/web/static/docs/reference/builtins/{samplers,soundfonts,polyphony,timelines,fm-synthesis,samples-loading,oscilloscope,waveform,spectrum,pianoroll,waterfall}.md` | **New.** Fallback copies committed to this repo so builds succeed without GitHub access (matches existing fallback pattern). |
 | `static/_mirror-fallback/web/static/docs/reference/builtins/{edge,state,audio-input}.md` | **New.** Fallback copies for the existing-but-newly-mirrored builtins. |
 | `static/_mirror-fallback/web/static/docs/reference/language/{conditionals,methods,arrays}.md` | **New.** Fallback copies for the existing-but-newly-mirrored language docs. |
 | `static/_mirror-fallback/web/static/docs/reference/mini-notation/chords.md` | **New.** Fallback copy. |
@@ -432,6 +435,7 @@ No changes to:
 | `web/static/docs/reference/builtins/timelines.md` | **New.** Move the `timeline` builtin and curve notation from `sequencing.md`/`mini-notation/curve-notation.md` into a dedicated page. Curve-notation reference stays in mini-notation; timelines.md focuses on the builtin and scheduling semantics. |
 | `web/static/docs/reference/builtins/samples-loading.md` | **New.** Document how user files reach the sampler at runtime (drag-and-drop in the IDE, fetch URLs, packaged sample banks). |
 | `web/static/docs/reference/builtins/oscilloscope.md` | **New.** Split from `visualizations.md`. Document the oscilloscope visualizer (signal display, trigger, time base). |
+| `web/static/docs/reference/builtins/waveform.md` | **New.** Split from `visualizations.md`. Document the waveform / envelope visualizer (min/max amplitude over time). |
 | `web/static/docs/reference/builtins/spectrum.md` | **New.** Split from `visualizations.md`. Document the spectrum analyzer. |
 | `web/static/docs/reference/builtins/pianoroll.md` | **New.** Split from `visualizations.md`. Document the pianoroll visualizer for note events. |
 | `web/static/docs/reference/builtins/waterfall.md` | **New.** Split from `visualizations.md`. Document the waterfall (spectrogram) view. |
@@ -461,6 +465,7 @@ No changes to:
 { upstream: 'web/static/docs/reference/builtins/timelines.md',        category: 'reference', subcategory: 'builtins',     slug: 'timelines' },
 { upstream: 'web/static/docs/reference/builtins/samples-loading.md',  category: 'reference', subcategory: 'builtins',     slug: 'samples-loading' },
 { upstream: 'web/static/docs/reference/builtins/oscilloscope.md',     category: 'reference', subcategory: 'builtins',     slug: 'oscilloscope' },
+{ upstream: 'web/static/docs/reference/builtins/waveform.md',         category: 'reference', subcategory: 'builtins',     slug: 'waveform' },
 { upstream: 'web/static/docs/reference/builtins/spectrum.md',         category: 'reference', subcategory: 'builtins',     slug: 'spectrum' },
 { upstream: 'web/static/docs/reference/builtins/pianoroll.md',        category: 'reference', subcategory: 'builtins',     slug: 'pianoroll' },
 { upstream: 'web/static/docs/reference/builtins/waterfall.md',        category: 'reference', subcategory: 'builtins',     slug: 'waterfall' },
@@ -488,7 +493,7 @@ No changes to:
 
 **Verification:**
 - `bun run check` and `bun run build` succeed in nkido.
-- F1 lookup for `samplers`, `soundfonts`, `fm`, `polyphony`, `timeline`, `chords`, `oscilloscope`, `spectrum`, `pianoroll`, `waterfall` returns the right page.
+- F1 lookup for `samplers`, `soundfonts`, `fm`, `polyphony`, `timeline`, `chords`, `oscilloscope`, `waveform`, `spectrum`, `pianoroll`, `waterfall` returns the right page.
 - F1 lookup for `visualizations` still resolves to `visualizations.md` (now the overview); deep-link anchors that previously pointed into removed sub-sections instead resolve to the relevant split page.
 
 ### Phase 2 — Mirror expansion + heading extraction (nkido.cc repo)
@@ -509,17 +514,17 @@ No changes to:
 
 ### Phase 3 — OverviewGrid component + build script (nkido.cc repo)
 
-**Goal:** The grid renders correctly on the landing page with all 35 cards, anchored chips, mobile collapse, and footer CTA.
+**Goal:** The grid renders correctly on the landing page with all 36 cards, anchored chips, mobile collapse, and footer CTA.
 
 1. Implement `scripts/build-overview.ts` per §6.4. Hardcoded `GROUP_MAPPING` and `ICON_MAP`. Export a `buildOverview()` function plus a CLI entrypoint.
 2. Wire `fetch-mirrored-docs.ts` to call `buildOverview()` at the end of `main()` (after `writeManifest`).
-3. Run `bun run build:overview` (or `bun run scripts/fetch-mirrored-docs.ts`) to produce `src/lib/data/overview.json`. Inspect output: 6 groups, 35 cards in steady state, ≤5 chips per card.
+3. Run `bun run build:overview` (or `bun run scripts/fetch-mirrored-docs.ts`) to produce `src/lib/data/overview.json`. Inspect output: 6 groups, 36 cards in steady state, ≤5 chips per card.
 4. Implement `OverviewCard.svelte` per §5.4.
 5. Implement `OverviewGrid.svelte` per §6.2 and §6.6 (CSS-driven mobile collapse).
 6. Add `<OverviewGrid />` to `src/routes/+page.svelte` after `<RunsEverywhere />`.
 
 **Verification:**
-- `bun run dev` — landing page shows 6 sectioned groups with 35 cards total.
+- `bun run dev` — landing page shows 6 sectioned groups with 36 cards total.
 - Click any card title → top of correct doc.
 - Click a tag chip → navigates to a heading anchor that scrolls to the right section.
 - At <768px viewport: groups collapse closed; tap heading expands.
@@ -602,7 +607,7 @@ No changes to:
 
 - **Card rendering**:
   1. Open `nkido.cc/` on desktop (>1024px). Scroll to the bottom.
-  2. Confirm: 6 group headings, 35 cards total, distributed per §5.2.
+  2. Confirm: 6 group headings, 36 cards total, distributed per §5.2.
   3. Hover any card → focus styles visible.
 
 - **Title-click navigation**:
@@ -645,7 +650,7 @@ No changes to:
 
 ## 12. Open Questions
 
-1. **Does the count badge text track the actual number of cards or stay marketing-friendly?** Proposed: "95+ DSP opcodes · 35 reference pages" where "35" is auto-derived from `overview.json` length so it stays accurate as docs are added. "95+" is a hand-set constant matching `FeatureGrid`. If the card count fluctuates as upstream rolls out new docs, the badge updates automatically.
+1. **Does the count badge text track the actual number of cards or stay marketing-friendly?** Proposed: "95+ DSP opcodes · 36 reference pages" where "36" is auto-derived from `overview.json` length so it stays accurate as docs are added. "95+" is a hand-set constant matching `FeatureGrid`. If the card count fluctuates as upstream rolls out new docs, the badge updates automatically.
 
 2. **Should the sequencing-related move (poly/mono/legato/spread out of `sequencing.md`)** require coordination with `prd-pattern-array-note-extensions-phase-2.md` or similar in-flight upstream work? Phase 1 implementer should grep upstream PRDs for references to `sequencing.md` voice-allocation sections before splitting.
 
