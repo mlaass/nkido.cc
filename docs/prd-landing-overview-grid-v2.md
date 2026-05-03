@@ -4,7 +4,7 @@
 >
 > **What changes vs v1:** ~80–110 sub-feature cards instead of 36 doc-level cards; named sub-groups inside each top-level group (e.g. Effects → Frequency / Time-based / Nonlinear / Dynamics); per-card code-snippet preview replaces broken keyword chips; structure declared by enriched upstream frontmatter (single source of truth) rather than hardcoded `GROUP_MAPPING` + heuristic keyword↔heading matching.
 >
-> **Why:** v1's `GROUP_MAPPING` lumps unrelated docs into broad rows (Effects has 7 docs covering filtering, time-based effects, distortion, and dynamics in one undifferentiated list), and v1's chip resolution is brittle — Distortion has 19 keywords but only 9 markdown headings, so ~10 chips drop silently per card. The chips that survive feel arbitrary because the keyword↔heading match is a coincidence, not a design.
+> **Why:** v1's `GROUP_MAPPING` lumps unrelated docs into broad rows (Effects has 7 docs covering filtering, time-based effects, distortion, and dynamics in one undifferentiated list), and v1's chip resolution is brittle — Distortion has 20 keywords but only 9 markdown headings, so ~11 keywords have no matching heading. The chips that survive feel arbitrary because the keyword↔heading match is a coincidence, not a design.
 
 ---
 
@@ -17,6 +17,8 @@ This PRD rebuilds the grid around three changes:
 1. **One card per sub-feature**, not per doc. Distortion becomes 9 cards (saturate, softclip, bitcrush, fold, tube, smooth, tape, xfmr, excite). Filters becomes 5 (lp, hp, bp, moog, sallen-key). Total card count grows to ~80–110 in steady state.
 2. **Named sub-groups inside the existing 6 top-level groups.** Effects → Frequency / Time-based / Nonlinear / Dynamics. Tools → Math / State & I/O / Audio plumbing. Sub-group label is declared per-doc in upstream frontmatter; multiple docs can share a sub-group.
 3. **Code-snippet previews replace tag chips.** Each card carries an optional one-line nkido sample (e.g. `saw 110 -> moog .8 .3`). Snippets are authored in upstream frontmatter alongside each sub-feature; if absent, the card simply renders without one. No keyword↔heading matching anywhere.
+
+> **Card name vs anchor.** Throughout this PRD, friendly card labels in prose (`Saturate`, `Bitcrush`, `Trigonometry`, `Stereo Delay`) are display names — the `subfeatures[].name` field. The `subfeatures[].anchor` field must match an existing `## heading` slug in the parent doc (lowercased + dashified by github-slugger). Names and anchors can differ. See §8.3.
 
 Discovery is driven by a sticky row of filter pills (`All · Instruments · Effects · …`) and collapsible sub-group headings; on mobile, sub-groups collapse closed by default. Cards link to anchors inside their parent doc (`/docs/reference/builtins/distortion#saturate`); no further upstream file splits beyond what v1 shipped.
 
@@ -48,7 +50,7 @@ Discovery is driven by a sticky row of filter pills (`All · Instruments · Effe
 
 ### 2.1 What's broken about v1
 
-**Distortion's chip resolution is the canonical case.** `distortion.md` declares 19 keywords (`distortion, saturate, softclip, bitcrush, fold, wavefold, drive, crush, lofi, tube, valve, smooth, adaa, tape, warmth, xfmr, transformer, excite, exciter, harmonics`). Its markdown body has 9 H2 headings (`saturate, softclip, bitcrush, fold, tube, smooth, tape, xfmr, excite`). The chip resolution rule is `github-slugger.slug(keyword) ∈ headings[]`, so:
+**Distortion's chip resolution is the canonical case.** `distortion.md` declares 20 keywords (`distortion, saturate, softclip, bitcrush, fold, wavefold, drive, crush, lofi, tube, valve, smooth, adaa, tape, warmth, xfmr, transformer, excite, exciter, harmonics`). Its markdown body has 9 H2 headings (`saturate, softclip, bitcrush, fold, tube, smooth, tape, xfmr, excite`). The chip resolution rule is `github-slugger.slug(keyword) ∈ headings[]`, so:
 
 - `saturate, softclip, bitcrush, fold, tube, smooth, tape, xfmr, excite` resolve → ✓
 - `distortion, wavefold, drive, crush, lofi, valve, adaa, warmth, transformer, exciter, harmonics` don't → silently dropped, logs a warning each
@@ -319,8 +321,10 @@ type OverviewCard = {
 3. Group cards into a tree: groups → subgroups → cards.
    - Subgroup order: first contributing doc's order within the top-level group.
    - Within-subgroup card order: doc order ascending, then subfeature array order.
-4. Validate icon names against an allowlist sourced from lucide-svelte's exports.
-   Unknown icons fall back to 'Box' with a warning.
+4. Validate icon names against the static iconMap imported by OverviewCard.svelte
+   (the runtime can only render icons it imports). Unknown icons fall back to 'Box'
+   with a warning. Adding a new icon name in upstream frontmatter is a 2-step change:
+   add the import to OverviewCard.svelte, then author the frontmatter.
 5. Emit warnings to stderr; never exit non-zero. Write overview.json.
 ```
 
@@ -332,22 +336,20 @@ The script is invoked from `fetch-mirrored-docs.ts` at the end of `main()`, afte
 
 1. Read the new fields off `data` if present: `data.group`, `data.subgroup`, `data.icon`, `data.tagline`, `data.subfeatures` (validated as an array of `{name, anchor, tagline, snippet?, icon?}`).
 2. Persist them on the `MirrorResult` and into `manifest.entries[...].`. Existing fields are unchanged.
-3. Drop the v1 `referenceKeyword` heuristic — no consumer remains after `build-overview.ts` is rewritten.
+3. Leave the existing `referenceKeyword` field on the rendered `.md`'s frontmatter untouched — `DocPage.svelte` consumes it to render the per-doc "Reference: …" footer link, which is unrelated to the v1 chip resolver in `build-overview.ts`. v2 doesn't touch DocPage.
 
 The output `.md` frontmatter that `DocPage` consumes is **not** changed for the user-facing fields (title, description, slug, etc.). The new fields are read but not echoed back to the rendered `.md`'s frontmatter; they exist only in the manifest and `overview.json`.
 
 ### 6.6 Filter Pills
 
 ```svelte
-<div class="pill-row" role="tablist">
+<div class="pill-row">
   <button
-    role="tab"
     aria-pressed={activeFilter === 'all'}
     class:active={activeFilter === 'all'}
     onclick={() => activeFilter = 'all'}>All</button>
   {#each groups as g}
     <button
-      role="tab"
       aria-pressed={activeFilter === g.id}
       class:active={activeFilter === g.id}
       onclick={() => activeFilter = g.id}>{g.heading}</button>
@@ -361,7 +363,7 @@ The output `.md` frontmatter that `DocPage` consumes is **not** changed for the 
 {/each}
 ```
 
-Single-select. Hidden groups use the HTML `hidden` attribute (removes them from accessibility tree and visual layout). The pill row uses `position: sticky; top: 0;` with a translucent backdrop on scroll.
+Pills follow the WAI-ARIA **Toggle Button** pattern (`<button aria-pressed>`), not the Tab pattern — there are no separate tab panels and `role="tab"` would conflict with `aria-pressed`. Single-select. Hidden groups use the HTML `hidden` attribute (removes them from accessibility tree and visual layout). The pill row uses `position: sticky; top: 0;` with a translucent backdrop on scroll.
 
 Keyboard: pills are reachable via Tab; Left/Right arrows move focus across pills; Enter/Space activates. `aria-pressed` reflects active state for screen readers.
 
@@ -424,13 +426,13 @@ No changes to:
 | File | Change |
 |------|--------|
 | `src/lib/components/Home/OverviewGrid.svelte` | **Rewritten.** Reads new `overview.json` shape. Renders sticky filter pill row, then 6 top-level group sections, each containing sub-group sections, each containing cards. State: `activeFilter` (`'all' \| OverviewGroupId`), `openSubgroups: Record<subgroupId, boolean>`. CSS-driven sub-group collapse on mobile. Sticky pill row. Footer CTA `View full reference →`. |
-| `src/lib/components/Home/OverviewCard.svelte` | **Rewritten.** Props: `card: OverviewCard`. Renders icon (Lucide via `<svelte:component this={iconMap[card.icon]} />`, fallback `Box`), `<a>` title, tagline, optional snippet block. No chip list. The `<a>`'s `href` is `card.url`. |
+| `src/lib/components/Home/OverviewCard.svelte` | **Rewritten.** Props: `card: OverviewCard`. Renders icon (Lucide via `<svelte:component this={iconMap[card.icon]} />`, fallback `Box`), `<a>` title, tagline, optional snippet block. No chip list. The `<a>`'s `href` is `card.url`. The static `iconMap` is the source of truth for the icon allowlist used by `build-overview.ts` — extend its imports to cover every `icon:` value authored in upstream frontmatter (PRD examples reference `Box`, `Cylinder`, `Binary`, etc., which today aren't imported). |
 | `src/lib/components/Home/OverviewGrid.test.ts` | **Modified.** New fixture covering: 3 groups × 2 subgroups × mixed (sub-feature + atomic) cards; one card with snippet, one without; one card with custom icon, one with default. Snapshot regenerated. |
 | `src/lib/data/overview.json` | **Regenerated.** New shape per §6.3. Built artifact, checked into git. |
 | `src/lib/data/docs-manifest.json` | **Modified.** Each entry gains optional fields: `group`, `subgroup`, `icon`, `tagline`, `subfeatures: { name, anchor, tagline, snippet?, icon? }[]`. Pre-existing fields unchanged. |
 | `scripts/build-overview.ts` | **Rewritten.** Algorithm per §6.4. Reads enriched manifest. No `GROUP_MAPPING`. Validates icon names against `lucide-svelte` exports. Verifies subfeature anchors against `headings[]`. Emits warnings; exits 0. |
 | `scripts/build-overview.test.ts` | **Rewritten.** Cases per §11.2. |
-| `scripts/fetch-mirrored-docs.ts` | **Modified.** Two changes: (1) extend `MirrorResult` and the writer to persist `group`, `subgroup`, `icon`, `tagline`, `subfeatures` from frontmatter into the manifest; (2) drop the v1 `referenceKeyword` field on the rendered `.md`'s frontmatter (no consumer left). Heading extraction unchanged. |
+| `scripts/fetch-mirrored-docs.ts` | **Modified.** Single change: extend `MirrorResult` and the writer to persist `group`, `subgroup`, `icon`, `tagline`, `subfeatures` from frontmatter into the manifest. The existing `referenceKeyword` field on rendered `.md` frontmatter stays — `DocPage.svelte` consumes it for the per-doc "Reference: …" footer (unrelated to the v1 chip resolver). Heading extraction unchanged. |
 | `scripts/validate-frontmatter.ts` | **Modified.** Optional shape check for new fields once Phase 1 is complete. Initially advisory (warn), promotable to required after upstream migration is done. |
 | `static/_mirror-fallback/web/static/docs/reference/**/*.md` | **Modified.** Fallbacks regenerated alongside upstream changes. Body content unchanged; only frontmatter shape evolves. |
 | `package.json` | **Stays.** No deps added. `bun run build:overview` already exists. |
@@ -447,7 +449,7 @@ No changes to:
 | `web/static/docs/reference/language/{pipes,variables,operators,closures,arrays,methods,conditionals}.md` | **Modified.** Add `group: language`, `subgroup: <syntax\|data>`, `icon`, `tagline`. Atomic — no `subfeatures` for any of these. |
 | `web/static/docs/reference/builtins/{math,utility,state,edge,stereo,audio-input}.md` | **Modified.** Add `group: tools`, `subgroup`, `icon`, `tagline`, `subfeatures` (math only — function families). The others are atomic. |
 
-No `.md` body content changes. No new files. No file renames or deletions.
+No prose-body changes, new files, file renames, or deletions. **Heading additions/renames are allowed** where the existing H2 layout doesn't fit a clean sub-feature taxonomy (e.g. math.md may need `## Range` and `## Rounding` H2s added; `## Trigonometric Functions` may be renamed to `## Trigonometry`). Authors verify final anchors with `github-slugger` before authoring `subfeatures[].anchor`.
 
 ### 8.3 Frontmatter Schema (full reference)
 
@@ -493,7 +495,7 @@ subfeatures:                         # if absent → atomic doc renders as 1 car
 | `tagline` | string | Required for atomic docs | 1-line description. ≤120 chars recommended. |
 | `subfeatures` | array | No | If present and non-empty → sub-feature card path. Otherwise atomic. |
 | `subfeatures[].name` | string | Yes | Card title. |
-| `subfeatures[].anchor` | string | Yes | Slug matching a `## heading`. |
+| `subfeatures[].anchor` | string | Yes | Slug matching a `## heading` in the doc. Use the `github-slugger`-derived slug — heading text is lowercased, non-alphanumerics become dashes (e.g. `## Trigonometric Functions` → `anchor: trigonometric-functions`; `## sallenkey` → `anchor: sallenkey`). The build script verifies against the doc's extracted `headings[]` and warns on mismatch. |
 | `subfeatures[].tagline` | string | Yes | 1-line description for the sub-feature. |
 | `subfeatures[].snippet` | string | No | One-line nkido sample. ≤80 chars recommended. |
 | `subfeatures[].icon` | string | No | Lucide name override. Falls back to doc `icon`, then `Box`. |
@@ -538,9 +540,8 @@ tagline: Forward composition with `->` and `|>`
 **Goal:** `docs-manifest.json` exposes new per-entry fields for the build script to consume.
 
 1. Modify `scripts/fetch-mirrored-docs.ts` to read and persist `group`, `subgroup`, `icon`, `tagline`, `subfeatures` per entry.
-2. Drop the `referenceKeyword` field that v1 added to rendered `.md` frontmatter — no consumer remains after Phase 3.
-3. Run `bun run scripts/fetch-mirrored-docs.ts` (also invoked transitively by `bun run predev` / `bun run prebuild`) and inspect the manifest output.
-4. Commit regenerated `_mirror-fallback/...` files (frontmatter-only changes).
+2. Run `bun run scripts/fetch-mirrored-docs.ts` (also invoked transitively by `bun run predev` / `bun run prebuild`) and inspect the manifest output.
+3. Commit regenerated `_mirror-fallback/...` files (frontmatter-only changes).
 
 **Verification:**
 
@@ -574,7 +575,7 @@ tagline: Forward composition with `->` and `|>`
 
 1. Test in Chrome, Firefox, Safari (desktop) + iOS Safari + Android Chrome.
 2. Keyboard: Tab through pill row (Left/Right arrows move within row), Tab into cards, Enter activates a card link. Tab into sub-group headings, Enter toggles open/closed.
-3. Screen reader: pills use `aria-pressed`, sub-group headings use `<button>` with `aria-expanded`. Card titles get `aria-label="<name> reference"`.
+3. Screen reader: pills are toggle buttons (`<button aria-pressed>`, no `role="tab"`), sub-group headings use `<button>` with `aria-expanded`. Card titles get `aria-label="<name> reference"`.
 4. Focus visible: pills, headings, card titles get a 2px focus outline using `var(--accent-primary)`.
 5. Reduced motion: disable chevron rotation transition; pill state-changes snap.
 6. Lighthouse a11y on `/` stays ≥ 95.
@@ -678,7 +679,7 @@ Chrome, Firefox, Safari (desktop). iOS Safari, Android Chrome. Confirm grid layo
 ## 12. Migration Notes (v1 → v2)
 
 - v1's `GROUP_MAPPING` and `ICON_MAP` constants are deleted from `scripts/build-overview.ts`. No reference to them remains anywhere.
-- v1's `referenceKeyword` field on rendered `.md` frontmatter is removed (was unused outside `build-overview.ts`).
+- v1's `referenceKeyword` field on rendered `.md` frontmatter **stays** — it powers the per-doc "Reference: …" footer in `DocPage.svelte` and is unrelated to the chip resolver this PRD removes.
 - `overview.json`'s top-level shape changes from `{groups: [{cards: OverviewCard[]}]}` to `{groups: [{subgroups: [{cards: OverviewCard[]}]}]}`. Any consumer reading `overview.json` directly (currently only `OverviewGrid.svelte`, also rewritten) must be updated.
 - `OverviewCard` props change: `card.chips` is gone; `card.snippet?` and `card.tagline` are added. Tests and snapshots regenerate.
 - Mobile collapse semantics shift from "top-level group is the collapsible unit" (v1) to "sub-group is the collapsible unit" (v2). Top-level groups always show their heading on mobile; sub-groups collapse.
