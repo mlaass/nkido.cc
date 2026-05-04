@@ -1,162 +1,74 @@
 {
-  "generatedAt": "2026-05-02T22:30:38.025Z",
+  "generatedAt": "2026-05-03T23:12:05.975Z",
   "groups": [
     {
       "id": "instruments",
       "heading": "Instruments",
-      "cards": [
+      "subgroups": [
         {
-          "slug": "oscillators",
-          "title": "Oscillators",
-          "description": "Oscillators are the primary sound sources in synthesis. The osc() function is the unified interface for all oscillator types.",
-          "url": "/docs/reference/builtins/oscillators",
-          "icon": "Waves",
-          "chips": [
+          "id": "synthesis",
+          "heading": "Synthesis",
+          "cards": [
             {
-              "keyword": "osc",
-              "anchor": "osc",
-              "href": "/docs/reference/builtins/oscillators#osc"
+              "name": "Oscillators",
+              "tagline": "Sine, saw, square, triangle, phasor, ramp, and noise sources.",
+              "url": "/docs/reference/builtins/oscillators",
+              "icon": "Waves",
+              "source": {
+                "docSlug": "oscillators",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "noise",
-              "anchor": "noise",
-              "href": "/docs/reference/builtins/oscillators#noise"
+              "name": "FM Synthesis",
+              "tagline": "Carrier/modulator frequency modulation with rational ratios.",
+              "url": "/docs/reference/builtins/fm-synthesis",
+              "icon": "Radio",
+              "source": {
+                "docSlug": "fm-synthesis",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             }
           ]
         },
         {
-          "slug": "fm-synthesis",
-          "title": "FM Synthesis",
-          "description": "Frequency modulation (FM) synthesizes complex timbres by modulating the frequency of one oscillator (the carrier) with the output of another (the modulator).…",
-          "url": "/docs/reference/builtins/fm-synthesis",
-          "icon": "Radio",
-          "chips": [
+          "id": "sample-based",
+          "heading": "Sample-based",
+          "cards": [
             {
-              "keyword": "carrier",
-              "anchor": "carrier",
-              "href": "/docs/reference/builtins/fm-synthesis#carrier"
+              "name": "Samplers",
+              "tagline": "One-shot and looping playback with kit shortcuts.",
+              "url": "/docs/reference/builtins/samplers",
+              "icon": "Drum",
+              "source": {
+                "docSlug": "samplers",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "modulator",
-              "anchor": "modulator",
-              "href": "/docs/reference/builtins/fm-synthesis#modulator"
+              "name": "SoundFonts",
+              "tagline": "General MIDI preset playback via SF2/SF3 fonts.",
+              "url": "/docs/reference/builtins/soundfonts",
+              "icon": "Piano",
+              "source": {
+                "docSlug": "soundfonts",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "ratio",
-              "anchor": "ratio",
-              "href": "/docs/reference/builtins/fm-synthesis#ratio"
-            },
-            {
-              "keyword": "index",
-              "anchor": "index",
-              "href": "/docs/reference/builtins/fm-synthesis#index"
-            },
-            {
-              "keyword": "sideband",
-              "anchor": "sideband",
-              "href": "/docs/reference/builtins/fm-synthesis#sideband"
-            }
-          ]
-        },
-        {
-          "slug": "samplers",
-          "title": "Samplers",
-          "description": "Samplers play recorded audio. The most common path is a sample pattern — pat(\"bd sd hh sd\") — which triggers events from the loaded sample bank. nkido ships…",
-          "url": "/docs/reference/builtins/samplers",
-          "icon": "Drum",
-          "chips": [
-            {
-              "keyword": "sample",
-              "anchor": "sample",
-              "href": "/docs/reference/builtins/samplers#sample"
-            },
-            {
-              "keyword": "sample_loop",
-              "anchor": "sample_loop",
-              "href": "/docs/reference/builtins/samplers#sample_loop"
-            },
-            {
-              "keyword": "bd",
-              "anchor": "bd",
-              "href": "/docs/reference/builtins/samplers#bd"
-            },
-            {
-              "keyword": "sd",
-              "anchor": "sd",
-              "href": "/docs/reference/builtins/samplers#sd"
-            },
-            {
-              "keyword": "hh",
-              "anchor": "hh",
-              "href": "/docs/reference/builtins/samplers#hh"
-            }
-          ]
-        },
-        {
-          "slug": "soundfonts",
-          "title": "SoundFonts",
-          "description": "SoundFonts (.sf2 / .sf3) are bundled instrument banks — typically General MIDI piano, strings, brass, drums. The soundfont() builtin plays a pattern through…",
-          "url": "/docs/reference/builtins/soundfonts",
-          "icon": "Piano",
-          "chips": [
-            {
-              "keyword": "soundfont",
-              "anchor": "soundfont",
-              "href": "/docs/reference/builtins/soundfonts#soundfont"
-            },
-            {
-              "keyword": "gm",
-              "anchor": "gm",
-              "href": "/docs/reference/builtins/soundfonts#gm"
-            },
-            {
-              "keyword": "preset",
-              "anchor": "preset",
-              "href": "/docs/reference/builtins/soundfonts#preset"
-            },
-            {
-              "keyword": "voice",
-              "anchor": "voice",
-              "href": "/docs/reference/builtins/soundfonts#voice"
-            },
-            {
-              "keyword": "polyphonic",
-              "anchor": "polyphonic",
-              "href": "/docs/reference/builtins/soundfonts#polyphonic"
-            }
-          ]
-        },
-        {
-          "slug": "samples-loading",
-          "title": "Samples Loading",
-          "description": "How user-supplied audio reaches the sampler at runtime. The samples() directive declares a bank URI to fetch before the program runs; the IDE also accepts dr…",
-          "url": "/docs/reference/builtins/samples-loading",
-          "icon": "FolderOpen",
-          "chips": [
-            {
-              "keyword": "samples",
-              "anchor": "samples",
-              "href": "/docs/reference/builtins/samples-loading#samples"
-            },
-            {
-              "keyword": "bank",
-              "anchor": "bank",
-              "href": "/docs/reference/builtins/samples-loading#bank"
-            },
-            {
-              "keyword": "github",
-              "anchor": "github",
-              "href": "/docs/reference/builtins/samples-loading#github"
-            },
-            {
-              "keyword": "http",
-              "anchor": "http",
-              "href": "/docs/reference/builtins/samples-loading#http"
-            },
-            {
-              "keyword": "url",
-              "anchor": "url",
-              "href": "/docs/reference/builtins/samples-loading#url"
+              "name": "Samples Loading",
+              "tagline": "Pull sample banks from GitHub, HTTP, or local files.",
+              "url": "/docs/reference/builtins/samples-loading",
+              "icon": "FolderOpen",
+              "source": {
+                "docSlug": "samples-loading",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             }
           ]
         }
@@ -165,197 +77,434 @@
     {
       "id": "effects",
       "heading": "Effects",
-      "cards": [
+      "subgroups": [
         {
-          "slug": "filters",
-          "title": "Filters",
-          "description": "Filters shape the frequency content of signals by attenuating or boosting certain frequencies.",
-          "url": "/docs/reference/builtins/filters",
-          "icon": "Sliders",
-          "chips": [
+          "id": "frequency",
+          "heading": "Frequency",
+          "cards": [
             {
-              "keyword": "lp",
-              "anchor": "lp",
-              "href": "/docs/reference/builtins/filters#lp"
+              "name": "Lowpass",
+              "tagline": "Resonant low-pass with q control.",
+              "url": "/docs/reference/builtins/filters#lp",
+              "icon": "Sliders",
+              "source": {
+                "docSlug": "filters",
+                "docCategory": "reference/builtins",
+                "anchor": "lp",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> lp(%, 800)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> lp</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">800</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "hp",
-              "anchor": "hp",
-              "href": "/docs/reference/builtins/filters#hp"
+              "name": "Highpass",
+              "tagline": "Resonant high-pass.",
+              "url": "/docs/reference/builtins/filters#hp",
+              "icon": "Sliders",
+              "source": {
+                "docSlug": "filters",
+                "docCategory": "reference/builtins",
+                "anchor": "hp",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) |> hp(%, 200)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> hp</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">200</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "bp",
-              "anchor": "bp",
-              "href": "/docs/reference/builtins/filters#bp"
+              "name": "Bandpass",
+              "tagline": "Bandpass with peak control.",
+              "url": "/docs/reference/builtins/filters#bp",
+              "icon": "Sliders",
+              "source": {
+                "docSlug": "filters",
+                "docCategory": "reference/builtins",
+                "anchor": "bp",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> bp(%, 1000, 4)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> bp</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">1000</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "moog",
-              "anchor": "moog",
-              "href": "/docs/reference/builtins/filters#moog"
+              "name": "Moog",
+              "tagline": "Four-pole ladder, classic warmth.",
+              "url": "/docs/reference/builtins/filters#moog",
+              "icon": "Sliders",
+              "source": {
+                "docSlug": "filters",
+                "docCategory": "reference/builtins",
+                "anchor": "moog",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 55) |> moog(%, 400, 2)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> moog</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">400</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Sallen-Key",
+              "tagline": "12 dB SVF with morphing modes.",
+              "url": "/docs/reference/builtins/filters#sallenkey",
+              "icon": "Sliders",
+              "source": {
+                "docSlug": "filters",
+                "docCategory": "reference/builtins",
+                "anchor": "sallenkey",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 55) |> sallenkey(%, 600, 3)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> sallenkey</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">600</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">3</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "ADSR",
+              "tagline": "Attack, decay, sustain, release.",
+              "url": "/docs/reference/builtins/envelopes#adsr",
+              "icon": "Activity",
+              "source": {
+                "docSlug": "envelopes",
+                "docCategory": "reference/builtins",
+                "anchor": "adsr",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"sin\", 440) * adsr(trigger(2), 0.01, 0.2)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">440</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> adsr</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#6CB6FF\">0.01</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.2</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "AR",
+              "tagline": "Compact attack/release.",
+              "url": "/docs/reference/builtins/envelopes#ar",
+              "icon": "Activity",
+              "source": {
+                "docSlug": "envelopes",
+                "docCategory": "reference/builtins",
+                "anchor": "ar",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"sin\", 55) * ar(trigger(4), 0.001, 0.2)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#6CB6FF\">0.001</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.2</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         },
         {
-          "slug": "envelopes",
-          "title": "Envelopes",
-          "description": "Envelopes shape the amplitude or other parameters of a sound over time. They respond to gates (sustained signals) or triggers (momentary pulses).",
-          "url": "/docs/reference/builtins/envelopes",
-          "icon": "Activity",
-          "chips": [
+          "id": "time-based",
+          "heading": "Time-based",
+          "cards": [
             {
-              "keyword": "adsr",
-              "anchor": "adsr",
-              "href": "/docs/reference/builtins/envelopes#adsr"
+              "name": "Delay",
+              "tagline": "Beat-synced feedback delay.",
+              "url": "/docs/reference/builtins/delays#delay",
+              "icon": "Repeat2",
+              "source": {
+                "docSlug": "delays",
+                "docCategory": "reference/builtins",
+                "anchor": "delay",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> delay(%, 0.5, 0.4)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> delay</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "ar",
-              "anchor": "ar",
-              "href": "/docs/reference/builtins/envelopes#ar"
+              "name": "Delay (ms)",
+              "tagline": "Time-domain delay with millisecond control.",
+              "url": "/docs/reference/builtins/delays#delay_ms",
+              "icon": "Repeat2",
+              "source": {
+                "docSlug": "delays",
+                "docCategory": "reference/builtins",
+                "anchor": "delay_ms",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> delay_ms(%, 300, 0.4)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> delay_ms</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">300</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Tap Delay",
+              "tagline": "Multi-tap with feedback processor.",
+              "url": "/docs/reference/builtins/delays#tap_delay",
+              "icon": "Repeat2",
+              "source": {
+                "docSlug": "delays",
+                "docCategory": "reference/builtins",
+                "anchor": "tap_delay",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) |> tap_delay(%, 0.375, 0.7, (x) -> lp(x, 1500))",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> tap_delay</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.375</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">, (x) </span><span style=\"color:#F47067\">-></span><span style=\"color:#DCBDFB\"> lp</span><span style=\"color:#ADBAC7\">(x, </span><span style=\"color:#6CB6FF\">1500</span><span style=\"color:#ADBAC7\">))</span></span></code></pre>"
+            },
+            {
+              "name": "Freeverb",
+              "tagline": "Schroeder-style room reverb.",
+              "url": "/docs/reference/builtins/reverbs#freeverb",
+              "icon": "Wind",
+              "source": {
+                "docSlug": "reverbs",
+                "docCategory": "reference/builtins",
+                "anchor": "freeverb",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) * ar(trigger(2)) |> freeverb(%, 0.5, 0.5)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">)) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> freeverb</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Dattorro",
+              "tagline": "Plate reverb, lush mid-decay.",
+              "url": "/docs/reference/builtins/reverbs#dattorro",
+              "icon": "Wind",
+              "source": {
+                "docSlug": "reverbs",
+                "docCategory": "reference/builtins",
+                "anchor": "dattorro",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) * ar(trigger(2)) |> dattorro(%, 0.8, 30)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">)) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> dattorro</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.8</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">30</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "FDN",
+              "tagline": "Feedback delay network, deep tails.",
+              "url": "/docs/reference/builtins/reverbs#fdn",
+              "icon": "Wind",
+              "source": {
+                "docSlug": "reverbs",
+                "docCategory": "reference/builtins",
+                "anchor": "fdn",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 55) * ar(trigger(0.5)) |> fdn(%, 0.9, 0.4)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> fdn</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.9</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Chorus",
+              "tagline": "Stereo chorus, lush detune.",
+              "url": "/docs/reference/builtins/modulation#chorus",
+              "icon": "Wand2",
+              "source": {
+                "docSlug": "modulation",
+                "docCategory": "reference/builtins",
+                "anchor": "chorus",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> chorus(%, 0.5, 0.5)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> chorus</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Flanger",
+              "tagline": "Swept short delay with feedback.",
+              "url": "/docs/reference/builtins/modulation#flanger",
+              "icon": "Wand2",
+              "source": {
+                "docSlug": "modulation",
+                "docCategory": "reference/builtins",
+                "anchor": "flanger",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) |> flanger(%, 0.5, 0.7)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> flanger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Phaser",
+              "tagline": "All-pass cascade phaser.",
+              "url": "/docs/reference/builtins/modulation#phaser",
+              "icon": "Wand2",
+              "source": {
+                "docSlug": "modulation",
+                "docCategory": "reference/builtins",
+                "anchor": "phaser",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) |> phaser(%, 0.3, 0.8)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> phaser</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.3</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.8</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Comb",
+              "tagline": "Comb filter modulation.",
+              "url": "/docs/reference/builtins/modulation#comb",
+              "icon": "Wand2",
+              "source": {
+                "docSlug": "modulation",
+                "docCategory": "reference/builtins",
+                "anchor": "comb",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"noise\") |> comb(%, 1/220, 0.95)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"noise\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> comb</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">1</span><span style=\"color:#F47067\">/</span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.95</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         },
         {
-          "slug": "delays",
-          "title": "Delays",
-          "description": "Delay effects create copies of a signal offset in time for echoes, rhythmic effects, and spatial depth.",
-          "url": "/docs/reference/builtins/delays",
-          "icon": "Repeat2",
-          "chips": [
+          "id": "nonlinear",
+          "heading": "Nonlinear",
+          "cards": [
             {
-              "keyword": "delay",
-              "anchor": "delay",
-              "href": "/docs/reference/builtins/delays#delay"
+              "name": "Saturate",
+              "tagline": "Tape-style tanh saturation.",
+              "url": "/docs/reference/builtins/distortion#saturate",
+              "icon": "Zap",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "saturate",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) |> saturate(%, 3)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> saturate</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">3</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "delay_ms",
-              "anchor": "delay_ms",
-              "href": "/docs/reference/builtins/delays#delay_ms"
+              "name": "Softclip",
+              "tagline": "Cubic soft clipper.",
+              "url": "/docs/reference/builtins/distortion#softclip",
+              "icon": "Zap",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "softclip",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> softclip(%, 0.7)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> softclip</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "delay_smp",
-              "anchor": "delay_smp",
-              "href": "/docs/reference/builtins/delays#delay_smp"
+              "name": "Bitcrush",
+              "tagline": "8-bit lo-fi color.",
+              "url": "/docs/reference/builtins/distortion#bitcrush",
+              "icon": "Binary",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "bitcrush",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> bitcrush(%, 8, 0.5)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> bitcrush</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "tap_delay",
-              "anchor": "tap_delay",
-              "href": "/docs/reference/builtins/delays#tap_delay"
+              "name": "Fold",
+              "tagline": "Wavefolder for harmonic chaos.",
+              "url": "/docs/reference/builtins/distortion#fold",
+              "icon": "Zap",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "fold",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"sin\", 110) * 2 |> fold(%, 0.5)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 2</span><span style=\"color:#F47067\"> |></span><span style=\"color:#DCBDFB\"> fold</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "tap_delay_ms",
-              "anchor": "tap_delay_ms",
-              "href": "/docs/reference/builtins/delays#tap_delay_ms"
+              "name": "Tube",
+              "tagline": "Asymmetric valve warmth.",
+              "url": "/docs/reference/builtins/distortion#tube",
+              "icon": "Cylinder",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "tube",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) |> tube(%, 5, 0.1)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> tube</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Smooth",
+              "tagline": "Anti-aliased smooth distortion.",
+              "url": "/docs/reference/builtins/distortion#smooth",
+              "icon": "Zap",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "smooth",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> smooth(%, 3)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> smooth</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">3</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Tape",
+              "tagline": "Tape compression and saturation.",
+              "url": "/docs/reference/builtins/distortion#tape",
+              "icon": "Zap",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "tape",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) |> tape(%, 4, 0.4)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> tape</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "XFMR",
+              "tagline": "Transformer-style coloration.",
+              "url": "/docs/reference/builtins/distortion#xfmr",
+              "icon": "Zap",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "xfmr",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 55) |> xfmr(%, 4, 8)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> xfmr</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Excite",
+              "tagline": "Harmonic exciter.",
+              "url": "/docs/reference/builtins/distortion#excite",
+              "icon": "Zap",
+              "source": {
+                "docSlug": "distortion",
+                "docCategory": "reference/builtins",
+                "anchor": "excite",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) |> excite(%, 0.5, 3000)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> excite</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">3000</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         },
         {
-          "slug": "reverbs",
-          "title": "Reverbs",
-          "description": "Reverbs simulate acoustic spaces by generating many delayed, filtered reflections. Each algorithm has its own character.",
-          "url": "/docs/reference/builtins/reverbs",
-          "icon": "Wind",
-          "chips": [
+          "id": "dynamics",
+          "heading": "Dynamics",
+          "cards": [
             {
-              "keyword": "freeverb",
-              "anchor": "freeverb",
-              "href": "/docs/reference/builtins/reverbs#freeverb"
+              "name": "Compressor",
+              "tagline": "Feedforward compressor.",
+              "url": "/docs/reference/builtins/dynamics#comp",
+              "icon": "Gauge",
+              "source": {
+                "docSlug": "dynamics",
+                "docCategory": "reference/builtins",
+                "anchor": "comp",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) * ar(trigger(2)) |> comp(%, -12, 4)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">)) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> comp</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">12</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "dattorro",
-              "anchor": "dattorro",
-              "href": "/docs/reference/builtins/reverbs#dattorro"
+              "name": "Limiter",
+              "tagline": "Brick-wall ceiling.",
+              "url": "/docs/reference/builtins/dynamics#limiter",
+              "icon": "Gauge",
+              "source": {
+                "docSlug": "dynamics",
+                "docCategory": "reference/builtins",
+                "anchor": "limiter",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) * 2 |> limiter(%, -0.1, 0.1)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 2</span><span style=\"color:#F47067\"> |></span><span style=\"color:#DCBDFB\"> limiter</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "fdn",
-              "anchor": "fdn",
-              "href": "/docs/reference/builtins/reverbs#fdn"
-            }
-          ]
-        },
-        {
-          "slug": "modulation",
-          "title": "Modulation Effects",
-          "description": "Modulation effects use time-varying delays to add movement and spatial width to sounds.",
-          "url": "/docs/reference/builtins/modulation",
-          "icon": "Wand2",
-          "chips": [
-            {
-              "keyword": "chorus",
-              "anchor": "chorus",
-              "href": "/docs/reference/builtins/modulation#chorus"
-            },
-            {
-              "keyword": "flanger",
-              "anchor": "flanger",
-              "href": "/docs/reference/builtins/modulation#flanger"
-            },
-            {
-              "keyword": "phaser",
-              "anchor": "phaser",
-              "href": "/docs/reference/builtins/modulation#phaser"
-            },
-            {
-              "keyword": "comb",
-              "anchor": "comb",
-              "href": "/docs/reference/builtins/modulation#comb"
-            }
-          ]
-        },
-        {
-          "slug": "distortion",
-          "title": "Distortion",
-          "description": "Distortion effects add harmonic content by clipping, saturating, or otherwise mangling signals.",
-          "url": "/docs/reference/builtins/distortion",
-          "icon": "Zap",
-          "chips": [
-            {
-              "keyword": "saturate",
-              "anchor": "saturate",
-              "href": "/docs/reference/builtins/distortion#saturate"
-            },
-            {
-              "keyword": "softclip",
-              "anchor": "softclip",
-              "href": "/docs/reference/builtins/distortion#softclip"
-            },
-            {
-              "keyword": "bitcrush",
-              "anchor": "bitcrush",
-              "href": "/docs/reference/builtins/distortion#bitcrush"
-            },
-            {
-              "keyword": "fold",
-              "anchor": "fold",
-              "href": "/docs/reference/builtins/distortion#fold"
-            },
-            {
-              "keyword": "tube",
-              "anchor": "tube",
-              "href": "/docs/reference/builtins/distortion#tube"
-            }
-          ]
-        },
-        {
-          "slug": "dynamics",
-          "title": "Dynamics",
-          "description": "Dynamics processors control the volume envelope of signals, reducing dynamic range or removing unwanted quiet sections.",
-          "url": "/docs/reference/builtins/dynamics",
-          "icon": "Gauge",
-          "chips": [
-            {
-              "keyword": "comp",
-              "anchor": "comp",
-              "href": "/docs/reference/builtins/dynamics#comp"
-            },
-            {
-              "keyword": "limiter",
-              "anchor": "limiter",
-              "href": "/docs/reference/builtins/dynamics#limiter"
-            },
-            {
-              "keyword": "gate",
-              "anchor": "gate",
-              "href": "/docs/reference/builtins/dynamics#gate"
+              "name": "Gate",
+              "tagline": "Threshold-based noise gate.",
+              "url": "/docs/reference/builtins/dynamics#gate",
+              "icon": "Gauge",
+              "source": {
+                "docSlug": "dynamics",
+                "docCategory": "reference/builtins",
+                "anchor": "gate",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"noise\") * ar(trigger(8), 0.001, 0.05) |> gate(%, -20, 10)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"noise\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#6CB6FF\">0.001</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.05</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> gate</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">20</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">10</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         }
@@ -364,162 +513,331 @@
     {
       "id": "sequencing",
       "heading": "Sequencing",
-      "cards": [
+      "subgroups": [
         {
-          "slug": "basics",
-          "title": "Mini-Notation Basics",
-          "description": "Mini-notation is a compact syntax for describing musical patterns, inspired by TidalCycles and Strudel.",
-          "url": "/docs/reference/mini-notation/basics",
-          "icon": "Music",
-          "chips": [
+          "id": "patterns",
+          "heading": "Patterns",
+          "cards": [
             {
-              "keyword": "alternation",
-              "anchor": "alternation",
-              "href": "/docs/reference/mini-notation/basics#alternation"
+              "name": "Sequences",
+              "tagline": "Bracketed step sequences.",
+              "url": "/docs/reference/mini-notation/basics#sequences",
+              "icon": "Music",
+              "source": {
+                "docSlug": "basics",
+                "docCategory": "reference/mini-notation",
+                "anchor": "sequences",
+                "anchorMatched": true
+              },
+              "snippet": "pat(\"c4 e4 g4 c5\") |> ((f) -> osc(\"sin\", f) * ar(trigger(4)))",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">pat</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"c4 e4 g4 c5\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#ADBAC7\"> ((f) </span><span style=\"color:#F47067\">-></span><span style=\"color:#DCBDFB\"> osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, f) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">)))</span></span></code></pre>"
+            },
+            {
+              "name": "Polyrhythms",
+              "tagline": "Stacked patterns at different lengths.",
+              "url": "/docs/reference/mini-notation/basics#polyrhythms",
+              "icon": "Music",
+              "source": {
+                "docSlug": "basics",
+                "docCategory": "reference/mini-notation",
+                "anchor": "polyrhythms",
+                "anchorMatched": true
+              },
+              "snippet": "pat(\"c4 e4 g4, c3 g3 c3 g3\")",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">pat</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"c4 e4 g4, c3 g3 c3 g3\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Alternation",
+              "tagline": "Round-robin and probabilistic choice.",
+              "url": "/docs/reference/mini-notation/basics#alternation",
+              "icon": "Music",
+              "source": {
+                "docSlug": "basics",
+                "docCategory": "reference/mini-notation",
+                "anchor": "alternation",
+                "anchorMatched": true
+              },
+              "snippet": "pat(\"<c4 e4 g4>\")",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">pat</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"&#x3C;c4 e4 g4>\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Modifiers",
+              "tagline": "Speed, repeat, and chance operators.",
+              "url": "/docs/reference/mini-notation/basics#modifiers",
+              "icon": "Music",
+              "source": {
+                "docSlug": "basics",
+                "docCategory": "reference/mini-notation",
+                "anchor": "modifiers",
+                "anchorMatched": true
+              },
+              "snippet": "pat(\"c4*4 e4\")",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">pat</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"c4*4 e4\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Microtonal Notation",
+              "tagline": "EDO tunings and per-note micro-step adjustments.",
+              "url": "/docs/reference/mini-notation/microtonal",
+              "icon": "KeyRound",
+              "source": {
+                "docSlug": "microtonal",
+                "docCategory": "reference/mini-notation",
+                "anchorMatched": true
+              }
+            },
+            {
+              "name": "Triads",
+              "tagline": "Major, minor, dim, aug.",
+              "url": "/docs/reference/mini-notation/chords#triad",
+              "icon": "Music2",
+              "source": {
+                "docSlug": "chords",
+                "docCategory": "reference/mini-notation",
+                "anchor": "triad",
+                "anchorMatched": true
+              },
+              "snippet": "chord(\"C\")",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">chord</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"C\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Sevenths",
+              "tagline": "Maj7, m7, dom7, dim7.",
+              "url": "/docs/reference/mini-notation/chords#seventh",
+              "icon": "Music2",
+              "source": {
+                "docSlug": "chords",
+                "docCategory": "reference/mini-notation",
+                "anchor": "seventh",
+                "anchorMatched": true
+              },
+              "snippet": "chord(\"Cmaj7 Am7 Dm7 G7\") |> mtof(%) |> osc(\"saw\", %)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">chord</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"Cmaj7 Am7 Dm7 G7\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> mtof</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Voicings",
+              "tagline": "Inversions and spread voicings.",
+              "url": "/docs/reference/mini-notation/chords#voicing",
+              "icon": "Music2",
+              "source": {
+                "docSlug": "chords",
+                "docCategory": "reference/mini-notation",
+                "anchor": "voicing",
+                "anchorMatched": true
+              },
+              "snippet": "chord(\"Cmaj7 Am7 Dm7 G7\").voicing(\"drop2\")",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">chord</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"Cmaj7 Am7 Dm7 G7\"</span><span style=\"color:#ADBAC7\">).</span><span style=\"color:#DCBDFB\">voicing</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"drop2\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Drop voicings",
+              "tagline": "Drop-2 and drop-3 jazz voicings.",
+              "url": "/docs/reference/mini-notation/chords#drop2",
+              "icon": "Music2",
+              "source": {
+                "docSlug": "chords",
+                "docCategory": "reference/mini-notation",
+                "anchor": "drop2",
+                "anchorMatched": true
+              },
+              "snippet": "chord(\"Cmaj7\").voicing(\"drop2\")",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">chord</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"Cmaj7\"</span><span style=\"color:#ADBAC7\">).</span><span style=\"color:#DCBDFB\">voicing</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"drop2\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         },
         {
-          "slug": "microtonal",
-          "title": "Microtonal Notation",
-          "description": "Akkado supports microtonal pitch notation through micro-step operators (^, v, +) and the tune() function, which selects how those operators map to frequency.",
-          "url": "/docs/reference/mini-notation/microtonal",
-          "icon": "KeyRound",
-          "chips": []
-        },
-        {
-          "slug": "chords",
-          "title": "Chords",
-          "description": "Two paths to chordal patterns: the chord() function with chord-symbol literals (Am7, Cmaj7), and inline chord brackets in pat() strings ([c4 e4 g4]). For voi…",
-          "url": "/docs/reference/mini-notation/chords",
-          "icon": "Music2",
-          "chips": [
+          "id": "timing",
+          "heading": "Timing",
+          "cards": [
             {
-              "keyword": "chord",
-              "anchor": "chord",
-              "href": "/docs/reference/mini-notation/chords#chord"
+              "name": "Clock",
+              "tagline": "Master tempo source.",
+              "url": "/docs/reference/builtins/sequencing#clock",
+              "icon": "ListMusic",
+              "source": {
+                "docSlug": "sequencing",
+                "docCategory": "reference/builtins",
+                "anchor": "clock",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) |> delay(%, clock() / 4, 0.4)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> delay</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#DCBDFB\">clock</span><span style=\"color:#ADBAC7\">() </span><span style=\"color:#F47067\">/</span><span style=\"color:#6CB6FF\"> 4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "voicing",
-              "anchor": "voicing",
-              "href": "/docs/reference/mini-notation/chords#voicing"
+              "name": "LFO",
+              "tagline": "Bipolar low-frequency oscillator.",
+              "url": "/docs/reference/builtins/sequencing#lfo",
+              "icon": "ListMusic",
+              "source": {
+                "docSlug": "sequencing",
+                "docCategory": "reference/builtins",
+                "anchor": "lfo",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"sin\", 220 + lfo(5) * 10)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#F47067\"> +</span><span style=\"color:#DCBDFB\"> lfo</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">5</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 10</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "anchor",
-              "anchor": "anchor",
-              "href": "/docs/reference/mini-notation/chords#anchor"
+              "name": "Trigger",
+              "tagline": "Edge-triggered gate generator.",
+              "url": "/docs/reference/builtins/sequencing#trigger",
+              "icon": "ListMusic",
+              "source": {
+                "docSlug": "sequencing",
+                "docCategory": "reference/builtins",
+                "anchor": "trigger",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"sin\", 55) * ar(trigger(1), 0.01, 0.2)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">1</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#6CB6FF\">0.01</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.2</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "mode",
-              "anchor": "mode",
-              "href": "/docs/reference/mini-notation/chords#mode"
+              "name": "Euclidean",
+              "tagline": "Euclidean rhythm generator.",
+              "url": "/docs/reference/builtins/sequencing#euclid",
+              "icon": "ListMusic",
+              "source": {
+                "docSlug": "sequencing",
+                "docCategory": "reference/builtins",
+                "anchor": "euclid",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"sin\", 55) * ar(euclid(3, 8), 0.01, 0.15)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">euclid</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">3</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#6CB6FF\">0.01</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.15</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "addVoicings",
-              "anchor": "addvoicings",
-              "href": "/docs/reference/mini-notation/chords#addvoicings"
+              "name": "Pattern Transforms",
+              "tagline": "early, late, swing, palindrome, ply.",
+              "url": "/docs/reference/builtins/sequencing#pattern-transforms",
+              "icon": "ListMusic",
+              "source": {
+                "docSlug": "sequencing",
+                "docCategory": "reference/builtins",
+                "anchor": "pattern-transforms",
+                "anchorMatched": true
+              },
+              "snippet": "pat(\"c4 e4 g4 b4\").early(0.25)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">pat</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"c4 e4 g4 b4\"</span><span style=\"color:#ADBAC7\">).</span><span style=\"color:#DCBDFB\">early</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">0.25</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Pattern Generators",
+              "tagline": "binary, run, iter, iterBack.",
+              "url": "/docs/reference/builtins/sequencing#pattern-generators",
+              "icon": "ListMusic",
+              "source": {
+                "docSlug": "sequencing",
+                "docCategory": "reference/builtins",
+                "anchor": "pattern-generators",
+                "anchorMatched": true
+              },
+              "snippet": "run(8) |> mtof(% + 60) |> osc(\"saw\", %)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">run</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> mtof</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#F47067\"> +</span><span style=\"color:#6CB6FF\"> 60</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Timeline",
+              "tagline": "Sample-accurate parameter automation.",
+              "url": "/docs/reference/builtins/timelines#timeline",
+              "icon": "Clock",
+              "source": {
+                "docSlug": "timelines",
+                "docCategory": "reference/builtins",
+                "anchor": "timeline",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 220) * timeline(\"__/''\")",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> timeline</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"__/''\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Breakpoints",
+              "tagline": "Linear and curved segments.",
+              "url": "/docs/reference/builtins/timelines#breakpoint",
+              "icon": "Clock",
+              "source": {
+                "docSlug": "timelines",
+                "docCategory": "reference/builtins",
+                "anchor": "breakpoint",
+                "anchorMatched": true
+              }
+            },
+            {
+              "name": "Curves",
+              "tagline": "Curve interpolation between values.",
+              "url": "/docs/reference/builtins/timelines#curve",
+              "icon": "Clock",
+              "source": {
+                "docSlug": "timelines",
+                "docCategory": "reference/builtins",
+                "anchor": "curve",
+                "anchorMatched": true
+              }
+            },
+            {
+              "name": "Automation",
+              "tagline": "Synced parameter automation.",
+              "url": "/docs/reference/builtins/timelines#automation",
+              "icon": "Clock",
+              "source": {
+                "docSlug": "timelines",
+                "docCategory": "reference/builtins",
+                "anchor": "automation",
+                "anchorMatched": true
+              }
             }
           ]
         },
         {
-          "slug": "sequencing",
-          "title": "Sequencing & Timing",
-          "description": "Timing and sequencing functions create rhythmic patterns, triggers, and automation curves synchronized to the global clock.",
-          "url": "/docs/reference/builtins/sequencing",
-          "icon": "ListMusic",
-          "chips": [
+          "id": "voicing",
+          "heading": "Voicing",
+          "cards": [
             {
-              "keyword": "lfo",
-              "anchor": "lfo",
-              "href": "/docs/reference/builtins/sequencing#lfo"
+              "name": "Poly",
+              "tagline": "Polyphonic voice allocation.",
+              "url": "/docs/reference/builtins/polyphony#poly",
+              "icon": "Layers",
+              "source": {
+                "docSlug": "polyphony",
+                "docCategory": "reference/builtins",
+                "anchor": "poly",
+                "anchorMatched": true
+              },
+              "snippet": "pat(\"c4 e4 g4 b4\") |> poly(@, (f, g, v) -> osc(\"sin\", f) * v, 8)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">pat</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"c4 e4 g4 b4\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> poly</span><span style=\"color:#ADBAC7\">(@, (f, g, v) </span><span style=\"color:#F47067\">-></span><span style=\"color:#DCBDFB\"> osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, f) </span><span style=\"color:#F47067\">*</span><span style=\"color:#ADBAC7\"> v, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "trigger",
-              "anchor": "trigger",
-              "href": "/docs/reference/builtins/sequencing#trigger"
+              "name": "Mono",
+              "tagline": "Monophonic last-note priority.",
+              "url": "/docs/reference/builtins/polyphony#mono",
+              "icon": "Layers",
+              "source": {
+                "docSlug": "polyphony",
+                "docCategory": "reference/builtins",
+                "anchor": "mono",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "euclid",
-              "anchor": "euclid",
-              "href": "/docs/reference/builtins/sequencing#euclid"
+              "name": "Legato",
+              "tagline": "Held-note legato playing.",
+              "url": "/docs/reference/builtins/polyphony#legato",
+              "icon": "Layers",
+              "source": {
+                "docSlug": "polyphony",
+                "docCategory": "reference/builtins",
+                "anchor": "legato",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "clock",
-              "anchor": "clock",
-              "href": "/docs/reference/builtins/sequencing#clock"
-            },
-            {
-              "keyword": "early",
-              "anchor": "early",
-              "href": "/docs/reference/builtins/sequencing#early"
-            }
-          ]
-        },
-        {
-          "slug": "polyphony",
-          "title": "Polyphony",
-          "description": "Voice allocation for patterns. poly() runs an instrument function per voice and sums the outputs. mono() and legato() are single-voice variants with differen…",
-          "url": "/docs/reference/builtins/polyphony",
-          "icon": "Layers",
-          "chips": [
-            {
-              "keyword": "poly",
-              "anchor": "poly",
-              "href": "/docs/reference/builtins/polyphony#poly"
-            },
-            {
-              "keyword": "mono",
-              "anchor": "mono",
-              "href": "/docs/reference/builtins/polyphony#mono"
-            },
-            {
-              "keyword": "legato",
-              "anchor": "legato",
-              "href": "/docs/reference/builtins/polyphony#legato"
-            },
-            {
-              "keyword": "spread",
-              "anchor": "spread",
-              "href": "/docs/reference/builtins/polyphony#spread"
-            },
-            {
-              "keyword": "voice",
-              "anchor": "voice",
-              "href": "/docs/reference/builtins/polyphony#voice"
-            }
-          ]
-        },
-        {
-          "slug": "timelines",
-          "title": "Timelines",
-          "description": "Breakpoint automation envelopes synced to the clock. Use timeline() to define smooth parameter curves with arbitrary shapes — slower than an lfo(), more expr…",
-          "url": "/docs/reference/builtins/timelines",
-          "icon": "Clock",
-          "chips": [
-            {
-              "keyword": "timeline",
-              "anchor": "timeline",
-              "href": "/docs/reference/builtins/timelines#timeline"
-            },
-            {
-              "keyword": "breakpoint",
-              "anchor": "breakpoint",
-              "href": "/docs/reference/builtins/timelines#breakpoint"
-            },
-            {
-              "keyword": "automation",
-              "anchor": "automation",
-              "href": "/docs/reference/builtins/timelines#automation"
-            },
-            {
-              "keyword": "curve",
-              "anchor": "curve",
-              "href": "/docs/reference/builtins/timelines#curve"
-            },
-            {
-              "keyword": "scheduled",
-              "anchor": "scheduled",
-              "href": "/docs/reference/builtins/timelines#scheduled"
+              "name": "Spread",
+              "tagline": "Stereo spread across voices.",
+              "url": "/docs/reference/builtins/polyphony#spread",
+              "icon": "Layers",
+              "source": {
+                "docSlug": "polyphony",
+                "docCategory": "reference/builtins",
+                "anchor": "spread",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", spread(5, [220, 220.7, 219.3, 221.4, 218.6]))",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#DCBDFB\">spread</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">5</span><span style=\"color:#ADBAC7\">, [</span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220.7</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">219.3</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">221.4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">218.6</span><span style=\"color:#ADBAC7\">]))</span></span></code></pre>"
             }
           ]
         }
@@ -528,164 +846,65 @@
     {
       "id": "visualizations",
       "heading": "Visualizations",
-      "cards": [
+      "subgroups": [
         {
-          "slug": "oscilloscope",
-          "title": "Oscilloscope",
-          "description": "A time-domain visualizer that draws the signal as a waveform with trigger stabilization. Inserted as a pass-through node in the signal chain — the audio pass…",
-          "url": "/docs/reference/builtins/oscilloscope",
-          "icon": "LineChart",
-          "chips": [
+          "id": "visualizations",
+          "heading": "Visualizations",
+          "cards": [
             {
-              "keyword": "oscilloscope",
-              "anchor": "oscilloscope",
-              "href": "/docs/reference/builtins/oscilloscope#oscilloscope"
+              "name": "Oscilloscope",
+              "tagline": "Triggered time-domain probe.",
+              "url": "/docs/reference/builtins/oscilloscope",
+              "icon": "LineChart",
+              "source": {
+                "docSlug": "oscilloscope",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "triggerLevel",
-              "anchor": "triggerlevel",
-              "href": "/docs/reference/builtins/oscilloscope#triggerlevel"
+              "name": "Waveform",
+              "tagline": "Continuous waveform display.",
+              "url": "/docs/reference/builtins/waveform",
+              "icon": "AudioWaveform",
+              "source": {
+                "docSlug": "waveform",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "triggerEdge",
-              "anchor": "triggeredge",
-              "href": "/docs/reference/builtins/oscilloscope#triggeredge"
+              "name": "Spectrum Analyzer",
+              "tagline": "Real-time FFT magnitude display.",
+              "url": "/docs/reference/builtins/spectrum",
+              "icon": "BarChart",
+              "source": {
+                "docSlug": "spectrum",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "rising",
-              "anchor": "rising",
-              "href": "/docs/reference/builtins/oscilloscope#rising"
+              "name": "Waterfall",
+              "tagline": "Scrolling time-frequency spectrogram.",
+              "url": "/docs/reference/builtins/waterfall",
+              "icon": "AreaChart",
+              "source": {
+                "docSlug": "waterfall",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "falling",
-              "anchor": "falling",
-              "href": "/docs/reference/builtins/oscilloscope#falling"
-            }
-          ]
-        },
-        {
-          "slug": "waveform",
-          "title": "Waveform",
-          "description": "A time-domain envelope visualizer that draws the min/max amplitude of the signal over time. Inserted as a pass-through node in the signal chain.",
-          "url": "/docs/reference/builtins/waveform",
-          "icon": "AudioWaveform",
-          "chips": [
-            {
-              "keyword": "waveform",
-              "anchor": "waveform",
-              "href": "/docs/reference/builtins/waveform#waveform"
-            },
-            {
-              "keyword": "scale",
-              "anchor": "scale",
-              "href": "/docs/reference/builtins/waveform#scale"
-            },
-            {
-              "keyword": "filled",
-              "anchor": "filled",
-              "href": "/docs/reference/builtins/waveform#filled"
-            }
-          ]
-        },
-        {
-          "slug": "spectrum",
-          "title": "Spectrum Analyzer",
-          "description": "A frequency-domain visualizer using FFT analysis. Inserted as a pass-through node in the signal chain.",
-          "url": "/docs/reference/builtins/spectrum",
-          "icon": "BarChart",
-          "chips": [
-            {
-              "keyword": "spectrum",
-              "anchor": "spectrum",
-              "href": "/docs/reference/builtins/spectrum#spectrum"
-            },
-            {
-              "keyword": "fft",
-              "anchor": "fft",
-              "href": "/docs/reference/builtins/spectrum#fft"
-            },
-            {
-              "keyword": "logScale",
-              "anchor": "logscale",
-              "href": "/docs/reference/builtins/spectrum#logscale"
-            },
-            {
-              "keyword": "minDb",
-              "anchor": "mindb",
-              "href": "/docs/reference/builtins/spectrum#mindb"
-            },
-            {
-              "keyword": "maxDb",
-              "anchor": "maxdb",
-              "href": "/docs/reference/builtins/spectrum#maxdb"
-            }
-          ]
-        },
-        {
-          "slug": "waterfall",
-          "title": "Waterfall",
-          "description": "A scrolling spectrogram visualizer: time on one axis, frequency on the other, color for amplitude. Inserted as a pass-through node in the signal chain.",
-          "url": "/docs/reference/builtins/waterfall",
-          "icon": "AreaChart",
-          "chips": [
-            {
-              "keyword": "waterfall",
-              "anchor": "waterfall",
-              "href": "/docs/reference/builtins/waterfall#waterfall"
-            },
-            {
-              "keyword": "gradient",
-              "anchor": "gradient",
-              "href": "/docs/reference/builtins/waterfall#gradient"
-            },
-            {
-              "keyword": "magma",
-              "anchor": "magma",
-              "href": "/docs/reference/builtins/waterfall#magma"
-            },
-            {
-              "keyword": "viridis",
-              "anchor": "viridis",
-              "href": "/docs/reference/builtins/waterfall#viridis"
-            },
-            {
-              "keyword": "inferno",
-              "anchor": "inferno",
-              "href": "/docs/reference/builtins/waterfall#inferno"
-            }
-          ]
-        },
-        {
-          "slug": "pianoroll",
-          "title": "Piano Roll",
-          "description": "A pattern-event visualizer that draws notes as rectangles on a pitch-time grid. Inserted as a pass-through node in the signal chain.",
-          "url": "/docs/reference/builtins/pianoroll",
-          "icon": "Grid3x3",
-          "chips": [
-            {
-              "keyword": "pianoroll",
-              "anchor": "pianoroll",
-              "href": "/docs/reference/builtins/pianoroll#pianoroll"
-            },
-            {
-              "keyword": "beats",
-              "anchor": "beats",
-              "href": "/docs/reference/builtins/pianoroll#beats"
-            },
-            {
-              "keyword": "showGrid",
-              "anchor": "showgrid",
-              "href": "/docs/reference/builtins/pianoroll#showgrid"
-            },
-            {
-              "keyword": "scale",
-              "anchor": "scale",
-              "href": "/docs/reference/builtins/pianoroll#scale"
-            },
-            {
-              "keyword": "chromatic",
-              "anchor": "chromatic",
-              "href": "/docs/reference/builtins/pianoroll#chromatic"
+              "name": "Piano Roll",
+              "tagline": "Note-event grid for pattern visualization.",
+              "url": "/docs/reference/builtins/pianoroll",
+              "icon": "Grid3x3",
+              "source": {
+                "docSlug": "pianoroll",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             }
           ]
         }
@@ -694,293 +913,256 @@
     {
       "id": "language",
       "heading": "Language",
-      "cards": [
+      "subgroups": [
         {
-          "slug": "pipes",
-          "title": "Pipes & Holes",
-          "description": "The pipe operator (|>) and hole (%) define Akkado's signal flow model.",
-          "url": "/docs/reference/language/pipes",
-          "icon": "Plug",
-          "chips": []
-        },
-        {
-          "slug": "variables",
-          "title": "Variables & Assignment",
-          "description": "Variables store values for reuse throughout your patch.",
-          "url": "/docs/reference/language/variables",
-          "icon": "Variable",
-          "chips": [
+          "id": "syntax",
+          "heading": "Syntax",
+          "cards": [
             {
-              "keyword": "scope",
-              "anchor": "scope",
-              "href": "/docs/reference/language/variables#scope"
+              "name": "Pipes & Holes",
+              "tagline": "Forward composition with -> and |>; the % hole.",
+              "url": "/docs/reference/language/pipes",
+              "icon": "Plug",
+              "source": {
+                "docSlug": "pipes",
+                "docCategory": "reference/language",
+                "anchorMatched": true
+              }
+            },
+            {
+              "name": "Variables & Assignment",
+              "tagline": "Bind values and signal nodes to identifiers.",
+              "url": "/docs/reference/language/variables",
+              "icon": "Variable",
+              "source": {
+                "docSlug": "variables",
+                "docCategory": "reference/language",
+                "anchorMatched": true
+              }
+            },
+            {
+              "name": "Operators",
+              "tagline": "Arithmetic, comparison, logic, and pipe operators with precedence.",
+              "url": "/docs/reference/language/operators",
+              "icon": "Calculator",
+              "source": {
+                "docSlug": "operators",
+                "docCategory": "reference/language",
+                "anchorMatched": true
+              }
+            },
+            {
+              "name": "Closures",
+              "tagline": "Anonymous functions and partial application.",
+              "url": "/docs/reference/language/closures",
+              "icon": "Parentheses",
+              "source": {
+                "docSlug": "closures",
+                "docCategory": "reference/language",
+                "anchorMatched": true
+              }
+            },
+            {
+              "name": "Conditionals & Logic",
+              "tagline": "select, comparison, and boolean primitives.",
+              "url": "/docs/reference/language/conditionals",
+              "icon": "GitBranch",
+              "source": {
+                "docSlug": "conditionals",
+                "docCategory": "reference/language",
+                "anchorMatched": true
+              }
             }
           ]
         },
         {
-          "slug": "operators",
-          "title": "Operators",
-          "description": "Akkado uses operators for arithmetic, comparison, logic, and signal flow.",
-          "url": "/docs/reference/language/operators",
-          "icon": "Calculator",
-          "chips": []
-        },
-        {
-          "slug": "closures",
-          "title": "Closures",
-          "description": "Closures are anonymous functions that capture their environment. They connect patterns to synthesis.",
-          "url": "/docs/reference/language/closures",
-          "icon": "Parentheses",
-          "chips": []
-        },
-        {
-          "slug": "conditionals",
-          "title": "Conditionals & Logic",
-          "description": "Signal-rate decision-making: compare signals, combine boolean signals with AND/OR/NOT, and pick between two signals based on a condition. Every operation run…",
-          "url": "/docs/reference/language/conditionals",
-          "icon": "GitBranch",
-          "chips": [
+          "id": "data",
+          "heading": "Data",
+          "cards": [
             {
-              "keyword": "select",
-              "anchor": "select",
-              "href": "/docs/reference/language/conditionals#select"
+              "name": "Arrays",
+              "tagline": "Literals, comprehensions, and the full higher-order toolkit.",
+              "url": "/docs/reference/language/arrays",
+              "icon": "Brackets",
+              "source": {
+                "docSlug": "arrays",
+                "docCategory": "reference/language",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "gt",
-              "anchor": "gt",
-              "href": "/docs/reference/language/conditionals#gt"
-            },
-            {
-              "keyword": "lt",
-              "anchor": "lt",
-              "href": "/docs/reference/language/conditionals#lt"
-            },
-            {
-              "keyword": "gte",
-              "anchor": "gte",
-              "href": "/docs/reference/language/conditionals#gte"
-            },
-            {
-              "keyword": "lte",
-              "anchor": "lte",
-              "href": "/docs/reference/language/conditionals#lte"
+              "name": "Method Calls (UFCS)",
+              "tagline": "Universal function call syntax via dot.",
+              "url": "/docs/reference/language/methods",
+              "icon": "Workflow",
+              "source": {
+                "docSlug": "methods",
+                "docCategory": "reference/language",
+                "anchorMatched": true
+              }
             }
           ]
-        },
-        {
-          "slug": "arrays",
-          "title": "Arrays",
-          "description": "Arrays are ordered, fixed-size collections of values. They are the primary way to express parallel signal flows in Akkado: every element of an array becomes…",
-          "url": "/docs/reference/language/arrays",
-          "icon": "Brackets",
-          "chips": [
-            {
-              "keyword": "indexing",
-              "anchor": "indexing",
-              "href": "/docs/reference/language/arrays#indexing"
-            },
-            {
-              "keyword": "len",
-              "anchor": "len",
-              "href": "/docs/reference/language/arrays#len"
-            },
-            {
-              "keyword": "map",
-              "anchor": "map",
-              "href": "/docs/reference/language/arrays#map"
-            },
-            {
-              "keyword": "reduce",
-              "anchor": "reduce",
-              "href": "/docs/reference/language/arrays#reduce"
-            },
-            {
-              "keyword": "zipWith",
-              "anchor": "zipwith",
-              "href": "/docs/reference/language/arrays#zipwith"
-            }
-          ]
-        },
-        {
-          "slug": "methods",
-          "title": "Method Calls (UFCS)",
-          "description": "Akkado supports method-call syntax for any callable in scope, built-in or user-defined. The form",
-          "url": "/docs/reference/language/methods",
-          "icon": "Workflow",
-          "chips": []
         }
       ]
     },
     {
       "id": "tools",
       "heading": "Tools",
-      "cards": [
+      "subgroups": [
         {
-          "slug": "math",
-          "title": "Math Functions",
-          "description": "Mathematical operations for signal processing and control logic.",
-          "url": "/docs/reference/builtins/math",
-          "icon": "Sigma",
-          "chips": [
+          "id": "math",
+          "heading": "Math",
+          "cards": [
             {
-              "keyword": "add",
-              "anchor": "add",
-              "href": "/docs/reference/builtins/math#add"
+              "name": "Arithmetic",
+              "tagline": "Add, subtract, multiply, divide, power.",
+              "url": "/docs/reference/builtins/math#arithmetic",
+              "icon": "Sigma",
+              "source": {
+                "docSlug": "math",
+                "docCategory": "reference/builtins",
+                "anchor": "arithmetic",
+                "anchorMatched": true
+              },
+              "snippet": "add(osc(\"sin\", 220), osc(\"sin\", 330)) * 0.5",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">add</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">330</span><span style=\"color:#ADBAC7\">)) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 0.5</span></span></code></pre>"
             },
             {
-              "keyword": "sub",
-              "anchor": "sub",
-              "href": "/docs/reference/builtins/math#sub"
+              "name": "Unary",
+              "tagline": "abs, sqrt, log, exp, floor, ceil, sign.",
+              "url": "/docs/reference/builtins/math#unary-math",
+              "icon": "Sigma",
+              "source": {
+                "docSlug": "math",
+                "docCategory": "reference/builtins",
+                "anchor": "unary-math",
+                "anchorMatched": true
+              },
+              "snippet": "neg(osc(\"sin\", 220))",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">neg</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">))</span></span></code></pre>"
             },
             {
-              "keyword": "mul",
-              "anchor": "mul",
-              "href": "/docs/reference/builtins/math#mul"
+              "name": "Binary",
+              "tagline": "min, max, mod, pow.",
+              "url": "/docs/reference/builtins/math#binary-math",
+              "icon": "Sigma",
+              "source": {
+                "docSlug": "math",
+                "docCategory": "reference/builtins",
+                "anchor": "binary-math",
+                "anchorMatched": true
+              },
+              "snippet": "min(osc(\"sin\", 220), 0.5)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">min</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "div",
-              "anchor": "div",
-              "href": "/docs/reference/builtins/math#div"
+              "name": "Ternary",
+              "tagline": "clamp, wrap.",
+              "url": "/docs/reference/builtins/math#ternary-math",
+              "icon": "Sigma",
+              "source": {
+                "docSlug": "math",
+                "docCategory": "reference/builtins",
+                "anchor": "ternary-math",
+                "anchorMatched": true
+              },
+              "snippet": "clamp(osc(\"saw\", 110), -0.5, 0.5)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">clamp</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
-              "keyword": "pow",
-              "anchor": "pow",
-              "href": "/docs/reference/builtins/math#pow"
+              "name": "Trigonometry",
+              "tagline": "sin, cos, tan, asin, acos, atan, atan2.",
+              "url": "/docs/reference/builtins/math#trigonometric-functions",
+              "icon": "Sigma",
+              "source": {
+                "docSlug": "math",
+                "docCategory": "reference/builtins",
+                "anchor": "trigonometric-functions",
+                "anchorMatched": true
+              },
+              "snippet": "sin(osc(\"phasor\", 440) * 2 * 3.14159)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">sin</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"phasor\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">440</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 2</span><span style=\"color:#F47067\"> *</span><span style=\"color:#6CB6FF\"> 3.14159</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Hyperbolic",
+              "tagline": "sinh, cosh, tanh.",
+              "url": "/docs/reference/builtins/math#hyperbolic-functions",
+              "icon": "Sigma",
+              "source": {
+                "docSlug": "math",
+                "docCategory": "reference/builtins",
+                "anchor": "hyperbolic-functions",
+                "anchorMatched": true
+              },
+              "snippet": "osc(\"saw\", 110) * 3 |> tanh(%)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 3</span><span style=\"color:#F47067\"> |></span><span style=\"color:#DCBDFB\"> tanh</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         },
         {
-          "slug": "state",
-          "title": "State Cells",
-          "description": "State cells let you persist a single floating-point value across audio blocks from inside a closure. They are the building block for writing your own statefu…",
-          "url": "/docs/reference/builtins/state",
-          "icon": "Database",
-          "chips": [
+          "id": "audio-plumbing",
+          "heading": "Audio plumbing",
+          "cards": [
             {
-              "keyword": "state",
-              "anchor": "state",
-              "href": "/docs/reference/builtins/state#state"
+              "name": "Utility",
+              "tagline": "Output, MIDI-to-frequency, slew, DC, and more.",
+              "url": "/docs/reference/builtins/utility",
+              "icon": "Wrench",
+              "source": {
+                "docSlug": "utility",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "get",
-              "anchor": "get",
-              "href": "/docs/reference/builtins/state#get"
-            },
-            {
-              "keyword": "set",
-              "anchor": "set",
-              "href": "/docs/reference/builtins/state#set"
+              "name": "Stereo",
+              "tagline": "Pan, width, M/S encoding, and stereo plumbing.",
+              "url": "/docs/reference/builtins/stereo",
+              "icon": "Headphones",
+              "source": {
+                "docSlug": "stereo",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             }
           ]
         },
         {
-          "slug": "utility",
-          "title": "Utility",
-          "description": "Utility functions for common audio tasks like output, MIDI conversion, and signal processing helpers.",
-          "url": "/docs/reference/builtins/utility",
-          "icon": "Wrench",
-          "chips": [
+          "id": "state-io",
+          "heading": "State & I/O",
+          "cards": [
             {
-              "keyword": "out",
-              "anchor": "out",
-              "href": "/docs/reference/builtins/utility#out"
+              "name": "State Cells",
+              "tagline": "Persistent cells with get/set for counters and accumulators.",
+              "url": "/docs/reference/builtins/state",
+              "icon": "Database",
+              "source": {
+                "docSlug": "state",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "mtof",
-              "anchor": "mtof",
-              "href": "/docs/reference/builtins/utility#mtof"
+              "name": "Edge Primitives",
+              "tagline": "Rising/falling edge detection and sample-and-hold.",
+              "url": "/docs/reference/builtins/edge",
+              "icon": "Triangle",
+              "source": {
+                "docSlug": "edge",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             },
             {
-              "keyword": "dc",
-              "anchor": "dc",
-              "href": "/docs/reference/builtins/utility#dc"
-            },
-            {
-              "keyword": "slew",
-              "anchor": "slew",
-              "href": "/docs/reference/builtins/utility#slew"
-            },
-            {
-              "keyword": "sah",
-              "anchor": "sah",
-              "href": "/docs/reference/builtins/utility#sah"
-            }
-          ]
-        },
-        {
-          "slug": "edge",
-          "title": "Edge Primitives",
-          "description": "Edge primitives detect transitions in trigger / control signals and accumulate counts. All four variants share one backing opcode (EDGE_OP) for cache localit…",
-          "url": "/docs/reference/builtins/edge",
-          "icon": "Triangle",
-          "chips": [
-            {
-              "keyword": "gateup",
-              "anchor": "gateup",
-              "href": "/docs/reference/builtins/edge#gateup"
-            },
-            {
-              "keyword": "gatedown",
-              "anchor": "gatedown",
-              "href": "/docs/reference/builtins/edge#gatedown"
-            },
-            {
-              "keyword": "counter",
-              "anchor": "counter",
-              "href": "/docs/reference/builtins/edge#counter"
-            },
-            {
-              "keyword": "sah",
-              "anchor": "sah",
-              "href": "/docs/reference/builtins/edge#sah"
-            }
-          ]
-        },
-        {
-          "slug": "stereo",
-          "title": "Stereo",
-          "description": "Stereo signal operations. Akkado tracks channel count (Mono vs Stereo) on every",
-          "url": "/docs/reference/builtins/stereo",
-          "icon": "Headphones",
-          "chips": [
-            {
-              "keyword": "stereo",
-              "anchor": "stereo",
-              "href": "/docs/reference/builtins/stereo#stereo"
-            },
-            {
-              "keyword": "mono",
-              "anchor": "mono",
-              "href": "/docs/reference/builtins/stereo#mono"
-            },
-            {
-              "keyword": "pan",
-              "anchor": "pan",
-              "href": "/docs/reference/builtins/stereo#pan"
-            },
-            {
-              "keyword": "width",
-              "anchor": "width",
-              "href": "/docs/reference/builtins/stereo#width"
-            },
-            {
-              "keyword": "pingpong",
-              "anchor": "pingpong",
-              "href": "/docs/reference/builtins/stereo#pingpong"
-            }
-          ]
-        },
-        {
-          "slug": "audio-input",
-          "title": "Audio Input",
-          "description": "The in() builtin exposes external audio as a signal source (microphone, tab/system audio, or an uploaded file) so any Cedar effect can process it. The host p…",
-          "url": "/docs/reference/builtins/audio-input",
-          "icon": "Mic",
-          "chips": [
-            {
-              "keyword": "in",
-              "anchor": "in",
-              "href": "/docs/reference/builtins/audio-input#in"
+              "name": "Audio Input",
+              "tagline": "Capture mic, tab audio, or file as a signal source.",
+              "url": "/docs/reference/builtins/audio-input",
+              "icon": "Mic",
+              "source": {
+                "docSlug": "audio-input",
+                "docCategory": "reference/builtins",
+                "anchorMatched": true
+              }
             }
           ]
         }

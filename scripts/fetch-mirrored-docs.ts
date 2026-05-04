@@ -28,6 +28,14 @@ const UPSTREAM_TO_URL: Record<string, string> = Object.fromEntries(
 
 type MirrorSource = 'local' | 'live' | 'fallback';
 
+type Subfeature = {
+	name: string;
+	anchor: string;
+	tagline: string;
+	snippet?: string;
+	icon?: string;
+};
+
 type MirrorResult = {
 	entry: MirrorEntry;
 	source: MirrorSource;
@@ -36,6 +44,11 @@ type MirrorResult = {
 	order: number;
 	keywords: string[];
 	headings: string[];
+	group?: string;
+	subgroup?: string;
+	icon?: string;
+	tagline?: string;
+	subfeatures?: Subfeature[];
 };
 
 const localRoot = resolveFsPath(MIRROR_LOCAL_PATH);
@@ -263,6 +276,35 @@ function validateFrontmatter(entry: MirrorEntry, data: Record<string, unknown>):
 	}
 }
 
+function parseSubfeatures(entry: MirrorEntry, value: unknown): Subfeature[] | undefined {
+	if (value === undefined || value === null) return undefined;
+	if (!Array.isArray(value)) {
+		console.warn(`⚠ ${entry.upstream}: subfeatures must be an array`);
+		return undefined;
+	}
+	const out: Subfeature[] = [];
+	for (const [i, raw] of value.entries()) {
+		if (raw === null || typeof raw !== 'object') {
+			console.warn(`⚠ ${entry.upstream}: subfeatures[${i}] is not an object`);
+			continue;
+		}
+		const sub = raw as Record<string, unknown>;
+		const name = typeof sub.name === 'string' ? sub.name : '';
+		const anchor = typeof sub.anchor === 'string' ? sub.anchor : '';
+		const tagline = typeof sub.tagline === 'string' ? sub.tagline : '';
+		if (!name || !anchor || !tagline) {
+			console.warn(
+				`⚠ ${entry.upstream}: subfeatures[${i}] missing required field (name/anchor/tagline)`
+			);
+			continue;
+		}
+		const snippet = typeof sub.snippet === 'string' ? sub.snippet : undefined;
+		const icon = typeof sub.icon === 'string' ? sub.icon : undefined;
+		out.push({ name, anchor, tagline, ...(snippet ? { snippet } : {}), ...(icon ? { icon } : {}) });
+	}
+	return out;
+}
+
 function writeEntry(entry: MirrorEntry, raw: string, source: MirrorSource): MirrorResult {
 	const { data, content: body } = matter(raw);
 	validateFrontmatter(entry, data);
@@ -280,6 +322,12 @@ function writeEntry(entry: MirrorEntry, raw: string, source: MirrorSource): Mirr
 			: [];
 
 	const headings = extractHeadings(body);
+
+	const group = typeof data.group === 'string' ? data.group : undefined;
+	const subgroup = typeof data.subgroup === 'string' ? data.subgroup : undefined;
+	const icon = typeof data.icon === 'string' ? data.icon : undefined;
+	const tagline = typeof data.tagline === 'string' ? data.tagline : undefined;
+	const subfeatures = parseSubfeatures(entry, data.subfeatures);
 
 	const backHref = entry.category === 'tutorials' ? '/docs/tutorials' : `/docs/reference/${entry.subcategory}`;
 	const backLabel = entry.category === 'tutorials' ? 'Tutorials' : entry.subcategory.replace('-', ' ');
@@ -324,7 +372,12 @@ function writeEntry(entry: MirrorEntry, raw: string, source: MirrorSource): Mirr
 		description,
 		order,
 		keywords,
-		headings
+		headings,
+		...(group ? { group } : {}),
+		...(subgroup ? { subgroup } : {}),
+		...(icon ? { icon } : {}),
+		...(tagline ? { tagline } : {}),
+		...(subfeatures ? { subfeatures } : {})
 	};
 }
 
@@ -421,7 +474,7 @@ async function main() {
 
 	// Keep overview.json in sync with the manifest. Warnings go to stderr; the
 	// build is never blocked by chip-resolution or missing-slug issues.
-	writeOverview(buildOverviewFromDisk());
+	writeOverview(await buildOverviewFromDisk());
 }
 
 function writeManifest(results: MirrorResult[]): void {
@@ -439,7 +492,12 @@ function writeManifest(results: MirrorResult[]): void {
 			keywords: r.keywords,
 			headings: r.headings,
 			url: urlPath(r.entry),
-			source: r.source
+			source: r.source,
+			...(r.group ? { group: r.group } : {}),
+			...(r.subgroup ? { subgroup: r.subgroup } : {}),
+			...(r.icon ? { icon: r.icon } : {}),
+			...(r.tagline ? { tagline: r.tagline } : {}),
+			...(r.subfeatures ? { subfeatures: r.subfeatures } : {})
 		});
 	}
 	for (const key of Object.keys(byCategory)) {

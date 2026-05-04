@@ -4,9 +4,12 @@
 		AreaChart,
 		AudioWaveform,
 		BarChart,
+		Binary,
+		Box,
 		Brackets,
 		Calculator,
 		Clock,
+		Cylinder,
 		Database,
 		Drum,
 		FolderOpen,
@@ -38,14 +41,19 @@
 		Zap
 	} from 'lucide-svelte';
 
-	type Chip = { keyword: string; anchor: string; href: string };
 	type Card = {
-		slug: string;
-		title: string;
-		description: string;
+		name: string;
+		tagline: string;
 		url: string;
 		icon: string;
-		chips: Chip[];
+		snippet?: string;
+		snippetHtml?: string;
+		source: {
+			docSlug: string;
+			docCategory: string;
+			anchor?: string;
+			anchorMatched: boolean;
+		};
 	};
 
 	export let card: Card;
@@ -55,9 +63,12 @@
 		AreaChart,
 		AudioWaveform,
 		BarChart,
+		Binary,
+		Box,
 		Brackets,
 		Calculator,
 		Clock,
+		Cylinder,
 		Database,
 		Drum,
 		FolderOpen,
@@ -89,7 +100,7 @@
 		Zap
 	} as const;
 
-	$: Icon = iconMap[card.icon as keyof typeof iconMap] ?? Sliders;
+	$: Icon = iconMap[card.icon as keyof typeof iconMap] ?? Box;
 </script>
 
 <article class="overview-card">
@@ -97,17 +108,13 @@
 		<svelte:component this={Icon} size={24} />
 	</div>
 	<h3 class="overview-title">
-		<a href={card.url} aria-label="{card.title} reference">{card.title}</a>
+		<a href={card.url} aria-label="{card.name} reference">{card.name}</a>
 	</h3>
-	<p class="overview-description">{card.description}</p>
-	{#if card.chips.length > 0}
-		<ul class="overview-chips" aria-label="Topics in {card.title}">
-			{#each card.chips as chip (chip.anchor)}
-				<li>
-					<a class="chip" href={chip.href}>{chip.keyword}</a>
-				</li>
-			{/each}
-		</ul>
+	<p class="overview-tagline">{card.tagline}</p>
+	{#if card.snippetHtml}
+		<div class="overview-snippet">{@html card.snippetHtml}</div>
+	{:else if card.snippet}
+		<div class="overview-snippet"><pre><code>{card.snippet}</code></pre></div>
 	{/if}
 </article>
 
@@ -123,7 +130,7 @@
 	}
 
 	.overview-card:hover {
-		border-color: var(--border-default);
+		border-color: var(--accent-primary);
 	}
 
 	.overview-icon {
@@ -152,7 +159,7 @@
 		border-radius: 2px;
 	}
 
-	.overview-description {
+	.overview-tagline {
 		color: var(--text-secondary);
 		font-size: 0.9rem;
 		margin: 0 0 var(--spacing-sm) 0;
@@ -163,38 +170,30 @@
 		overflow: hidden;
 	}
 
-	.overview-chips {
-		list-style: none;
-		padding: 0;
+	/* Snippet block: Shiki HTML renders its own <pre>/<code> with inline
+	   styles for the github-dark-dimmed theme. We just provide the outer
+	   block layout and the fallback monospace styling for pre-tag content
+	   when snippetHtml is absent. */
+	.overview-snippet {
 		margin: auto 0 0 0;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
+		font-size: 0.78rem;
+		font-family: var(--font-mono, monospace);
+		overflow-x: auto;
 	}
 
-	.chip {
-		display: inline-block;
-		padding: 2px 8px;
-		font-size: 0.75rem;
-		font-family: var(--font-mono, monospace);
-		color: var(--text-secondary);
+	.overview-snippet :global(pre) {
+		margin: 0;
+		padding: 8px 10px;
 		background: var(--bg-primary);
 		border: 1px solid var(--border-muted);
-		border-radius: 999px;
-		text-decoration: none;
-		transition:
-			color var(--transition-fast),
-			border-color var(--transition-fast);
+		border-radius: 8px;
+		overflow-x: auto;
 	}
 
-	.chip:hover,
-	.chip:focus-visible {
-		color: var(--accent-primary);
-		border-color: var(--accent-primary);
-	}
-
-	.chip:focus-visible {
-		outline: 2px solid var(--accent-primary);
-		outline-offset: 2px;
+	.overview-snippet :global(code) {
+		background: transparent;
+		padding: 0;
+		color: var(--text-secondary);
+		font-family: inherit;
 	}
 </style>

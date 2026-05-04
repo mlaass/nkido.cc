@@ -2,49 +2,71 @@
 /**
  * Build src/lib/data/overview.json from src/lib/data/docs-manifest.json.
  *
- * The OverviewGrid landing-page section consumes overview.json. This script
- * applies a hardcoded group + icon mapping to the manifest, resolves chip
- * anchors against each entry's `headings` field (populated by
- * fetch-mirrored-docs.ts), and emits a sorted, deduped, validated artifact.
+ * Reads the v2 manifest fields (group, subgroup, icon, tagline, subfeatures)
+ * authored in upstream nkido frontmatter and emits a tree of
+ * groups → subgroups → cards. Snippet code is pre-highlighted with Shiki so
+ * the landing page doesn't pay a runtime highlighter cost.
  *
- * Cards whose slug is absent from the manifest are silently omitted with a
- * warning. Chips whose keyword does not match a heading are silently dropped.
- * Either way the build never fails — see PRD §10 for the degradation rules.
+ * Tolerant by design: missing required fields log a stderr warning and skip
+ * the doc; mismatched anchors warn and ship the card; unknown icons fall back
+ * to Box. The build never exits non-zero.
  *
  * Invoked at the end of fetch-mirrored-docs.ts main() so the two artifacts
- * stay in lockstep, and also as a CLI for local iteration when only the
- * mapping has changed.
+ * stay in lockstep, and as a CLI for local iteration.
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
-import GithubSlugger from 'github-slugger';
+import { createHighlighter, type Highlighter } from 'shiki';
+import { OVERVIEW_ICON_NAMES, isKnownIcon } from '../src/lib/data/overview-icons';
 
-export type OverviewGroupId = 'instruments' | 'effects' | 'sequencing' | 'visualizations' | 'language' | 'tools';
+export type OverviewGroupId =
+	| 'instruments'
+	| 'effects'
+	| 'sequencing'
+	| 'visualizations'
+	| 'language'
+	| 'tools';
 
-export type OverviewChip = {
-	keyword: string;
-	anchor: string;
-	href: string;
+export type OverviewCardSource = {
+	docSlug: string;
+	docCategory: string;
+	anchor?: string;
+	anchorMatched: boolean;
 };
 
 export type OverviewCard = {
-	slug: string;
-	title: string;
-	description: string;
+	name: string;
+	tagline: string;
 	url: string;
 	icon: string;
-	chips: OverviewChip[];
+	snippet?: string;
+	snippetHtml?: string;
+	source: OverviewCardSource;
+};
+
+export type OverviewSubgroup = {
+	id: string;
+	heading: string;
+	cards: OverviewCard[];
 };
 
 export type OverviewGroup = {
 	id: OverviewGroupId;
 	heading: string;
-	cards: OverviewCard[];
+	subgroups: OverviewSubgroup[];
 };
 
 export type Overview = {
 	generatedAt: string;
 	groups: OverviewGroup[];
+};
+
+type Subfeature = {
+	name: string;
+	anchor: string;
+	tagline: string;
+	snippet?: string;
+	icon?: string;
 };
 
 type ManifestEntry = {
@@ -55,7 +77,12 @@ type ManifestEntry = {
 	keywords: string[];
 	headings: string[];
 	url: string;
-	source: 'live' | 'fallback';
+	source: 'live' | 'fallback' | 'local';
+	group?: string;
+	subgroup?: string;
+	icon?: string;
+	tagline?: string;
+	subfeatures?: Subfeature[];
 };
 
 type Manifest = {
@@ -72,124 +99,205 @@ const GROUPS: { id: OverviewGroupId; heading: string }[] = [
 	{ id: 'tools', heading: 'Tools' }
 ];
 
-type GroupRow = {
-	group: OverviewGroupId;
-	slug: string;
-	manifestKey: string; // 'reference/builtins' etc.
-	icon: string;
+const FLAT_GROUPS: ReadonlySet<OverviewGroupId> = new Set(['visualizations']);
+
+const VALID_GROUP_IDS: ReadonlySet<string> = new Set(GROUPS.map((g) => g.id));
+
+/** Display label for a subgroup id. Overrides keep specific casings; falls
+ *  back to title-casing the dashified id. */
+const SUBGROUP_HEADING_OVERRIDES: Record<string, string> = {
+	'time-based': 'Time-based',
+	'state-io': 'State & I/O',
+	'audio-plumbing': 'Audio plumbing',
+	'sample-based': 'Sample-based'
 };
 
-/**
- * Hardcoded mapping: for each card, which group it belongs to, which manifest
- * category/subcategory bucket to look it up in, and which Lucide icon to use.
- * Order within a group on the rendered page is determined by the manifest's
- * `order` field (ties broken by slug); the order of rows here is purely
- * cosmetic.
- */
-const GROUP_MAPPING: GroupRow[] = [
-	// Instruments (5)
-	{ group: 'instruments', slug: 'oscillators', manifestKey: 'reference/builtins', icon: 'Waves' },
-	{ group: 'instruments', slug: 'fm-synthesis', manifestKey: 'reference/builtins', icon: 'Radio' },
-	{ group: 'instruments', slug: 'samplers', manifestKey: 'reference/builtins', icon: 'Drum' },
-	{ group: 'instruments', slug: 'soundfonts', manifestKey: 'reference/builtins', icon: 'Piano' },
-	{ group: 'instruments', slug: 'samples-loading', manifestKey: 'reference/builtins', icon: 'FolderOpen' },
+function subgroupHeading(id: string): string {
+	if (SUBGROUP_HEADING_OVERRIDES[id]) return SUBGROUP_HEADING_OVERRIDES[id];
+	return id
+		.split('-')
+		.map((part) => (part ? part[0].toUpperCase() + part.slice(1) : part))
+		.join(' ');
+}
 
-	// Effects (7)
-	{ group: 'effects', slug: 'filters', manifestKey: 'reference/builtins', icon: 'Sliders' },
-	{ group: 'effects', slug: 'envelopes', manifestKey: 'reference/builtins', icon: 'Activity' },
-	{ group: 'effects', slug: 'delays', manifestKey: 'reference/builtins', icon: 'Repeat2' },
-	{ group: 'effects', slug: 'reverbs', manifestKey: 'reference/builtins', icon: 'Wind' },
-	{ group: 'effects', slug: 'modulation', manifestKey: 'reference/builtins', icon: 'Wand2' },
-	{ group: 'effects', slug: 'distortion', manifestKey: 'reference/builtins', icon: 'Zap' },
-	{ group: 'effects', slug: 'dynamics', manifestKey: 'reference/builtins', icon: 'Gauge' },
+function resolveIcon(
+	candidate: string | undefined,
+	fallback: string | undefined,
+	docSlug: string,
+	warn: (msg: string) => void
+): string {
+	for (const name of [candidate, fallback]) {
+		if (!name) continue;
+		if (isKnownIcon(name)) return name;
+		warn(`⚠ overview: unknown icon '${name}' on '${docSlug}' — falling back to Box`);
+		return 'Box';
+	}
+	return 'Box';
+}
 
-	// Sequencing (6)
-	{ group: 'sequencing', slug: 'sequencing', manifestKey: 'reference/builtins', icon: 'ListMusic' },
-	{ group: 'sequencing', slug: 'polyphony', manifestKey: 'reference/builtins', icon: 'Layers' },
-	{ group: 'sequencing', slug: 'timelines', manifestKey: 'reference/builtins', icon: 'Clock' },
-	{ group: 'sequencing', slug: 'basics', manifestKey: 'reference/mini-notation', icon: 'Music' },
-	{ group: 'sequencing', slug: 'microtonal', manifestKey: 'reference/mini-notation', icon: 'KeyRound' },
-	{ group: 'sequencing', slug: 'chords', manifestKey: 'reference/mini-notation', icon: 'Music2' },
+type CardWithRouting = OverviewCard & {
+	_groupId: OverviewGroupId;
+	_subgroupId: string | undefined;
+	_docOrder: number;
+	_arrayIndex: number;
+};
 
-	// Visualizations (5)
-	{ group: 'visualizations', slug: 'oscilloscope', manifestKey: 'reference/builtins', icon: 'LineChart' },
-	{ group: 'visualizations', slug: 'waveform', manifestKey: 'reference/builtins', icon: 'AudioWaveform' },
-	{ group: 'visualizations', slug: 'spectrum', manifestKey: 'reference/builtins', icon: 'BarChart' },
-	{ group: 'visualizations', slug: 'waterfall', manifestKey: 'reference/builtins', icon: 'AreaChart' },
-	{ group: 'visualizations', slug: 'pianoroll', manifestKey: 'reference/builtins', icon: 'Grid3x3' },
-
-	// Language (7)
-	{ group: 'language', slug: 'pipes', manifestKey: 'reference/language', icon: 'Plug' },
-	{ group: 'language', slug: 'variables', manifestKey: 'reference/language', icon: 'Variable' },
-	{ group: 'language', slug: 'operators', manifestKey: 'reference/language', icon: 'Calculator' },
-	{ group: 'language', slug: 'closures', manifestKey: 'reference/language', icon: 'Parentheses' },
-	{ group: 'language', slug: 'arrays', manifestKey: 'reference/language', icon: 'Brackets' },
-	{ group: 'language', slug: 'methods', manifestKey: 'reference/language', icon: 'Workflow' },
-	{ group: 'language', slug: 'conditionals', manifestKey: 'reference/language', icon: 'GitBranch' },
-
-	// Tools (6)
-	{ group: 'tools', slug: 'math', manifestKey: 'reference/builtins', icon: 'Sigma' },
-	{ group: 'tools', slug: 'utility', manifestKey: 'reference/builtins', icon: 'Wrench' },
-	{ group: 'tools', slug: 'state', manifestKey: 'reference/builtins', icon: 'Database' },
-	{ group: 'tools', slug: 'edge', manifestKey: 'reference/builtins', icon: 'Triangle' },
-	{ group: 'tools', slug: 'stereo', manifestKey: 'reference/builtins', icon: 'Headphones' },
-	{ group: 'tools', slug: 'audio-input', manifestKey: 'reference/builtins', icon: 'Mic' }
-];
-
-const MAX_CHIPS_PER_CARD = 5;
-
-export function buildOverview(manifest: Manifest, options: { warn?: (msg: string) => void } = {}): Overview {
+export async function buildOverview(
+	manifest: Manifest,
+	options: { warn?: (msg: string) => void; highlighter?: Highlighter | null } = {}
+): Promise<Overview> {
 	const warn = options.warn ?? ((msg: string) => console.warn(msg));
-	const slugger = new GithubSlugger();
+	const highlighter = options.highlighter ?? null;
 
-	const groupMap = new Map<OverviewGroupId, OverviewCard[]>();
-	for (const g of GROUPS) groupMap.set(g.id, []);
+	const allCards: CardWithRouting[] = [];
 
-	for (const row of GROUP_MAPPING) {
-		const bucket = manifest.entries[row.manifestKey];
-		const entry = bucket?.find((e) => e.slug === row.slug);
-		if (!entry) {
-			warn(`⚠ overview: missing manifest entry for slug '${row.slug}' in '${row.manifestKey}'`);
+	for (const [categoryKey, entries] of Object.entries(manifest.entries)) {
+		for (const entry of entries) {
+			if (!entry.group) continue; // silent skip — most opt-in fields, not all docs need to appear
+			if (!VALID_GROUP_IDS.has(entry.group)) {
+				warn(`⚠ overview: unknown group '${entry.group}' on '${entry.slug}' — skipping`);
+				continue;
+			}
+			const groupId = entry.group as OverviewGroupId;
+			const isFlatGroup = FLAT_GROUPS.has(groupId);
+
+			if (!isFlatGroup && !entry.subgroup) {
+				warn(`⚠ overview: '${entry.slug}' missing 'subgroup' for non-flat group '${groupId}' — skipping`);
+				continue;
+			}
+			const subgroupId = isFlatGroup ? undefined : entry.subgroup;
+
+			const subfeatures = entry.subfeatures ?? [];
+			const headingSet = new Set(entry.headings ?? []);
+
+			if (subfeatures.length === 0) {
+				// Atomic doc → single card from doc-level tagline.
+				if (!entry.tagline) {
+					warn(`⚠ overview: '${entry.slug}' has neither subfeatures nor tagline — skipping`);
+					continue;
+				}
+				const icon = resolveIcon(entry.icon, undefined, entry.slug, warn);
+				allCards.push({
+					name: entry.title,
+					tagline: entry.tagline,
+					url: entry.url,
+					icon,
+					source: {
+						docSlug: entry.slug,
+						docCategory: categoryKey,
+						anchorMatched: true
+					},
+					_groupId: groupId,
+					_subgroupId: subgroupId,
+					_docOrder: entry.order,
+					_arrayIndex: 0
+				});
+				continue;
+			}
+
+			// Sub-feature doc → one card per subfeature.
+			for (const [arrayIndex, sub] of subfeatures.entries()) {
+				const anchorMatched = headingSet.has(sub.anchor);
+				if (!anchorMatched) {
+					warn(
+						`⚠ overview: subfeature '${sub.name}' on '${entry.slug}' anchors to '#${sub.anchor}' but no heading found`
+					);
+				}
+				const icon = resolveIcon(sub.icon, entry.icon, entry.slug, warn);
+				const card: CardWithRouting = {
+					name: sub.name,
+					tagline: sub.tagline,
+					url: `${entry.url}#${sub.anchor}`,
+					icon,
+					source: {
+						docSlug: entry.slug,
+						docCategory: categoryKey,
+						anchor: sub.anchor,
+						anchorMatched
+					},
+					_groupId: groupId,
+					_subgroupId: subgroupId,
+					_docOrder: entry.order,
+					_arrayIndex: arrayIndex
+				};
+				if (sub.snippet) {
+					card.snippet = sub.snippet;
+					if (highlighter) {
+						try {
+							card.snippetHtml = highlighter.codeToHtml(sub.snippet, {
+								lang: 'js',
+								theme: 'github-dark-dimmed'
+							});
+						} catch (err) {
+							warn(
+								`⚠ overview: failed to highlight snippet for '${sub.name}': ${(err as Error).message}`
+							);
+						}
+					}
+				}
+				allCards.push(card);
+			}
+		}
+	}
+
+	// Group → subgroup → cards tree, preserving subgroup display order by
+	// the lowest doc order that contributes to it.
+	const groups: OverviewGroup[] = [];
+	for (const g of GROUPS) {
+		const groupCards = allCards.filter((c) => c._groupId === g.id);
+		if (groupCards.length === 0) continue;
+
+		if (FLAT_GROUPS.has(g.id)) {
+			// Flat group: one implicit subgroup with all cards.
+			const sorted = [...groupCards].sort(
+				(a, b) => a._docOrder - b._docOrder || a._arrayIndex - b._arrayIndex
+			);
+			groups.push({
+				id: g.id,
+				heading: g.heading,
+				subgroups: [
+					{
+						id: g.id,
+						heading: g.heading,
+						cards: sorted.map(stripRouting)
+					}
+				]
+			});
 			continue;
 		}
 
-		const headingSet = new Set(entry.headings ?? []);
-		const chips: OverviewChip[] = [];
-		for (const keyword of entry.keywords ?? []) {
-			if (chips.length >= MAX_CHIPS_PER_CARD) break;
-			slugger.reset();
-			const anchor = slugger.slug(String(keyword));
-			if (!headingSet.has(anchor)) {
-				warn(`⚠ overview: chip '${keyword}' on '${row.slug}' has no matching heading`);
-				continue;
+		// Non-flat: bucket by subgroup and order subgroups by first-contributor doc order.
+		const subgroupOrder = new Map<string, number>();
+		const subgroupBuckets = new Map<string, CardWithRouting[]>();
+		for (const card of groupCards) {
+			const sgId = card._subgroupId!;
+			const prevMin = subgroupOrder.get(sgId);
+			if (prevMin === undefined || card._docOrder < prevMin) {
+				subgroupOrder.set(sgId, card._docOrder);
 			}
-			chips.push({
-				keyword: String(keyword),
-				anchor,
-				href: `${entry.url}#${anchor}`
-			});
+			const bucket = subgroupBuckets.get(sgId) ?? [];
+			bucket.push(card);
+			subgroupBuckets.set(sgId, bucket);
 		}
 
-		const card: OverviewCard = {
-			slug: row.slug,
-			title: entry.title,
-			description: entry.description,
-			url: entry.url,
-			icon: row.icon,
-			chips
-		};
-		groupMap.get(row.group)!.push(card);
-	}
-
-	const groups: OverviewGroup[] = GROUPS.map((g) => {
-		const cards = groupMap.get(g.id)!;
-		cards.sort((a, b) => {
-			const ao = lookupOrder(manifest, GROUP_MAPPING.find((r) => r.slug === a.slug)!.manifestKey, a.slug);
-			const bo = lookupOrder(manifest, GROUP_MAPPING.find((r) => r.slug === b.slug)!.manifestKey, b.slug);
-			return ao - bo || a.slug.localeCompare(b.slug);
+		const sortedSubgroupIds = [...subgroupOrder.keys()].sort((a, b) => {
+			const oa = subgroupOrder.get(a)!;
+			const ob = subgroupOrder.get(b)!;
+			return oa - ob || a.localeCompare(b);
 		});
-		return { id: g.id, heading: g.heading, cards };
-	});
+
+		const subgroups: OverviewSubgroup[] = sortedSubgroupIds.map((sgId) => {
+			const cards = subgroupBuckets.get(sgId)!;
+			cards.sort((a, b) => a._docOrder - b._docOrder || a._arrayIndex - b._arrayIndex);
+			return {
+				id: sgId,
+				heading: subgroupHeading(sgId),
+				cards: cards.map(stripRouting)
+			};
+		});
+
+		groups.push({ id: g.id, heading: g.heading, subgroups });
+	}
 
 	return {
 		generatedAt: new Date().toISOString(),
@@ -197,25 +305,56 @@ export function buildOverview(manifest: Manifest, options: { warn?: (msg: string
 	};
 }
 
-function lookupOrder(manifest: Manifest, key: string, slug: string): number {
-	const e = manifest.entries[key]?.find((x) => x.slug === slug);
-	return e?.order ?? 999;
+function stripRouting(card: CardWithRouting): OverviewCard {
+	const out: OverviewCard = {
+		name: card.name,
+		tagline: card.tagline,
+		url: card.url,
+		icon: card.icon,
+		source: card.source
+	};
+	if (card.snippet !== undefined) out.snippet = card.snippet;
+	if (card.snippetHtml !== undefined) out.snippetHtml = card.snippetHtml;
+	return out;
 }
 
-export function buildOverviewFromDisk(manifestPath = 'src/lib/data/docs-manifest.json'): Overview {
+let cachedHighlighter: Highlighter | null = null;
+async function getHighlighter(): Promise<Highlighter> {
+	if (cachedHighlighter) return cachedHighlighter;
+	cachedHighlighter = await createHighlighter({
+		themes: ['github-dark-dimmed'],
+		langs: ['js']
+	});
+	return cachedHighlighter;
+}
+
+export async function buildOverviewFromDisk(
+	manifestPath = 'src/lib/data/docs-manifest.json'
+): Promise<Overview> {
 	const raw = readFileSync(manifestPath, 'utf8');
 	const manifest = JSON.parse(raw) as Manifest;
-	return buildOverview(manifest);
+	const highlighter = await getHighlighter();
+	return buildOverview(manifest, { highlighter });
 }
 
 export function writeOverview(overview: Overview, outFile = 'src/lib/data/overview.json'): void {
 	mkdirSync(dirname(outFile), { recursive: true });
 	writeFileSync(outFile, JSON.stringify(overview, null, 2));
-	const total = overview.groups.reduce((n, g) => n + g.cards.length, 0);
-	console.log(`✓ overview: ${overview.groups.length} groups, ${total} cards → ${outFile}`);
+	const groupCount = overview.groups.length;
+	const subgroupCount = overview.groups.reduce((n, g) => n + g.subgroups.length, 0);
+	const cardCount = overview.groups.reduce(
+		(n, g) => n + g.subgroups.reduce((m, sg) => m + sg.cards.length, 0),
+		0
+	);
+	console.log(
+		`✓ overview: ${groupCount} groups, ${subgroupCount} subgroups, ${cardCount} cards → ${outFile}`
+	);
 }
 
+// Re-export the icon list so tests/consumers can introspect the allowlist.
+export { OVERVIEW_ICON_NAMES };
+
 if (import.meta.main) {
-	const overview = buildOverviewFromDisk();
+	const overview = await buildOverviewFromDisk();
 	writeOverview(overview);
 }

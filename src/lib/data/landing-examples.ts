@@ -6,6 +6,11 @@ export interface LandingExample {
 
 export const LANDING_EXAMPLES: LandingExample[] = [
 	{
+		slug: 'dnb-amen',
+		label: 'Drum & Bass',
+		description: 'A fast-paced drum & bass track. Or do we need Jungle?'
+	},
+	{
 		slug: 'fm-piano',
 		label: 'FM Synth',
 		description: 'Rhodes-style electric piano via two-operator FM synthesis with chord progression.'
@@ -13,12 +18,12 @@ export const LANDING_EXAMPLES: LandingExample[] = [
 	{
 		slug: 'wavetable-scan',
 		label: 'Wavetable',
-		description: 'Smooch wavetable oscillator scanning through a bank of harmonic frames.'
+		description: 'Wavetable oscillator scanning through a bank of harmonic frames.'
 	},
 	{
 		slug: 'microtonal-raga',
 		label: 'Microtonal',
-		description: 'A meditative line in 31-EDO tuning, with intervals between the semitones.'
+		description: 'A whale like melody line in 31-EDO tuning, with intervals between the semitones.'
 	},
 	{
 		slug: 'poly-chords',
@@ -50,11 +55,6 @@ export const LANDING_EXAMPLES: LandingExample[] = [
 		label: 'SoundFont',
 		description: 'Melody played through the built-in General MIDI SoundFont (acoustic piano).'
 	},
-	{
-		slug: 'hello-sine',
-		label: 'Oscillators',
-		description: 'The smallest Akkado patch: a sine wave with vibrato.'
-	}
 ];
 
 export const DEFAULT_SLUG = 'fm-piano';

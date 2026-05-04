@@ -1,17 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { buildOverview } from './build-overview';
 
 type Manifest = Parameters<typeof buildOverview>[0];
+type ManifestEntry = Manifest['entries'][string][number];
 
-function manifestEntry(overrides: Partial<{
-	title: string;
-	description: string;
-	slug: string;
-	order: number;
-	keywords: string[];
-	headings: string[];
-	url: string;
-}>): Manifest['entries'][string][number] {
+function entry(overrides: Partial<ManifestEntry>): ManifestEntry {
 	return {
 		title: 'Title',
 		description: 'Description',
@@ -22,7 +15,7 @@ function manifestEntry(overrides: Partial<{
 		url: '/docs/reference/builtins/slug',
 		source: 'live',
 		...overrides
-	} as Manifest['entries'][string][number];
+	} as ManifestEntry;
 }
 
 function emptyManifest(): Manifest {
@@ -45,122 +38,263 @@ describe('buildOverview', () => {
 		warn = (msg) => warnings.push(msg);
 	});
 
-	it('omits a card when its slug is missing from the manifest, and warns', () => {
-		const overview = buildOverview(emptyManifest(), { warn });
-		const instruments = overview.groups.find((g) => g.id === 'instruments')!;
+	it('emits one card from an atomic doc (no subfeatures, doc-level tagline)', async () => {
+		const m = emptyManifest();
+		m.entries['reference/language'].push(
+			entry({
+				slug: 'pipes',
+				title: 'Pipes',
+				url: '/docs/reference/language/pipes',
+				group: 'language',
+				subgroup: 'syntax',
+				icon: 'Plug',
+				tagline: 'Forward composition.'
+			})
+		);
 
-		// All five instrument slugs are missing → 0 cards in the group.
-		expect(instruments.cards).toEqual([]);
-		expect(warnings.some((w) => w.includes("missing manifest entry for slug 'oscillators'"))).toBe(true);
+		const overview = await buildOverview(m, { warn });
+		const cards = overview.groups
+			.find((g) => g.id === 'language')!
+			.subgroups.find((s) => s.id === 'syntax')!.cards;
+
+		expect(cards).toHaveLength(1);
+		expect(cards[0].name).toBe('Pipes');
+		expect(cards[0].tagline).toBe('Forward composition.');
+		expect(cards[0].url).toBe('/docs/reference/language/pipes');
+		expect(cards[0].icon).toBe('Plug');
+		expect(cards[0].source.anchor).toBeUndefined();
+		expect(cards[0].source.anchorMatched).toBe(true);
+		expect(cards[0].snippet).toBeUndefined();
 	});
 
-	it('emits exactly 5 chips in keyword order when all chips resolve', () => {
+	it('emits N cards for a sub-feature doc, each with a fragment URL', async () => {
 		const m = emptyManifest();
 		m.entries['reference/builtins'].push(
-			manifestEntry({
+			entry({
 				slug: 'filters',
 				title: 'Filters',
-				description: 'desc',
+				url: '/docs/reference/builtins/filters',
 				order: 2,
-				keywords: ['lp', 'hp', 'bp', 'moog', 'sallenkey', 'extra'],
-				headings: ['lp', 'hp', 'bp', 'moog', 'sallenkey'],
-				url: '/docs/reference/builtins/filters'
+				group: 'effects',
+				subgroup: 'frequency',
+				icon: 'Sliders',
+				headings: ['lp', 'hp', 'bp'],
+				subfeatures: [
+					{ name: 'Lowpass', anchor: 'lp', tagline: 'Resonant low-pass.' },
+					{ name: 'Highpass', anchor: 'hp', tagline: 'High-pass.' },
+					{ name: 'Bandpass', anchor: 'bp', tagline: 'Band-pass.' }
+				]
 			})
 		);
 
-		const overview = buildOverview(m, { warn });
-		const card = overview.groups
+		const overview = await buildOverview(m, { warn });
+		const cards = overview.groups
 			.find((g) => g.id === 'effects')!
-			.cards.find((c) => c.slug === 'filters')!;
+			.subgroups.find((s) => s.id === 'frequency')!.cards;
 
-		expect(card.chips).toHaveLength(5);
-		expect(card.chips.map((c) => c.keyword)).toEqual(['lp', 'hp', 'bp', 'moog', 'sallenkey']);
-		expect(card.chips[0]).toEqual({
-			keyword: 'lp',
-			anchor: 'lp',
-			href: '/docs/reference/builtins/filters#lp'
-		});
+		expect(cards.map((c) => c.name)).toEqual(['Lowpass', 'Highpass', 'Bandpass']);
+		expect(cards[0].url).toBe('/docs/reference/builtins/filters#lp');
+		expect(cards.every((c) => c.icon === 'Sliders')).toBe(true);
+		expect(cards.every((c) => c.source.anchorMatched)).toBe(true);
 	});
 
-	it('drops keywords whose slugified form does not match a heading, and warns', () => {
+	it('orders mixed sub-feature cards in a sub-group by doc order then array index', async () => {
 		const m = emptyManifest();
 		m.entries['reference/builtins'].push(
-			manifestEntry({
+			entry({
+				slug: 'envelopes',
+				title: 'Envelopes',
+				url: '/docs/reference/builtins/envelopes',
+				order: 4, // higher → should appear after filters
+				group: 'effects',
+				subgroup: 'frequency',
+				icon: 'Activity',
+				headings: ['adsr', 'ar'],
+				subfeatures: [
+					{ name: 'ADSR', anchor: 'adsr', tagline: 'ADSR.' },
+					{ name: 'AR', anchor: 'ar', tagline: 'AR.' }
+				]
+			}),
+			entry({
 				slug: 'filters',
 				title: 'Filters',
-				keywords: ['lp', 'NOT-A-HEADING', 'hp', 'ALSO-MISSING', 'bp'],
-				headings: ['lp', 'hp', 'bp']
+				url: '/docs/reference/builtins/filters',
+				order: 2,
+				group: 'effects',
+				subgroup: 'frequency',
+				icon: 'Sliders',
+				headings: ['lp', 'hp'],
+				subfeatures: [
+					{ name: 'Lowpass', anchor: 'lp', tagline: 'LP.' },
+					{ name: 'Highpass', anchor: 'hp', tagline: 'HP.' }
+				]
 			})
 		);
 
-		const overview = buildOverview(m, { warn });
-		const card = overview.groups
+		const overview = await buildOverview(m, { warn });
+		const cards = overview.groups
 			.find((g) => g.id === 'effects')!
-			.cards.find((c) => c.slug === 'filters')!;
+			.subgroups.find((s) => s.id === 'frequency')!.cards;
 
-		expect(card.chips.map((c) => c.keyword)).toEqual(['lp', 'hp', 'bp']);
-		expect(warnings.filter((w) => w.includes('has no matching heading')).length).toBe(2);
+		// filters (order 2) before envelopes (order 4); within each, array order preserved.
+		expect(cards.map((c) => c.name)).toEqual(['Lowpass', 'Highpass', 'ADSR', 'AR']);
 	});
 
-	it('sorts cards within a group by manifest order, ties broken by slug', () => {
+	it('skips a doc that has neither group nor any other v2 fields (silent skip)', async () => {
 		const m = emptyManifest();
-		// Both effects, both order 99, slugs sort as: delays < distortion < dynamics.
-		m.entries['reference/builtins'].push(
-			manifestEntry({ slug: 'distortion', order: 99 }),
-			manifestEntry({ slug: 'delays', order: 99 }),
-			manifestEntry({ slug: 'dynamics', order: 99 })
+		m.entries['reference/builtins'].push(entry({ slug: 'unknown' }));
+
+		const overview = await buildOverview(m, { warn });
+		const allCardNames = overview.groups.flatMap((g) =>
+			g.subgroups.flatMap((sg) => sg.cards.map((c) => c.name))
 		);
 
-		const overview = buildOverview(m, { warn });
-		const slugs = overview.groups
-			.find((g) => g.id === 'effects')!
-			.cards.map((c) => c.slug);
-
-		// Other Effects slugs are missing — only these three render.
-		expect(slugs).toEqual(['delays', 'distortion', 'dynamics']);
+		expect(allCardNames).toEqual([]);
+		// Missing group is the most common transient state; it shouldn't spam logs.
+		expect(warnings.length).toBe(0);
 	});
 
-	it('skips manifest entries whose slug is not in GROUP_MAPPING', () => {
+	it('warns and skips a doc whose group is not one of the 6 known IDs', async () => {
 		const m = emptyManifest();
 		m.entries['reference/builtins'].push(
-			manifestEntry({ slug: 'tutorials-hello-sine' }),
-			manifestEntry({ slug: 'unknown-builtin' })
+			entry({ slug: 'weird', group: 'unknown-group', tagline: 'X.' })
 		);
 
-		const overview = buildOverview(m, { warn });
-		const allSlugs = overview.groups.flatMap((g) => g.cards.map((c) => c.slug));
-
-		expect(allSlugs).not.toContain('tutorials-hello-sine');
-		expect(allSlugs).not.toContain('unknown-builtin');
-		// No warning for these — they're filtered at the GROUP_MAPPING step,
-		// not the missing-entry step.
-		expect(warnings.some((w) => w.includes('tutorials-hello-sine'))).toBe(false);
+		const overview = await buildOverview(m, { warn });
+		expect(overview.groups).toEqual([]);
+		expect(warnings.some((w) => w.includes("unknown group 'unknown-group'"))).toBe(true);
 	});
 
-	it('renders a group with empty cards when every slug in it is missing', () => {
-		const overview = buildOverview(emptyManifest(), { warn: () => {} });
-		const visualizations = overview.groups.find((g) => g.id === 'visualizations')!;
-
-		expect(visualizations.cards).toEqual([]);
-		expect(visualizations.heading).toBe('Visualizations');
-	});
-
-	it('emits no chips when keywords is empty, without warning', () => {
+	it('warns and skips a doc missing subgroup for a non-flat group', async () => {
 		const m = emptyManifest();
 		m.entries['reference/builtins'].push(
-			manifestEntry({ slug: 'filters', keywords: [], headings: ['lp', 'hp'] })
+			entry({ slug: 'orphan', group: 'effects', tagline: 'No subgroup.' })
 		);
 
-		const overview = buildOverview(m, { warn });
-		const card = overview.groups
-			.find((g) => g.id === 'effects')!
-			.cards.find((c) => c.slug === 'filters')!;
-
-		expect(card.chips).toEqual([]);
+		const overview = await buildOverview(m, { warn });
+		expect(overview.groups).toEqual([]);
+		expect(warnings.some((w) => w.includes("missing 'subgroup' for non-flat group"))).toBe(true);
 	});
 
-	it('returns groups in the canonical order regardless of manifest insertion', () => {
-		const overview = buildOverview(emptyManifest(), { warn: () => {} });
+	it('warns and skips a doc with no subfeatures and no tagline', async () => {
+		const m = emptyManifest();
+		m.entries['reference/builtins'].push(
+			entry({ slug: 'bare', group: 'effects', subgroup: 'frequency' })
+		);
+
+		const overview = await buildOverview(m, { warn });
+		expect(overview.groups).toEqual([]);
+		expect(warnings.some((w) => w.includes('neither subfeatures nor tagline'))).toBe(true);
+	});
+
+	it('warns on anchor mismatch but ships the card with anchorMatched: false', async () => {
+		const m = emptyManifest();
+		m.entries['reference/builtins'].push(
+			entry({
+				slug: 'filters',
+				url: '/docs/reference/builtins/filters',
+				group: 'effects',
+				subgroup: 'frequency',
+				icon: 'Sliders',
+				headings: ['lp'], // hp missing
+				subfeatures: [
+					{ name: 'Lowpass', anchor: 'lp', tagline: 'LP.' },
+					{ name: 'Highpass', anchor: 'hp', tagline: 'HP.' }
+				]
+			})
+		);
+
+		const overview = await buildOverview(m, { warn });
+		const cards = overview.groups[0].subgroups[0].cards;
+
+		expect(cards).toHaveLength(2);
+		expect(cards[0].source.anchorMatched).toBe(true);
+		expect(cards[1].source.anchorMatched).toBe(false);
+		expect(cards[1].url).toBe('/docs/reference/builtins/filters#hp');
+		expect(warnings.some((w) => w.includes("anchors to '#hp'"))).toBe(true);
+	});
+
+	it('falls back to Box for an unknown icon, with warning', async () => {
+		const m = emptyManifest();
+		m.entries['reference/builtins'].push(
+			entry({
+				slug: 'pipes',
+				url: '/docs/reference/language/pipes',
+				group: 'language',
+				subgroup: 'syntax',
+				icon: 'NotALucideIcon',
+				tagline: 'A doc.'
+			})
+		);
+
+		const overview = await buildOverview(m, { warn });
+		const card = overview.groups[0].subgroups[0].cards[0];
+
+		expect(card.icon).toBe('Box');
+		expect(warnings.some((w) => w.includes("unknown icon 'NotALucideIcon'"))).toBe(true);
+	});
+
+	it('orders subgroups within a group by lowest contributor order', async () => {
+		const m = emptyManifest();
+		// Voicing first contributor: order 18
+		m.entries['reference/builtins'].push(
+			entry({
+				slug: 'polyphony',
+				url: '/docs/reference/builtins/polyphony',
+				order: 18,
+				group: 'sequencing',
+				subgroup: 'voicing',
+				icon: 'Layers',
+				tagline: 'Voicing.'
+			})
+		);
+		// Timing first contributor: order 4
+		m.entries['reference/builtins'].push(
+			entry({
+				slug: 'sequencing',
+				url: '/docs/reference/builtins/sequencing',
+				order: 4,
+				group: 'sequencing',
+				subgroup: 'timing',
+				icon: 'ListMusic',
+				tagline: 'Timing.'
+			})
+		);
+
+		const overview = await buildOverview(m, { warn });
+		const subgroupIds = overview.groups
+			.find((g) => g.id === 'sequencing')!
+			.subgroups.map((s) => s.id);
+
+		expect(subgroupIds).toEqual(['timing', 'voicing']);
+	});
+
+	it('omits a top-level group entirely when no docs contribute', async () => {
+		const overview = await buildOverview(emptyManifest(), { warn });
+		expect(overview.groups).toEqual([]);
+	});
+
+	it('preserves canonical top-level group order when all six are populated', async () => {
+		const m = emptyManifest();
+		const minimal = (slug: string, group: string, subgroup?: string) =>
+			entry({
+				slug,
+				url: `/docs/${slug}`,
+				group,
+				...(subgroup ? { subgroup } : {}),
+				icon: 'Box',
+				tagline: 'X.'
+			});
+		m.entries['reference/builtins'].push(
+			minimal('language-doc', 'language', 'syntax'),
+			minimal('tools-doc', 'tools', 'math'),
+			minimal('viz-doc', 'visualizations'),
+			minimal('inst-doc', 'instruments', 'synthesis'),
+			minimal('seq-doc', 'sequencing', 'patterns'),
+			minimal('eff-doc', 'effects', 'frequency')
+		);
+
+		const overview = await buildOverview(m, { warn });
 		expect(overview.groups.map((g) => g.id)).toEqual([
 			'instruments',
 			'effects',
@@ -169,5 +303,76 @@ describe('buildOverview', () => {
 			'language',
 			'tools'
 		]);
+	});
+
+	it('preserves snippet on cards when present, omits the field when absent', async () => {
+		const m = emptyManifest();
+		m.entries['reference/builtins'].push(
+			entry({
+				slug: 'distortion',
+				url: '/docs/reference/builtins/distortion',
+				group: 'effects',
+				subgroup: 'nonlinear',
+				icon: 'Zap',
+				headings: ['saturate', 'tube'],
+				subfeatures: [
+					{ name: 'Saturate', anchor: 'saturate', tagline: 'S.', snippet: 'saw -> saturate' },
+					{ name: 'Tube', anchor: 'tube', tagline: 'T.' }
+				]
+			})
+		);
+
+		// No highlighter passed → snippet kept as raw string, snippetHtml undefined.
+		const overview = await buildOverview(m, { warn });
+		const cards = overview.groups[0].subgroups[0].cards;
+
+		expect(cards[0].snippet).toBe('saw -> saturate');
+		expect(cards[0].snippetHtml).toBeUndefined();
+		expect(cards[1].snippet).toBeUndefined();
+	});
+
+	it('respects per-subfeature icon override', async () => {
+		const m = emptyManifest();
+		m.entries['reference/builtins'].push(
+			entry({
+				slug: 'distortion',
+				url: '/docs/reference/builtins/distortion',
+				group: 'effects',
+				subgroup: 'nonlinear',
+				icon: 'Zap',
+				headings: ['bitcrush', 'tube'],
+				subfeatures: [
+					{ name: 'Bitcrush', anchor: 'bitcrush', tagline: 'B.', icon: 'Binary' },
+					{ name: 'Tube', anchor: 'tube', tagline: 'T.' } // inherits doc icon
+				]
+			})
+		);
+
+		const overview = await buildOverview(m, { warn });
+		const cards = overview.groups[0].subgroups[0].cards;
+
+		expect(cards[0].icon).toBe('Binary');
+		expect(cards[1].icon).toBe('Zap');
+	});
+
+	it('renders a flat group as a single implicit subgroup with the group heading', async () => {
+		const m = emptyManifest();
+		m.entries['reference/builtins'].push(
+			entry({
+				slug: 'oscilloscope',
+				title: 'Oscilloscope',
+				url: '/docs/reference/builtins/oscilloscope',
+				group: 'visualizations',
+				icon: 'LineChart',
+				tagline: 'Scope.'
+			})
+		);
+
+		const overview = await buildOverview(m, { warn });
+		const visualizations = overview.groups.find((g) => g.id === 'visualizations')!;
+
+		expect(visualizations.subgroups).toHaveLength(1);
+		expect(visualizations.subgroups[0].id).toBe('visualizations');
+		expect(visualizations.subgroups[0].cards[0].name).toBe('Oscilloscope');
 	});
 });
