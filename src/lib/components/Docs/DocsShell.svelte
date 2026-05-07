@@ -5,7 +5,10 @@
 	import DocsSidebar from './DocsSidebar.svelte';
 	import DocsBreadcrumb from './DocsBreadcrumb.svelte';
 	import MobileDrawer from './MobileDrawer.svelte';
+	import DocsTOC from './DocsTOC.svelte';
 	import { DOCS_SHELL_KEY, type DocsShellContext } from './docs-shell-context';
+	import { resolveHeadings, shouldRenderTOC } from './headings';
+	import manifest from '$lib/data/docs-manifest.json';
 
 	type Section = 'concepts' | 'tutorials' | 'reference';
 
@@ -35,6 +38,8 @@
 	});
 
 	const isHub = $derived(HUB_PATHS.has(normalizedPath));
+	const headings = $derived(resolveHeadings(normalizedPath, manifest));
+	const hasTOC = $derived(!isHub && shouldRenderTOC(headings));
 
 	let drawerOpen = $state(false);
 </script>
@@ -42,7 +47,7 @@
 {#if section === null}
 	{@render children()}
 {:else}
-	<div class="docs-shell">
+	<div class="docs-shell" class:has-toc={hasTOC}>
 		<aside class="sidebar-desktop">
 			<DocsSidebar {section} />
 		</aside>
@@ -61,12 +66,21 @@
 				{#if !isHub}
 					<DocsBreadcrumb />
 				{/if}
+				{#if hasTOC}
+					<DocsTOC {headings} position="inline" />
+				{/if}
 			</header>
 
-			<main class="content-body" data-pagefind-body>
+			<main class="content-body" data-pagefind-body data-toc-root>
 				{@render children()}
 			</main>
 		</div>
+
+		{#if hasTOC}
+			<aside class="toc-desktop">
+				<DocsTOC {headings} position="sidebar" />
+			</aside>
+		{/if}
 
 		<MobileDrawer bind:open={drawerOpen}>
 			<DocsSidebar {section} />
@@ -87,6 +101,17 @@
 	}
 
 	.sidebar-desktop {
+		position: sticky;
+		top: var(--header-height, 64px);
+		align-self: start;
+		max-height: calc(100vh - var(--header-height, 64px));
+		overflow-y: auto;
+		padding-top: var(--spacing-md);
+		padding-bottom: var(--spacing-lg);
+	}
+
+	.toc-desktop {
+		display: none;
 		position: sticky;
 		top: var(--header-height, 64px);
 		align-self: start;
@@ -135,6 +160,18 @@
 		border-color: var(--border-default);
 	}
 
+	@media (min-width: 1280px) {
+		.docs-shell.has-toc {
+			grid-template-columns: 260px minmax(0, 1fr) 220px;
+		}
+		.docs-shell.has-toc .toc-desktop {
+			display: block;
+		}
+		.docs-shell.has-toc :global(.toc-inline) {
+			display: none;
+		}
+	}
+
 	@media (max-width: 1023px) {
 		.docs-shell {
 			grid-template-columns: 1fr;
@@ -149,11 +186,16 @@
 
 	@media print {
 		.sidebar-desktop,
+		.toc-desktop,
 		.drawer-toggle {
 			display: none;
 		}
-		.docs-shell {
+		.docs-shell,
+		.docs-shell.has-toc {
 			grid-template-columns: 1fr;
+		}
+		:global(.toc-inline) {
+			display: none;
 		}
 	}
 </style>
