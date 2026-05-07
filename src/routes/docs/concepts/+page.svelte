@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { ArrowRight, ArrowLeft } from 'lucide-svelte';
+	import { getContext } from 'svelte';
+	import { DOCS_SHELL_KEY } from '$lib/components/Docs/docs-shell-context';
+
+	const inShell = getContext(DOCS_SHELL_KEY) !== undefined;
 
 	const concepts = [
 		{
@@ -27,10 +31,12 @@
 
 <section class="page">
 	<div class="page-inner">
-		<a href="/docs" class="back-link">
-			<ArrowLeft size={14} />
-			All docs
-		</a>
+		{#if !inShell}
+			<a href="/docs" class="back-link">
+				<ArrowLeft size={14} />
+				All docs
+			</a>
+		{/if}
 		<h1>Concepts</h1>
 		<p class="intro">
 			The ideas that make NKIDO work. Start here before jumping into the tutorials.

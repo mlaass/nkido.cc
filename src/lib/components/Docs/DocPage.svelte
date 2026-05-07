@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { BookOpen, ArrowLeft, ArrowRight } from 'lucide-svelte';
+	import { getContext } from 'svelte';
 	import manifest from '$lib/data/docs-manifest.json';
+	import { DOCS_SHELL_KEY } from './docs-shell-context';
+
+	const inShell = getContext(DOCS_SHELL_KEY) !== undefined;
 
 	interface Props {
 		title: string;
@@ -50,10 +54,12 @@
 
 <article class="doc">
 	<div class="doc-inner">
-		<a href={backHref} class="back-link">
-			<ArrowLeft size={14} />
-			{backLabel}
-		</a>
+		{#if !inShell}
+			<a href={backHref} class="back-link">
+				<ArrowLeft size={14} />
+				{backLabel}
+			</a>
+		{/if}
 
 		<h1>{title}</h1>
 		{#if description}

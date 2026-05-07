@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { ArrowRight, ArrowLeft } from 'lucide-svelte';
+	import { getContext } from 'svelte';
+	import { DOCS_SHELL_KEY } from './docs-shell-context';
+
+	const inShell = getContext(DOCS_SHELL_KEY) !== undefined;
 
 	type Entry = { title: string; description?: string; url: string };
 
@@ -27,10 +31,12 @@
 
 <section class="page">
 	<div class="page-inner">
-		<a href={backHref} class="back-link">
-			<ArrowLeft size={14} />
-			{backLabel}
-		</a>
+		{#if !inShell}
+			<a href={backHref} class="back-link">
+				<ArrowLeft size={14} />
+				{backLabel}
+			</a>
+		{/if}
 		<h1>{title}</h1>
 		{#if intro}<p class="intro">{intro}</p>{/if}
 
