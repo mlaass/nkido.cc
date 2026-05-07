@@ -5,11 +5,11 @@ export interface LandingExample {
 }
 
 export const LANDING_EXAMPLES: LandingExample[] = [
-	{
-		slug: 'dnb-amen',
-		label: 'Drum & Bass',
-		description: 'A fast-paced drum & bass track. Or do we need Jungle?'
-	},
+  {
+    slug: "dnb-amen",
+    label: "Drum'n'Bass",
+    description: "Amen-break chops + jungle bass loaded over HTTPS via samples(\"github:tidalcycles/Dirt-Samples\"). First play fetches; refresh hits the IndexedDB cache."
+  },
 	{
 		slug: 'fm-piano',
 		label: 'FM Synth',
