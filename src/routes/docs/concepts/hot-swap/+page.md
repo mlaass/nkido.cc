@@ -5,7 +5,7 @@ description: How NKIDO replaces a running patch with a new one without glitches.
 backHref: /docs/concepts
 backLabel: Concepts
 referenceKeyword: hot-swap
-category: concept
+category: "concepts"
 order: 2
 keywords: [hot-swap, live-coding, semantic-id, state, crossfade]
 ---

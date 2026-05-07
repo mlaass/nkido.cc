@@ -69,13 +69,19 @@ type Subfeature = {
 	icon?: string;
 };
 
+type Heading = {
+	slug: string;
+	text: string;
+	depth: number;
+};
+
 type ManifestEntry = {
 	title: string;
 	description: string;
 	slug: string;
 	order: number;
 	keywords: string[];
-	headings: string[];
+	headings: Heading[];
 	url: string;
 	source: 'live' | 'fallback' | 'local';
 	group?: string;
@@ -168,7 +174,7 @@ export async function buildOverview(
 			const subgroupId = isFlatGroup ? undefined : entry.subgroup;
 
 			const subfeatures = entry.subfeatures ?? [];
-			const headingSet = new Set(entry.headings ?? []);
+			const headingSet = new Set((entry.headings ?? []).map((h) => h.slug));
 
 			if (subfeatures.length === 0) {
 				// Atomic doc → single card from doc-level tagline.

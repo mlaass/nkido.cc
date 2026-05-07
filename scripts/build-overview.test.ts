@@ -4,6 +4,10 @@ import { buildOverview } from './build-overview';
 type Manifest = Parameters<typeof buildOverview>[0];
 type ManifestEntry = Manifest['entries'][string][number];
 
+function h(slug: string): { slug: string; text: string; depth: number } {
+	return { slug, text: slug, depth: 2 };
+}
+
 function entry(overrides: Partial<ManifestEntry>): ManifestEntry {
 	return {
 		title: 'Title',
@@ -78,7 +82,7 @@ describe('buildOverview', () => {
 				group: 'effects',
 				subgroup: 'frequency',
 				icon: 'Sliders',
-				headings: ['lp', 'hp', 'bp'],
+				headings: [h('lp'), h('hp'), h('bp')],
 				subfeatures: [
 					{ name: 'Lowpass', anchor: 'lp', tagline: 'Resonant low-pass.' },
 					{ name: 'Highpass', anchor: 'hp', tagline: 'High-pass.' },
@@ -109,7 +113,7 @@ describe('buildOverview', () => {
 				group: 'effects',
 				subgroup: 'frequency',
 				icon: 'Activity',
-				headings: ['adsr', 'ar'],
+				headings: [h('adsr'), h('ar')],
 				subfeatures: [
 					{ name: 'ADSR', anchor: 'adsr', tagline: 'ADSR.' },
 					{ name: 'AR', anchor: 'ar', tagline: 'AR.' }
@@ -123,7 +127,7 @@ describe('buildOverview', () => {
 				group: 'effects',
 				subgroup: 'frequency',
 				icon: 'Sliders',
-				headings: ['lp', 'hp'],
+				headings: [h('lp'), h('hp')],
 				subfeatures: [
 					{ name: 'Lowpass', anchor: 'lp', tagline: 'LP.' },
 					{ name: 'Highpass', anchor: 'hp', tagline: 'HP.' }
@@ -196,7 +200,7 @@ describe('buildOverview', () => {
 				group: 'effects',
 				subgroup: 'frequency',
 				icon: 'Sliders',
-				headings: ['lp'], // hp missing
+				headings: [h('lp')], // hp missing
 				subfeatures: [
 					{ name: 'Lowpass', anchor: 'lp', tagline: 'LP.' },
 					{ name: 'Highpass', anchor: 'hp', tagline: 'HP.' }
@@ -314,7 +318,7 @@ describe('buildOverview', () => {
 				group: 'effects',
 				subgroup: 'nonlinear',
 				icon: 'Zap',
-				headings: ['saturate', 'tube'],
+				headings: [h('saturate'), h('tube')],
 				subfeatures: [
 					{ name: 'Saturate', anchor: 'saturate', tagline: 'S.', snippet: 'saw -> saturate' },
 					{ name: 'Tube', anchor: 'tube', tagline: 'T.' }
@@ -340,7 +344,7 @@ describe('buildOverview', () => {
 				group: 'effects',
 				subgroup: 'nonlinear',
 				icon: 'Zap',
-				headings: ['bitcrush', 'tube'],
+				headings: [h('bitcrush'), h('tube')],
 				subfeatures: [
 					{ name: 'Bitcrush', anchor: 'bitcrush', tagline: 'B.', icon: 'Binary' },
 					{ name: 'Tube', anchor: 'tube', tagline: 'T.' } // inherits doc icon

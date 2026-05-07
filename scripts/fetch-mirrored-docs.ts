@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-import { mkdirSync, writeFileSync, readFileSync, existsSync, statSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { dirname, resolve as resolveFsPath, join as joinFsPath } from 'node:path';
 import matter from 'gray-matter';
 import { resolve as resolvePath, dirname as dirnamePath } from 'node:path/posix';
@@ -36,6 +36,12 @@ type Subfeature = {
 	icon?: string;
 };
 
+export type Heading = {
+	slug: string;
+	text: string;
+	depth: number;
+};
+
 type MirrorResult = {
 	entry: MirrorEntry;
 	source: MirrorSource;
@@ -43,7 +49,7 @@ type MirrorResult = {
 	description: string;
 	order: number;
 	keywords: string[];
-	headings: string[];
+	headings: Heading[];
 	group?: string;
 	subgroup?: string;
 	icon?: string;
@@ -211,17 +217,19 @@ function escapeProseLTs(body: string): string {
 }
 
 /**
- * Extract slugified markdown headings from the body, restricted to the level
- * range in `HEADING_LEVELS`. Slug rules match `github-slugger`, which is what
- * `rehype-slug` (configured in `svelte.config.js`) uses to generate anchor IDs
- * in the rendered HTML — so chips that match a returned slug are guaranteed to
- * resolve in the browser.
+ * Extract markdown headings from the body, restricted to the level range in
+ * `HEADING_LEVELS`. Returns `{ slug, text, depth }` per heading. Slug rules
+ * match `github-slugger`, which is what `rehype-slug` (configured in
+ * `svelte.config.js`) uses to generate anchor IDs in the rendered HTML — so
+ * the returned slugs are guaranteed to resolve in the browser. Display text
+ * and depth are needed by the right-side TOC; the overview chip resolver
+ * uses just the slug.
  *
  * Skips fenced code blocks so headings inside ```` ``` ```` aren't picked up.
  */
-function extractHeadings(body: string): string[] {
+function extractHeadings(body: string): Heading[] {
 	const slugger = new GithubSlugger();
-	const slugs: string[] = [];
+	const headings: Heading[] = [];
 	let inFence = false;
 	for (const line of body.split('\n')) {
 		if (/^```/.test(line.trimStart())) {
@@ -231,8 +239,8 @@ function extractHeadings(body: string): string[] {
 		if (inFence) continue;
 		const m = line.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/);
 		if (!m) continue;
-		const level = m[1].length;
-		if (level < HEADING_LEVELS.min || level > HEADING_LEVELS.max) continue;
+		const depth = m[1].length;
+		if (depth < HEADING_LEVELS.min || depth > HEADING_LEVELS.max) continue;
 		const text = m[2]
 			.replace(/`([^`]+)`/g, '$1')
 			.replace(/\*\*([^*]+)\*\*/g, '$1')
@@ -240,9 +248,9 @@ function extractHeadings(body: string): string[] {
 			.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
 			.trim();
 		if (!text) continue;
-		slugs.push(slugger.slug(text));
+		headings.push({ slug: slugger.slug(text), text, depth });
 	}
-	return slugs;
+	return headings;
 }
 
 function synthesizeDescription(body: string): string {
@@ -381,6 +389,74 @@ function writeEntry(entry: MirrorEntry, raw: string, source: MirrorSource): Mirr
 	};
 }
 
+/**
+ * Enumerate website-local concept pages under `src/routes/docs/concepts/*`.
+ * Concepts aren't mirrored from upstream nkido; they're authored directly in
+ * this repo. We synthesize `MirrorEntry`/`MirrorResult` shapes for them so
+ * `writeManifest` can fold them into the same JSON alongside tutorials and
+ * reference. We do NOT rewrite the on-disk files — they stay as authored.
+ */
+function enumerateLocalConcepts(): MirrorResult[] {
+	const conceptsDir = 'src/routes/docs/concepts';
+	if (!existsSync(conceptsDir)) return [];
+
+	const dirs = readdirSync(conceptsDir, { withFileTypes: true })
+		.filter((d) => d.isDirectory())
+		.map((d) => d.name)
+		.sort();
+
+	const results: MirrorResult[] = [];
+	for (const slug of dirs) {
+		const filePath = `${conceptsDir}/${slug}/+page.md`;
+		if (!existsSync(filePath)) continue;
+		const raw = readFileSync(filePath, 'utf8');
+		const { data, content: body } = matter(raw);
+
+		const title = typeof data.title === 'string' && data.title.trim().length > 0
+			? data.title
+			: slug;
+		if (typeof data.title !== 'string' || data.title.trim().length === 0) {
+			console.warn(`⚠ concepts/${slug}: missing 'title:' frontmatter — using slug`);
+		}
+
+		const description: string =
+			typeof data.description === 'string' && data.description.trim().length > 0
+				? data.description
+				: synthesizeDescription(body);
+
+		const order = typeof data.order === 'number' ? data.order : 999;
+		if (typeof data.order !== 'number') {
+			console.warn(`⚠ concepts/${slug}: missing 'order:' frontmatter — defaulting to 999`);
+		}
+
+		const keywords: string[] = Array.isArray(data.keywords)
+			? data.keywords.map(String)
+			: typeof data.keywords === 'string'
+				? [data.keywords]
+				: [];
+
+		const headings = extractHeadings(body);
+
+		const entry: MirrorEntry = {
+			upstream: '',
+			category: 'concepts',
+			subcategory: '',
+			slug
+		};
+
+		results.push({
+			entry,
+			source: 'local',
+			title,
+			description,
+			order,
+			keywords,
+			headings
+		});
+	}
+	return results;
+}
+
 type Outcome =
 	| { kind: 'ok'; result: MirrorResult; source: MirrorSource }
 	| { kind: 'missing'; entry: MirrorEntry }
@@ -461,6 +537,12 @@ async function main() {
 			process.exit(1);
 		}
 		console.warn(`⚠ ${missingCount} entries missing — continuing in local dev`);
+	}
+
+	const localConcepts = enumerateLocalConcepts();
+	results.push(...localConcepts);
+	if (localConcepts.length > 0) {
+		console.log(`✓ concepts: ${localConcepts.length} local`);
 	}
 
 	writeManifest(results);

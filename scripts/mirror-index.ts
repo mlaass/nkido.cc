@@ -8,7 +8,7 @@
  * (or `src/routes/docs/<category>/<slug>/+page.md` when subcategory is empty).
  */
 
-export type MirrorCategory = 'reference' | 'tutorials';
+export type MirrorCategory = 'reference' | 'tutorials' | 'concepts';
 export type MirrorSubcategory = 'builtins' | 'language' | 'mini-notation' | '';
 
 export type MirrorEntry = {

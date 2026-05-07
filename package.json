@@ -6,7 +6,7 @@
   "scripts": {
     "predev": "bun run scripts/fetch-mirrored-docs.ts && bun run scripts/fetch-contributing.ts && bun run scripts/fetch-releases.ts",
     "dev": "vite dev",
-    "prebuild": "bun run scripts/fetch-mirrored-docs.ts && bun run scripts/fetch-contributing.ts && bun run scripts/fetch-releases.ts && bun run scripts/validate-frontmatter.ts",
+    "prebuild": "bun run scripts/fetch-mirrored-docs.ts && bun run scripts/build-sidebar.ts && bun run scripts/fetch-contributing.ts && bun run scripts/fetch-releases.ts && bun run scripts/validate-frontmatter.ts",
     "build": "vite build",
     "build:overview": "bun run scripts/build-overview.ts",
     "postbuild": "pagefind --site build",

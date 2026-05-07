@@ -5,7 +5,7 @@ description: Strudel/Tidal-style pattern syntax for rapid musical exploration.
 backHref: /docs/concepts
 backLabel: Concepts
 referenceKeyword: mini-notation
-category: concept
+category: "concepts"
 order: 3
 keywords: [mini-notation, pattern, tidal, strudel, note, sequence]
 ---

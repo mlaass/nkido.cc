@@ -5,7 +5,7 @@ description: How audio flows through NKIDO's directed acyclic graph.
 backHref: /docs/concepts
 backLabel: Concepts
 referenceKeyword: signal
-category: concept
+category: "concepts"
 order: 1
 keywords: [signal, DAG, dsp, graph, pipe]
 ---
