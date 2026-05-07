@@ -457,6 +457,74 @@ function enumerateLocalConcepts(): MirrorResult[] {
 	return results;
 }
 
+/**
+ * Enumerate website-local tutorial pages under `src/routes/docs/tutorials/*`.
+ * Most tutorials are mirrored from upstream nkido (see MIRROR_INDEX); a few are
+ * authored directly in this repo (e.g. cookbook, migrating). Skip any slug
+ * already populated by the upstream mirror so we don't double-emit.
+ */
+function enumerateLocalTutorials(mirroredSlugs: Set<string>): MirrorResult[] {
+	const tutorialsDir = 'src/routes/docs/tutorials';
+	if (!existsSync(tutorialsDir)) return [];
+
+	const dirs = readdirSync(tutorialsDir, { withFileTypes: true })
+		.filter((d) => d.isDirectory())
+		.map((d) => d.name)
+		.sort();
+
+	const results: MirrorResult[] = [];
+	for (const slug of dirs) {
+		if (mirroredSlugs.has(slug)) continue;
+		const filePath = `${tutorialsDir}/${slug}/+page.md`;
+		if (!existsSync(filePath)) continue;
+		const raw = readFileSync(filePath, 'utf8');
+		const { data, content: body } = matter(raw);
+
+		const title = typeof data.title === 'string' && data.title.trim().length > 0
+			? data.title
+			: slug;
+		if (typeof data.title !== 'string' || data.title.trim().length === 0) {
+			console.warn(`⚠ tutorials/${slug}: missing 'title:' frontmatter — using slug`);
+		}
+
+		const description: string =
+			typeof data.description === 'string' && data.description.trim().length > 0
+				? data.description
+				: synthesizeDescription(body);
+
+		const order = typeof data.order === 'number' ? data.order : 999;
+		if (typeof data.order !== 'number') {
+			console.warn(`⚠ tutorials/${slug}: missing 'order:' frontmatter — defaulting to 999`);
+		}
+
+		const keywords: string[] = Array.isArray(data.keywords)
+			? data.keywords.map(String)
+			: typeof data.keywords === 'string'
+				? [data.keywords]
+				: [];
+
+		const headings = extractHeadings(body);
+
+		const entry: MirrorEntry = {
+			upstream: '',
+			category: 'tutorials',
+			subcategory: '',
+			slug
+		};
+
+		results.push({
+			entry,
+			source: 'local',
+			title,
+			description,
+			order,
+			keywords,
+			headings
+		});
+	}
+	return results;
+}
+
 type Outcome =
 	| { kind: 'ok'; result: MirrorResult; source: MirrorSource }
 	| { kind: 'missing'; entry: MirrorEntry }
@@ -543,6 +611,15 @@ async function main() {
 	results.push(...localConcepts);
 	if (localConcepts.length > 0) {
 		console.log(`✓ concepts: ${localConcepts.length} local`);
+	}
+
+	const mirroredTutorialSlugs = new Set(
+		results.filter((r) => r.entry.category === 'tutorials').map((r) => r.entry.slug)
+	);
+	const localTutorials = enumerateLocalTutorials(mirroredTutorialSlugs);
+	results.push(...localTutorials);
+	if (localTutorials.length > 0) {
+		console.log(`✓ tutorials: ${localTutorials.length} local`);
 	}
 
 	writeManifest(results);
