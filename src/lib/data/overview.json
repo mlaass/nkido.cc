@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-08T10:55:26.139Z",
+  "generatedAt": "2026-05-08T15:50:07.484Z",
   "groups": [
     {
       "id": "instruments",
@@ -596,8 +596,8 @@
                 "anchor": "triad",
                 "anchorMatched": true
               },
-              "snippet": "chord(\"C\")",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">chord</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"C\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippet": "c\"C\"",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#ADBAC7\">c</span><span style=\"color:#96D0FF\">\"C\"</span></span></code></pre>"
             },
             {
               "name": "Sevenths",
@@ -610,8 +610,8 @@
                 "anchor": "seventh",
                 "anchorMatched": true
               },
-              "snippet": "chord(\"Cmaj7 Am7 Dm7 G7\") |> mtof(%) |> osc(\"saw\", %)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">chord</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"Cmaj7 Am7 Dm7 G7\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> mtof</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippet": "c\"Cmaj7 Am7 Dm7 G7\"",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#ADBAC7\">c</span><span style=\"color:#96D0FF\">\"Cmaj7 Am7 Dm7 G7\"</span></span></code></pre>"
             },
             {
               "name": "Voicings",
@@ -624,22 +624,8 @@
                 "anchor": "voicing",
                 "anchorMatched": true
               },
-              "snippet": "chord(\"Cmaj7 Am7 Dm7 G7\").voicing(\"drop2\")",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">chord</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"Cmaj7 Am7 Dm7 G7\"</span><span style=\"color:#ADBAC7\">).</span><span style=\"color:#DCBDFB\">voicing</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"drop2\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
-            },
-            {
-              "name": "Drop voicings",
-              "tagline": "Drop-2 and drop-3 jazz voicings.",
-              "url": "/docs/reference/mini-notation/chords#drop2",
-              "icon": "Music2",
-              "source": {
-                "docSlug": "chords",
-                "docCategory": "reference/mini-notation",
-                "anchor": "drop2",
-                "anchorMatched": true
-              },
-              "snippet": "chord(\"Cmaj7\").voicing(\"drop2\")",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">chord</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"Cmaj7\"</span><span style=\"color:#ADBAC7\">).</span><span style=\"color:#DCBDFB\">voicing</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"drop2\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippet": ".voicing(\"open\")",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#ADBAC7\">.</span><span style=\"color:#DCBDFB\">voicing</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"open\"</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         },
