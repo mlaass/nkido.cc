@@ -157,6 +157,59 @@
 		font-size: 0.875rem;
 	}
 
+	.doc-body :global(table) {
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+		margin: var(--spacing-md) 0;
+		font-size: 0.9375rem;
+		border: 1px solid var(--border-muted);
+		border-radius: 8px;
+		overflow: hidden;
+	}
+
+	.doc-body :global(thead) {
+		background: var(--bg-tertiary);
+	}
+
+	.doc-body :global(th),
+	.doc-body :global(td) {
+		padding: var(--spacing-sm) var(--spacing-md);
+		text-align: left;
+		vertical-align: top;
+		border-bottom: 1px solid var(--border-default);
+		border-right: 1px solid var(--border-muted);
+	}
+
+	.doc-body :global(th:last-child),
+	.doc-body :global(td:last-child) {
+		border-right: none;
+	}
+
+	.doc-body :global(tbody tr:last-child td) {
+		border-bottom: none;
+	}
+
+	.doc-body :global(th) {
+		color: var(--text-primary);
+		font-weight: 600;
+		font-size: 0.875rem;
+		letter-spacing: 0.01em;
+	}
+
+	.doc-body :global(td) {
+		color: var(--text-primary);
+	}
+
+	.doc-body :global(tbody tr:nth-child(even)) {
+		background: var(--bg-secondary);
+	}
+
+	.doc-body :global(td code),
+	.doc-body :global(th code) {
+		font-size: 0.85em;
+	}
+
 	.doc-body :global(blockquote) {
 		border-left: 3px solid var(--accent-primary);
 		padding-left: var(--spacing-md);
