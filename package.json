@@ -11,7 +11,7 @@
     "build:overview": "bun run scripts/build-overview.ts",
     "postbuild": "pagefind --site build",
     "preview": "vite preview",
-    "check": "svelte-kit sync && bun run scripts/fetch-mirrored-docs.ts && svelte-check --tsconfig ./tsconfig.json",
+    "check": "svelte-kit sync && bun run scripts/fetch-mirrored-docs.ts && bun run scripts/build-sidebar.ts && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "test": "vitest run",
     "test:watch": "vitest",
