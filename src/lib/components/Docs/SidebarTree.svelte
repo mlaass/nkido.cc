@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
+	import { ChevronDown, ChevronRight } from 'lucide-svelte';
 
 	type Leaf = { title: string; url: string; slug: string };
 	type Subgroup = { slug: string; label: string; entries: Leaf[] };
@@ -102,32 +103,48 @@
 		{#each referenceTopOrder as top (top)}
 			{@const subgroups = tree.reference[top] ?? []}
 			{@const topIsOpen = topOpen(top)}
+			{@const topPanelId = `sidebar-top-${top}`}
 			<li class="top-group">
 				<button
 					type="button"
 					class="top-toggle"
 					aria-expanded={topIsOpen}
+					aria-controls={topPanelId}
 					onclick={() => toggle(`top:${top}`, topIsOpen)}
 				>
-					<span class="caret" aria-hidden="true">{topIsOpen ? '▼' : '▶'}</span>
+					<span class="caret" aria-hidden="true">
+						{#if topIsOpen}
+							<ChevronDown size={14} strokeWidth={2.25} />
+						{:else}
+							<ChevronRight size={14} strokeWidth={2.25} />
+						{/if}
+					</span>
 					{referenceTopLabels[top]}
 				</button>
 				{#if topIsOpen}
-					<ul class="subgroups">
+					<ul class="subgroups" id={topPanelId}>
 						{#each subgroups as sub (sub.slug)}
 							{@const sIsOpen = subOpen(top, sub.slug)}
+							{@const subPanelId = `sidebar-sub-${top}-${sub.slug}`}
 							<li class="subgroup">
 								<button
 									type="button"
 									class="sub-toggle"
 									aria-expanded={sIsOpen}
+									aria-controls={subPanelId}
 									onclick={() => toggle(`${top}:${sub.slug}`, sIsOpen)}
 								>
-									<span class="caret" aria-hidden="true">{sIsOpen ? '▼' : '▶'}</span>
+									<span class="caret" aria-hidden="true">
+										{#if sIsOpen}
+											<ChevronDown size={14} strokeWidth={2.25} />
+										{:else}
+											<ChevronRight size={14} strokeWidth={2.25} />
+										{/if}
+									</span>
 									{sub.label}
 								</button>
 								{#if sIsOpen}
-									<ul class="leaves nested">
+									<ul class="leaves nested" id={subPanelId}>
 										{#each sub.entries as leaf (leaf.slug)}
 											<li>
 												<a
@@ -236,10 +253,20 @@
 	}
 
 	.caret {
-		display: inline-block;
-		width: 0.75em;
-		font-size: 0.625rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 14px;
+		height: 14px;
+		flex-shrink: 0;
 		color: var(--text-muted);
+	}
+
+	.top-toggle:hover .caret,
+	.sub-toggle:hover .caret,
+	.top-toggle[aria-expanded='true'] .caret,
+	.sub-toggle[aria-expanded='true'] .caret {
+		color: var(--text-secondary);
 	}
 
 	.subgroups {

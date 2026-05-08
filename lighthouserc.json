@@ -6,7 +6,8 @@
 				"http://localhost/",
 				"http://localhost/getting-started",
 				"http://localhost/godot",
-				"http://localhost/esp32"
+				"http://localhost/esp32",
+				"http://localhost/docs/reference/builtins/filters"
 			],
 			"numberOfRuns": 3,
 			"settings": {

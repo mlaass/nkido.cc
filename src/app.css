@@ -60,9 +60,9 @@
 
 		--text-primary: #1f1f1f;
 		--text-secondary: #6b6b6b;
-		--text-muted: #959595;
+		--text-muted: #6e6e6e;
 
-		--accent-primary: #ffb357;
+		--accent-primary: #8b4400;
 		--accent-secondary: #1a7f37;
 		--accent-warning: #9a6700;
 		--accent-error: #cf222e;
@@ -137,6 +137,15 @@ code, pre {
 	font-family: var(--font-mono);
 }
 
+/* Shiki (github-dark-dimmed) inlines color:#768390 for comments, which
+   gives a 3.87:1 contrast on its #22272e background — below WCAG AA's
+   4.5:1 floor. Bump it to #9aa5b1 (≈5.5:1) at the document level so axe
+   passes without forking the highlight theme. */
+.shiki span[style*="color:#768390"],
+.shiki span[style*="color: #768390"] {
+	color: #9aa5b1 !important;
+}
+
 /* Utility classes */
 .visually-hidden {
 	position: absolute;
@@ -174,6 +183,16 @@ a {
 
 a:hover {
 	text-decoration: underline;
+}
+
+/* WCAG 2.4.4 / 1.4.1: links inside running prose must be distinguishable
+   without relying on color alone. Underline links inside doc-body and the
+   getting-started main column. Navigation (sidebar/TOC/breadcrumb) keeps
+   no underline since surrounding chrome already distinguishes those. */
+.doc-body a,
+.gs-main a {
+	text-decoration: underline;
+	text-underline-offset: 2px;
 }
 
 /* Headings */

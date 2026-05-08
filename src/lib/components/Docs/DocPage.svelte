@@ -62,9 +62,6 @@
 		{/if}
 
 		<h1>{title}</h1>
-		{#if description}
-			<p class="doc-lead">{description}</p>
-		{/if}
 
 		<div class="doc-body">
 			{@render children()}
@@ -107,12 +104,6 @@
 	}
 
 	h1 {
-		margin-bottom: var(--spacing-md);
-	}
-
-	.doc-lead {
-		font-size: 1.25rem;
-		color: var(--text-secondary);
 		margin-bottom: var(--spacing-2xl);
 	}
 

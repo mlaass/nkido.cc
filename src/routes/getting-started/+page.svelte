@@ -45,7 +45,7 @@
 				</div>
 				<h3>Native CLI</h3>
 				<p>Build from source and run on the command line.</p>
-				<div class="code-block">
+				<!-- svelte-ignore a11y_no_noninteractive_tabindex --><div class="code-block" tabindex="0" role="region" aria-label="Code">
 <pre><code>git clone https://github.com/mlaass/nkido
 cd nkido
 cmake -B build
@@ -86,7 +86,7 @@ cmake --build build
 
 		<h3>macOS and Linux</h3>
 		<p>You'll need <code>git</code>, <code>cmake</code>, and a recent C++ compiler.</p>
-		<div class="code-block">
+		<!-- svelte-ignore a11y_no_noninteractive_tabindex --><div class="code-block" tabindex="0" role="region" aria-label="Code">
 <pre><code>git clone https://github.com/mlaass/nkido
 cd nkido
 cmake -B build
@@ -119,12 +119,12 @@ cmake --build build</code></pre>
 
 		<h2 id="first-patch">First patch</h2>
 		<p>Save the following as <code>hello.akk</code>:</p>
-		<div class="code-block">
+		<!-- svelte-ignore a11y_no_noninteractive_tabindex --><div class="code-block" tabindex="0" role="region" aria-label="Code">
 <pre><code>osc("sin", 440) |> out(%, %)</code></pre>
 		</div>
 		<p>That's the smallest complete patch — a 440 Hz sine wave routed to both stereo channels.</p>
 		<p>Run it from the build directory:</p>
-		<div class="code-block">
+		<!-- svelte-ignore a11y_no_noninteractive_tabindex --><div class="code-block" tabindex="0" role="region" aria-label="Code">
 <pre><code>./build/tools/nkido-cli/nkido-cli hello.akk</code></pre>
 		</div>
 		<p>

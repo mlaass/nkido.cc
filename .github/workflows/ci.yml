@@ -54,3 +54,9 @@ jobs:
       - name: Lighthouse CI
         run: |
           bun x @lhci/cli@0.14 autorun
+
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: E2E (axe + Pagefind smoke + visual shell)
+        run: bun run test:e2e

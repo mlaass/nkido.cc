@@ -7,7 +7,8 @@ export default defineConfig({
 	plugins: [svelte({ hot: false }), svelteTesting()],
 	resolve: {
 		alias: {
-			$lib: resolve(__dirname, 'src/lib')
+			$lib: resolve(__dirname, 'src/lib'),
+			'$app/state': resolve(__dirname, 'src/lib/test/sveltekit-stubs.ts')
 		}
 	},
 	test: {

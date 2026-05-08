@@ -10,6 +10,8 @@ backHref: "/docs/tutorials"
 backLabel: "Tutorials"
 ---
 
+<div data-pagefind-weight="5">
+
 A short, opinionated set of patches you can paste into the [live IDE](https://live.nkido.cc) and tweak. Each recipe is one self-contained graph plus a sentence on why it works. None of them are precious — copy, mutate, and steal whatever sounds useful.
 
 ## Four-on-the-floor kick
@@ -143,3 +145,5 @@ A 0.1 Hz LFO completes one cycle every 10 seconds, slowly walking the filter cut
 - [Hello Sine](/docs/tutorials/hello-sine) — work through the basic patch.
 - [Building Synth Voices](/docs/tutorials/synthesis) — the patterns these recipes are built on.
 - [Reference: built-ins](/docs/reference/builtins) — every operator the cookbook uses.
+
+</div>

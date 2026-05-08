@@ -26,12 +26,21 @@
 			<ul>
 				{#each nested as h (h.slug)}
 					<li>
-						<a href="#{h.slug}" data-active={tocSpy.active === h.slug}>{h.text}</a>
+						<a
+							href="#{h.slug}"
+							data-active={tocSpy.active === h.slug}
+							aria-current={tocSpy.active === h.slug ? 'location' : undefined}>{h.text}</a
+						>
 						{#if h.children.length > 0}
 							<ul class="toc-children">
 								{#each h.children as c (c.slug)}
 									<li>
-										<a href="#{c.slug}" data-active={tocSpy.active === c.slug}>{c.text}</a>
+										<a
+											href="#{c.slug}"
+											data-active={tocSpy.active === c.slug}
+											aria-current={tocSpy.active === c.slug ? 'location' : undefined}
+											>{c.text}</a
+										>
 									</li>
 								{/each}
 							</ul>
@@ -46,12 +55,21 @@
 			<ul>
 				{#each nested as h (h.slug)}
 					<li>
-						<a href="#{h.slug}" data-active={tocSpy.active === h.slug}>{h.text}</a>
+						<a
+							href="#{h.slug}"
+							data-active={tocSpy.active === h.slug}
+							aria-current={tocSpy.active === h.slug ? 'location' : undefined}>{h.text}</a
+						>
 						{#if h.children.length > 0}
 							<ul class="toc-children">
 								{#each h.children as c (c.slug)}
 									<li>
-										<a href="#{c.slug}" data-active={tocSpy.active === c.slug}>{c.text}</a>
+										<a
+											href="#{c.slug}"
+											data-active={tocSpy.active === c.slug}
+											aria-current={tocSpy.active === c.slug ? 'location' : undefined}
+											>{c.text}</a
+										>
 									</li>
 								{/each}
 							</ul>
