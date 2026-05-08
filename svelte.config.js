@@ -7,9 +7,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const theme = 'github-dark-dimmed';
+const themes = { dark: 'github-dark-dimmed', light: 'github-light' };
 const highlighter = await createHighlighter({
-	themes: [theme],
+	themes: Object.values(themes),
 	langs: ['js', 'ts', 'bash', 'shell', 'gdscript', 'c', 'cpp', 'python', 'json', 'yaml', 'toml', 'html', 'css', 'svelte']
 });
 
@@ -27,7 +27,8 @@ const mdsvexConfig = {
 			const html = escapeSvelte(
 				highlighter.codeToHtml(code, {
 					lang: highlighter.getLoadedLanguages().includes(langId) ? langId : 'text',
-					theme
+					themes,
+					defaultColor: false
 				})
 			);
 			return `{@html \`${html}\`}`;

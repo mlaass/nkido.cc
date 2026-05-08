@@ -1,9 +1,15 @@
 <script lang="ts">
 	import '../app.css';
+	import { browser } from '$app/environment';
 	import Header from '$lib/components/Layout/Header.svelte';
 	import Footer from '$lib/components/Layout/Footer.svelte';
+	import { theme } from '$lib/stores/theme.svelte';
 
 	let { children } = $props();
+
+	$effect(() => {
+		if (browser) document.documentElement.setAttribute('data-theme', theme.resolved);
+	});
 </script>
 
 <svelte:head>

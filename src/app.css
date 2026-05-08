@@ -23,7 +23,10 @@
 	--max-width: 1200px;
 	--content-padding: var(--spacing-lg);
 
-	/* Colors - Dark theme (default) */
+	/* Colors — defaults below match the dark theme so unstyled SSR output
+	   (before the FOUC script sets data-theme) renders sensibly. The
+	   inline script in app.html resolves "system" preference to a concrete
+	   light/dark value and writes it to <html data-theme>. */
 	--bg-primary: #0a0a0a;
 	--bg-secondary: #171717;
 	--bg-tertiary: #262626;
@@ -50,34 +53,31 @@
 	--syntax-operator: #ff7b72;
 }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-	:root {
-		--bg-primary: #ffffff;
-		--bg-secondary: #f7f7f7;
-		--bg-tertiary: #eeeeee;
-		--bg-hover: #d4d4d4;
+:root[data-theme="light"] {
+	--bg-primary: #ffffff;
+	--bg-secondary: #f7f7f7;
+	--bg-tertiary: #eeeeee;
+	--bg-hover: #d4d4d4;
 
-		--text-primary: #1f1f1f;
-		--text-secondary: #6b6b6b;
-		--text-muted: #6e6e6e;
+	--text-primary: #1f1f1f;
+	--text-secondary: #6b6b6b;
+	--text-muted: #6e6e6e;
 
-		--accent-primary: #8b4400;
-		--accent-secondary: #1a7f37;
-		--accent-warning: #9a6700;
-		--accent-error: #cf222e;
-		--accent-viz: #16a34a;
+	--accent-primary: #8b4400;
+	--accent-secondary: #1a7f37;
+	--accent-warning: #9a6700;
+	--accent-error: #cf222e;
+	--accent-viz: #16a34a;
 
-		--border-default: #d4d4d4;
-		--border-muted: #eeeeee;
+	--border-default: #d4d4d4;
+	--border-muted: #eeeeee;
 
-		--syntax-keyword: #cf222e;
-		--syntax-string: #0a3069;
-		--syntax-number: #0550ae;
-		--syntax-comment: #6e7781;
-		--syntax-function: #8250df;
-		--syntax-operator: #cf222e;
-	}
+	--syntax-keyword: #cf222e;
+	--syntax-string: #0a3069;
+	--syntax-number: #0550ae;
+	--syntax-comment: #6e7781;
+	--syntax-function: #8250df;
+	--syntax-operator: #cf222e;
 }
 
 /* Reset */
@@ -137,13 +137,35 @@ code, pre {
 	font-family: var(--font-mono);
 }
 
-/* Shiki (github-dark-dimmed) inlines color:#768390 for comments, which
-   gives a 3.87:1 contrast on its #22272e background — below WCAG AA's
-   4.5:1 floor. Bump it to #9aa5b1 (≈5.5:1) at the document level so axe
-   passes without forking the highlight theme. */
-.shiki span[style*="color:#768390"],
-.shiki span[style*="color: #768390"] {
-	color: #9aa5b1 !important;
+/* Shiki dual-theme switching. svelte.config.js renders code with
+   { themes: { dark: 'github-dark-dimmed', light: 'github-light' },
+     defaultColor: false } so each token carries both --shiki-light and
+   --shiki-dark CSS variables. We pick the active palette here. */
+:root[data-theme="dark"] .shiki,
+:root[data-theme="dark"] .shiki span {
+	color: var(--shiki-dark);
+	background-color: var(--shiki-dark-bg);
+	font-style: var(--shiki-dark-font-style);
+	font-weight: var(--shiki-dark-font-weight);
+	text-decoration: var(--shiki-dark-text-decoration);
+}
+
+:root[data-theme="light"] .shiki,
+:root[data-theme="light"] .shiki span {
+	color: var(--shiki-light);
+	background-color: var(--shiki-light-bg);
+	font-style: var(--shiki-light-font-style);
+	font-weight: var(--shiki-light-font-weight);
+	text-decoration: var(--shiki-light-text-decoration);
+}
+
+/* github-dark-dimmed inlines #768390 for comments, which only hits
+   3.87:1 against the #22272e bg — below WCAG AA. Bump to #9aa5b1
+   (≈5.5:1) so axe passes without forking the highlight theme. Scoped
+   to the dark theme so it doesn't fight the light palette. */
+:root[data-theme="dark"] .shiki span[style*="--shiki-dark:#768390"],
+:root[data-theme="dark"] .shiki span[style*="--shiki-dark: #768390"] {
+	color: #9aa5b1;
 }
 
 /* Utility classes */

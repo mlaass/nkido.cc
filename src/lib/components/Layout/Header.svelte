@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Logo from '$lib/components/Logo/Logo.svelte';
+	import ThemeToggle from '$lib/components/Layout/ThemeToggle.svelte';
 	import { Menu, X } from 'lucide-svelte';
 
 	let open = $state(false);
@@ -57,6 +58,7 @@
 					{link.label}
 				</a>
 			{/each}
+			<ThemeToggle />
 		</nav>
 
 		<button
@@ -75,6 +77,9 @@
 
 	{#if open}
 		<nav class="nav-mobile">
+			<div class="nav-mobile-tools">
+				<ThemeToggle />
+			</div>
 			{#each links as link}
 				<a
 					href={link.href}
@@ -166,6 +171,13 @@
 		padding: var(--spacing-sm) var(--content-padding) var(--spacing-md);
 		background: var(--bg-secondary);
 		border-top: 1px solid var(--border-muted);
+	}
+
+	.nav-mobile-tools {
+		display: flex;
+		justify-content: flex-end;
+		padding: var(--spacing-xs) 0;
+		border-bottom: 1px solid var(--border-muted);
 	}
 
 	.nav-link-mobile {
