@@ -3,13 +3,17 @@ title: Variables & Assignment
 category: language
 order: 2
 keywords: [variables, assignment, let, binding, scope, identifier]
+group: language
+subgroup: syntax
+icon: Variable
+tagline: Bind values and signal nodes to identifiers.
 ---
 
 # Variables & Assignment
 
 Variables store values for reuse throughout your patch.
 
-## Basic Assignment
+## Basic assignment
 
 Use `=` to bind a value to a name:
 
@@ -21,7 +25,7 @@ freq = 440
 osc("sin", freq) |> out(%, %)
 ```
 
-## Signal Variables
+## Signal variables
 
 Variables can store entire signal chains:
 
@@ -33,9 +37,9 @@ osc = osc("saw", 110) |> lp(%, 800)
 osc |> out(%, %)
 ```
 
-## Modular Patching
+## Modular patching
 
-Variables make complex patches readable:
+Variables make larger patches readable:
 
 ```akk
 // Define components
@@ -47,7 +51,7 @@ filter_cutoff = 400 + lfo_mod
 osc("saw", base_freq) |> lp(%, filter_cutoff) |> out(%, %)
 ```
 
-## Naming Rules
+## Naming rules
 
 - Names must start with a letter or underscore
 - Can contain letters, numbers, and underscores
@@ -76,4 +80,4 @@ b = a * 2      // a is visible here
 c = a + b      // both a and b visible
 ```
 
-Related: [Operators](operators), [Pipes & Holes](pipes)
+Related: [Operators](operators), [Pipes & Holes](pipes), [Records](records)

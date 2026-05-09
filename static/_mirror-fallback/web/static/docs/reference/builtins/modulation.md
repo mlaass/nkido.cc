@@ -3,11 +3,32 @@ title: Modulation Effects
 category: builtins
 order: 7
 keywords: [modulation, chorus, flanger, phaser, comb, effect, rate, depth, sweep]
+group: effects
+subgroup: time-based
+icon: Wand2
+tagline: Modulated short delay lines for movement and color.
+subfeatures:
+  - name: Chorus
+    anchor: chorus
+    tagline: Stereo chorus, lush detune.
+    snippet: 'osc("saw", 220) |> chorus(%, 0.5, 0.5)'
+  - name: Flanger
+    anchor: flanger
+    tagline: Swept short delay with feedback.
+    snippet: 'osc("saw", 110) |> flanger(%, 0.5, 0.7)'
+  - name: Phaser
+    anchor: phaser
+    tagline: All-pass cascade phaser.
+    snippet: 'osc("saw", 110) |> phaser(%, 0.3, 0.8)'
+  - name: Comb
+    anchor: comb
+    tagline: Comb filter modulation.
+    snippet: 'osc("noise") |> comb(%, 1/220, 0.95)'
 ---
 
 # Modulation Effects
 
-Modulation effects use time-varying delays to create movement and spatial interest in sounds.
+Modulation effects use time-varying delays to add movement and spatial width to sounds.
 
 **Note:** All modulation effects output 100% wet signal. For dry/wet mixing, blend manually:
 
@@ -29,9 +50,9 @@ dry * 0.3 + chorus(dry, 0.5, 0.5) * 0.7 |> out(%, %)
 | base_delay | number | 20.0 | Base chorus delay (ms) |
 | depth_range | number | 10.0 | Modulation depth range (ms) |
 
-Creates a thicker, wider sound by mixing the input with delayed copies that are slightly pitch-shifted by an LFO.
+Mixes the input with delayed copies that are slightly pitch-shifted by an LFO, producing a thicker, wider sound.
 
-The `base_delay` parameter sets the center delay time, while `depth_range` controls how far the modulation sweeps from the base. Larger values create more dramatic detuning effects.
+The `base_delay` parameter sets the center delay time, while `depth_range` controls how far the modulation sweeps from the base. Larger values produce more pronounced detuning.
 
 ```akk
 // Classic chorus
@@ -101,17 +122,26 @@ Related: [chorus](#chorus), [phaser](#phaser), [comb](#comb)
 
 **Phaser** - Creates notches in frequency spectrum via allpass filters.
 
-| Param | Type   | Default | Description |
-|-------|--------|---------|-------------|
-| in    | signal | -       | Input signal |
-| rate  | number | 0.5     | LFO rate in Hz |
-| depth | number | 0.8     | Modulation depth (0-1) |
-| min_freq | number | 200.0 | Sweep range low (Hz) |
-| max_freq | number | 4000.0 | Sweep range high (Hz) |
+| Param    | Type   | Default | Description |
+|----------|--------|---------|-------------|
+| in       | signal | -       | Input signal |
+| rate     | number | 0.5     | LFO rate in Hz |
+| depth    | number | 0.8     | Modulation depth (0-1) |
+| min_freq | number | 200.0   | Sweep range low (Hz) |
+| max_freq | number | 4000.0  | Sweep range high (Hz) |
+| stages   | literal int | 4 | Number of allpass stages, 2-12 (compile-time constant) |
+| feedback | literal float | 0.5 | Feedback amount, 0-1 (compile-time constant) |
 
-Sweeps a series of notch filters through the spectrum, creating a distinctive swirling effect different from chorus or flanger.
+Sweeps a chain of allpass-derived notches through the spectrum, producing a
+swirling effect distinct from chorus or flanger.
 
-The `min_freq` and `max_freq` parameters define the frequency range of the sweep. Wider ranges create more dramatic effects.
+`stages` and `feedback` shape the topology and must be **literal constants**;
+they're packed into instruction metadata at compile time, not driven by signals.
+More stages give more notches (each pair of stages = one notch); higher feedback
+sharpens the resonance.
+
+The phaser output is the canonical Bode/MXR sum (dry + allpass cascade), so
+expect up to +6 dB peak gain at constructive interference points.
 
 ```akk
 // Classic phaser
@@ -131,6 +161,11 @@ osc("noise") |> lp(%, 2000) |> phaser(%, 0.1, 0.9) |> out(%, %)
 ```akk
 // Extended high-frequency sweep
 osc("saw", 110) |> phaser(%, 0.2, 0.8, 100, 8000) |> out(%, %)
+```
+
+```akk
+// Deep, resonant 6-stage phaser with strong feedback
+osc("saw", 110) |> phaser(%, 0.5, 0.9, 100, 5000, 6, 0.7) |> out(%, %)
 ```
 
 Related: [flanger](#flanger), [chorus](#chorus)

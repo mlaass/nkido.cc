@@ -5,7 +5,7 @@
 
 	type Leaf = { title: string; url: string; slug: string };
 	type Subgroup = { slug: string; label: string; entries: Leaf[] };
-	type ReferenceTree = Record<'builtins' | 'language' | 'mini-notation', Subgroup[]>;
+	type ReferenceTree = Record<string, Subgroup[]>;
 	type Tree = {
 		concepts: Leaf[];
 		tutorials: Leaf[];
@@ -17,8 +17,8 @@
 	interface Props {
 		section: Section;
 		tree: Tree;
-		referenceTopOrder: Array<keyof ReferenceTree>;
-		referenceTopLabels: Record<keyof ReferenceTree, string>;
+		referenceTopOrder: string[];
+		referenceTopLabels: Record<string, string>;
 	}
 
 	let { section, tree, referenceTopOrder, referenceTopLabels }: Props = $props();
@@ -72,12 +72,12 @@
 		return null;
 	});
 
-	function topOpen(top: keyof ReferenceTree): boolean {
+	function topOpen(top: string): boolean {
 		if (activeRef && activeRef.top === top) return true;
 		return collapseState[`top:${top}`] === 'open';
 	}
 
-	function subOpen(top: keyof ReferenceTree, sub: string): boolean {
+	function subOpen(top: string, sub: string): boolean {
 		if (activeRef && activeRef.top === top && activeRef.sub === sub) return true;
 		return collapseState[`${top}:${sub}`] === 'open';
 	}

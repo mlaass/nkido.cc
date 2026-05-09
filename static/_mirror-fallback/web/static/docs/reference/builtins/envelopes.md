@@ -3,6 +3,19 @@ title: Envelopes
 category: builtins
 order: 3
 keywords: [envelope, adsr, ar, attack, decay, sustain, release, gate, trigger]
+group: effects
+subgroup: frequency
+icon: Activity
+tagline: Gate-driven amplitude shapers.
+subfeatures:
+  - name: ADSR
+    anchor: adsr
+    tagline: Attack, decay, sustain, release.
+    snippet: 'osc("sin", 440) * adsr(trigger(2), 0.01, 0.2)'
+  - name: AR
+    anchor: ar
+    tagline: Compact attack/release.
+    snippet: 'osc("sin", 55) * ar(trigger(4), 0.001, 0.2)'
 ---
 
 # Envelopes
@@ -11,7 +24,7 @@ Envelopes shape the amplitude or other parameters of a sound over time. They res
 
 ## adsr
 
-**ADSR Envelope** - Attack, Decay, Sustain, Release envelope.
+**ADSR envelope** - Attack, Decay, Sustain, Release envelope.
 
 | Param   | Type    | Default | Description |
 |---------|---------|---------|-------------|
@@ -44,7 +57,7 @@ Related: [ar](#ar), [trigger](#trigger)
 
 ## ar
 
-**AR Envelope** - Attack, Release envelope.
+**AR envelope** - Attack, Release envelope.
 
 | Param   | Type    | Default | Description |
 |---------|---------|---------|-------------|

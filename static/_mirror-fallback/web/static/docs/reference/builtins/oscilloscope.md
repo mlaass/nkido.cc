@@ -3,11 +3,14 @@ title: Oscilloscope
 category: builtins
 order: 20
 keywords: [oscilloscope, visualization, viz, time-domain, trigger, triggerLevel, triggerEdge, rising, falling, display, monitor, probe, scope]
+group: visualizations
+icon: LineChart
+tagline: Triggered time-domain probe.
 ---
 
 # Oscilloscope
 
-A time-domain visualizer that draws the signal as a waveform with trigger stabilization. Inserted as a pass-through node in the signal chain — the audio passes through unchanged while being displayed.
+A time-domain visualizer that draws the signal as a waveform with trigger stabilization. It sits in the signal chain as a pass-through, so audio flows through unchanged.
 
 ## oscilloscope
 
@@ -37,7 +40,7 @@ osc("sin", 440) |> oscilloscope(%) |> out(%, %)
 
 ## rising
 
-Trigger on a rising edge (signal crossing the threshold from below to above). The default — gives the most stable picture for typical waveforms.
+Trigger on a rising edge (signal crossing the threshold from below to above). This is the default and gives the most stable picture for typical waveforms.
 
 ```akk
 // Named with trigger at zero-crossing

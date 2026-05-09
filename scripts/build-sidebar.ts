@@ -21,8 +21,7 @@ import { dirname } from 'node:path';
 import {
 	referenceTopOrder,
 	referenceTopLabels,
-	subgroupOrder,
-	type ReferenceTopGroup
+	subgroupOrder
 } from '../src/lib/data/docs-sidebar-overrides';
 
 type Heading = { slug: string; text: string; depth: number };
@@ -62,13 +61,13 @@ export type SidebarSubgroup = {
 export type SidebarTree = {
 	concepts: SidebarLeaf[];
 	tutorials: SidebarLeaf[];
-	reference: Record<ReferenceTopGroup, SidebarSubgroup[]>;
+	reference: Record<string, SidebarSubgroup[]>;
 };
 
 export type Sidebar = {
 	generatedAt: string;
-	referenceTopOrder: ReferenceTopGroup[];
-	referenceTopLabels: Record<ReferenceTopGroup, string>;
+	referenceTopOrder: string[];
+	referenceTopLabels: Record<string, string>;
 	tree: SidebarTree;
 };
 
@@ -99,7 +98,7 @@ function titleCase(s: string): string {
 }
 
 function buildReferenceSubtree(
-	topGroup: ReferenceTopGroup,
+	topGroup: string,
 	entries: ManifestEntry[],
 	warn: (msg: string) => void
 ): SidebarSubgroup[] {
@@ -158,32 +157,59 @@ export function buildSidebar(
 ): Sidebar {
 	const warn = options.warn ?? ((msg: string) => console.warn(`⚠ ${msg}`));
 
+	// Discover reference top-groups from manifest keys shaped `reference/<sub>`.
+	// Override `referenceTopOrder` lists known groups in the curated visual
+	// order; any discovered group not in the override is appended (with a
+	// warn) so new upstream subcategories show up without code changes.
+	const discovered = new Set<string>();
+	for (const key of Object.keys(manifest.entries)) {
+		if (key.startsWith('reference/')) discovered.add(key.slice('reference/'.length));
+	}
+	// Always include the override-listed groups too — gives stable empty
+	// subtrees when the manifest is sparse (matches the prior behavior the
+	// emptyManifest tests rely on).
+	for (const t of referenceTopOrder) discovered.add(t);
+
+	const orderedTopGroups: string[] = [];
+	const seen = new Set<string>();
+	for (const t of referenceTopOrder) {
+		if (discovered.has(t)) {
+			orderedTopGroups.push(t);
+			seen.add(t);
+		}
+	}
+	const remaining = [...discovered].filter((t) => !seen.has(t)).sort();
+	for (const t of remaining) {
+		warn(`reference: top-group '${t}' not in override; appending at end`);
+		orderedTopGroups.push(t);
+	}
+
+	const referenceTree: Record<string, SidebarSubgroup[]> = {};
+	for (const top of orderedTopGroups) {
+		referenceTree[top] = buildReferenceSubtree(
+			top,
+			manifest.entries[`reference/${top}`] ?? [],
+			warn
+		);
+	}
+
 	const tree: SidebarTree = {
 		concepts: flatList(manifest.entries['concepts'] ?? [], warn, 'concepts'),
 		tutorials: flatList(manifest.entries['tutorials'] ?? [], warn, 'tutorials'),
-		reference: {
-			builtins: buildReferenceSubtree(
-				'builtins',
-				manifest.entries['reference/builtins'] ?? [],
-				warn
-			),
-			language: buildReferenceSubtree(
-				'language',
-				manifest.entries['reference/language'] ?? [],
-				warn
-			),
-			'mini-notation': buildReferenceSubtree(
-				'mini-notation',
-				manifest.entries['reference/mini-notation'] ?? [],
-				warn
-			)
-		}
+		reference: referenceTree
 	};
+
+	// Emit labels for every top-group in the tree, falling back to title-cased
+	// slug for groups the override hasn't named yet.
+	const labels: Record<string, string> = {};
+	for (const top of orderedTopGroups) {
+		labels[top] = referenceTopLabels[top] ?? titleCase(top);
+	}
 
 	return {
 		generatedAt: new Date().toISOString(),
-		referenceTopOrder,
-		referenceTopLabels,
+		referenceTopOrder: orderedTopGroups,
+		referenceTopLabels: labels,
 		tree
 	};
 }
@@ -201,7 +227,7 @@ export function writeSidebar(sidebar: Sidebar, outFile = 'src/lib/data/docs-side
 	writeFileSync(outFile, JSON.stringify(sidebar, null, 2) + '\n');
 	const conceptCount = sidebar.tree.concepts.length;
 	const tutorialCount = sidebar.tree.tutorials.length;
-	const refCount = referenceTopOrder.reduce((n, top) => {
+	const refCount = sidebar.referenceTopOrder.reduce((n, top) => {
 		const subgroups = sidebar.tree.reference[top] ?? [];
 		return n + subgroups.reduce((m, sg) => m + sg.entries.length, 0);
 	}, 0);

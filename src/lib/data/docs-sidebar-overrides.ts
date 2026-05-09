@@ -3,31 +3,31 @@
  *
  * The manifest is the source of truth for entries and their subgroups; this
  * file controls the visual order of top-level Reference groups and sub-groups
- * within each. Sub-groups not listed here are appended at the end alphabetically
- * with a build warning (tolerant build, per the v2 overview-grid pattern).
+ * within each. Top-groups and sub-groups not listed here are appended at the
+ * end alphabetically with a build warning (tolerant build, per the v2
+ * overview-grid pattern).
  *
- * Iterate `subgroupOrder.builtins` once `bun run scripts/build-sidebar.ts`
- * starts warning about subgroup slugs that don't appear in the manifest, or
- * vice versa. The PRD's tree diagram is illustrative, not authoritative.
+ * Iterate the lists below once `bun run scripts/build-sidebar.ts` starts
+ * warning about slugs that don't appear in the manifest, or vice versa.
  */
 
-export type ReferenceTopGroup = 'builtins' | 'language' | 'mini-notation';
-
-export const referenceTopOrder: ReferenceTopGroup[] = [
+export const referenceTopOrder: string[] = [
 	'builtins',
 	'language',
-	'mini-notation'
+	'mini-notation',
+	'pattern'
 ];
 
-export const referenceTopLabels: Record<ReferenceTopGroup, string> = {
+export const referenceTopLabels: Record<string, string> = {
 	builtins: 'Builtins',
 	language: 'Language',
-	'mini-notation': 'Mini-notation'
+	'mini-notation': 'Mini-notation',
+	pattern: 'Pattern'
 };
 
 export type SubgroupOverride = { slug: string; label: string };
 
-export const subgroupOrder: Record<ReferenceTopGroup, SubgroupOverride[]> = {
+export const subgroupOrder: Record<string, SubgroupOverride[]> = {
 	// Order mirrors the v2 overview grid's reading flow: instruments → effects
 	// → sequencing → visualizations → tools. Slugs and labels match what the
 	// manifest emits today; visualizations entries currently ship with no
@@ -50,5 +50,6 @@ export const subgroupOrder: Record<ReferenceTopGroup, SubgroupOverride[]> = {
 		{ slug: 'syntax', label: 'Syntax' },
 		{ slug: 'data', label: 'Data' }
 	],
-	'mini-notation': [{ slug: 'patterns', label: 'Patterns' }]
+	'mini-notation': [{ slug: 'patterns', label: 'Patterns' }],
+	pattern: []
 };

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-08T15:50:07.484Z",
+  "generatedAt": "2026-05-09T13:49:48.851Z",
   "groups": [
     {
       "id": "instruments",
@@ -587,7 +587,7 @@
             },
             {
               "name": "Triads",
-              "tagline": "Major, minor, dim, aug.",
+              "tagline": "Major, minor, dim, aug, sus.",
               "url": "/docs/reference/mini-notation/chords#triad",
               "icon": "Music2",
               "source": {
@@ -596,12 +596,12 @@
                 "anchor": "triad",
                 "anchorMatched": true
               },
-              "snippet": "c\"C\"",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#ADBAC7\">c</span><span style=\"color:#96D0FF\">\"C\"</span></span></code></pre>"
+              "snippet": "c\"C Am F G\"",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#ADBAC7\">c</span><span style=\"color:#96D0FF\">\"C Am F G\"</span></span></code></pre>"
             },
             {
               "name": "Sevenths",
-              "tagline": "Maj7, m7, dom7, dim7.",
+              "tagline": "Maj7, m7, dom7, dim7, mM7, m7b5.",
               "url": "/docs/reference/mini-notation/chords#seventh",
               "icon": "Music2",
               "source": {
@@ -612,6 +612,20 @@
               },
               "snippet": "c\"Cmaj7 Am7 Dm7 G7\"",
               "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#ADBAC7\">c</span><span style=\"color:#96D0FF\">\"Cmaj7 Am7 Dm7 G7\"</span></span></code></pre>"
+            },
+            {
+              "name": "Extended",
+              "tagline": "9ths, 11ths, 13ths, adds.",
+              "url": "/docs/reference/mini-notation/chords#extended",
+              "icon": "Music2",
+              "source": {
+                "docSlug": "chords",
+                "docCategory": "reference/mini-notation",
+                "anchor": "extended",
+                "anchorMatched": true
+              },
+              "snippet": "c\"Cmaj9 Am11 D13\"",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#ADBAC7\">c</span><span style=\"color:#96D0FF\">\"Cmaj9 Am11 D13\"</span></span></code></pre>"
             },
             {
               "name": "Voicings",
@@ -955,6 +969,17 @@
               "icon": "GitBranch",
               "source": {
                 "docSlug": "conditionals",
+                "docCategory": "reference/language",
+                "anchorMatched": true
+              }
+            },
+            {
+              "name": "Records",
+              "tagline": "Group named fields, destructure, spread, and use as builtin options.",
+              "url": "/docs/reference/language/records",
+              "icon": "Box",
+              "source": {
+                "docSlug": "records",
                 "docCategory": "reference/language",
                 "anchorMatched": true
               }

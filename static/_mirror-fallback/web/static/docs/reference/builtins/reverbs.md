@@ -3,11 +3,28 @@ title: Reverbs
 category: builtins
 order: 6
 keywords: [reverb, freeverb, dattorro, fdn, room, plate, space, decay, damping, wet, dry]
+group: effects
+subgroup: time-based
+icon: Wind
+tagline: Algorithmic reverbs from rooms to plates to dense FDN.
+subfeatures:
+  - name: Freeverb
+    anchor: freeverb
+    tagline: Schroeder-style room reverb.
+    snippet: 'osc("saw", 220) * ar(trigger(2)) |> freeverb(%, 0.5, 0.5)'
+  - name: Dattorro
+    anchor: dattorro
+    tagline: Plate reverb, lush mid-decay.
+    snippet: 'osc("saw", 220) * ar(trigger(2)) |> dattorro(%, 0.8, 30)'
+  - name: FDN
+    anchor: fdn
+    tagline: Feedback delay network, deep tails.
+    snippet: 'osc("saw", 55) * ar(trigger(0.5)) |> fdn(%, 0.9, 0.4)'
 ---
 
 # Reverbs
 
-Reverbs simulate acoustic spaces by creating many delayed, filtered reflections. Different algorithms offer different sonic characteristics.
+Reverbs simulate acoustic spaces by generating many delayed, filtered reflections. Each algorithm has its own character.
 
 ## freeverb
 
@@ -23,7 +40,7 @@ Reverbs simulate acoustic spaces by creating many delayed, filtered reflections.
 
 Aliases: `reverb`
 
-A classic reverb algorithm with a smooth, natural sound. Higher room values create larger spaces with longer decay. The advanced `room_scale` and `room_offset` parameters let you tune the reverb character.
+A classic reverb algorithm with a smooth, natural sound. Higher room values produce larger spaces with longer decay. The `room_scale` and `room_offset` parameters tune the reverb character.
 
 ```akk
 // Medium room reverb
@@ -63,7 +80,7 @@ Related: [dattorro](#dattorro), [fdn](#fdn)
 
 Aliases: `plate`
 
-The Dattorro plate reverb produces lush, shimmering tails perfect for vocals and synth pads. The predelay separates the dry signal from the reverb onset. The diffusion parameters control how quickly transients are smeared.
+The Dattorro plate reverb produces long, shimmering tails well-suited to vocals and synth pads. The predelay separates the dry signal from the reverb onset. The diffusion parameters control how quickly transients are smeared.
 
 ```akk
 // Lush plate reverb

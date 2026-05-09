@@ -5,8 +5,9 @@ import matter from 'gray-matter';
 import { resolve as resolvePath, dirname as dirnamePath } from 'node:path/posix';
 import GithubSlugger from 'github-slugger';
 import {
-	MIRROR_INDEX,
+	discoverEntries,
 	MIRROR_BASE_URL,
+	MIRROR_FALLBACK_ROOT,
 	MIRROR_LOCAL_PATH,
 	MIRROR_NO_LOCAL,
 	routePath,
@@ -21,10 +22,12 @@ import { buildOverviewFromDisk, writeOverview } from './build-overview';
 // frontmatter, and the leading H1 is stripped from the body.
 const HEADING_LEVELS = { min: 2, max: 5 } as const;
 
-/** Upstream path → local URL, for rewriting cross-doc `.md` links. */
-const UPSTREAM_TO_URL: Record<string, string> = Object.fromEntries(
-	MIRROR_INDEX.map((e) => [e.upstream, urlPath(e)])
-);
+/**
+ * Upstream path → local URL, for rewriting cross-doc `.md` links. Populated
+ * from the discovered entries at the start of `main()` so the rewriter sees
+ * every imported page.
+ */
+const UPSTREAM_TO_URL: Record<string, string> = {};
 
 type MirrorSource = 'local' | 'live' | 'fallback';
 
@@ -337,8 +340,22 @@ function writeEntry(entry: MirrorEntry, raw: string, source: MirrorSource): Mirr
 	const tagline = typeof data.tagline === 'string' ? data.tagline : undefined;
 	const subfeatures = parseSubfeatures(entry, data.subfeatures);
 
-	const backHref = entry.category === 'tutorials' ? '/docs/tutorials' : `/docs/reference/${entry.subcategory}`;
-	const backLabel = entry.category === 'tutorials' ? 'Tutorials' : entry.subcategory.replace('-', ' ');
+	const backHref =
+		entry.category === 'tutorials'
+			? '/docs/tutorials'
+			: entry.category === 'concepts'
+				? '/docs/concepts'
+				: entry.subcategory
+					? `/docs/reference/${entry.subcategory}`
+					: '/docs/reference';
+	const backLabel =
+		entry.category === 'tutorials'
+			? 'Tutorials'
+			: entry.category === 'concepts'
+				? 'Concepts'
+				: entry.subcategory
+					? entry.subcategory.replace('-', ' ')
+					: 'Reference';
 
 	const outFrontmatter: Record<string, unknown> = {
 		layout: 'doc',
@@ -391,12 +408,11 @@ function writeEntry(entry: MirrorEntry, raw: string, source: MirrorSource): Mirr
 
 /**
  * Enumerate website-local concept pages under `src/routes/docs/concepts/*`.
- * Concepts aren't mirrored from upstream nkido; they're authored directly in
- * this repo. We synthesize `MirrorEntry`/`MirrorResult` shapes for them so
- * `writeManifest` can fold them into the same JSON alongside tutorials and
- * reference. We do NOT rewrite the on-disk files — they stay as authored.
+ * Some concepts are mirrored from upstream nkido (see MIRROR_INDEX); others are
+ * authored directly in this repo. Skip any slug already populated by the
+ * upstream mirror so we don't double-emit.
  */
-function enumerateLocalConcepts(): MirrorResult[] {
+function enumerateLocalConcepts(mirroredSlugs: Set<string>): MirrorResult[] {
 	const conceptsDir = 'src/routes/docs/concepts';
 	if (!existsSync(conceptsDir)) return [];
 
@@ -407,6 +423,7 @@ function enumerateLocalConcepts(): MirrorResult[] {
 
 	const results: MirrorResult[] = [];
 	for (const slug of dirs) {
+		if (mirroredSlugs.has(slug)) continue;
 		const filePath = `${conceptsDir}/${slug}/+page.md`;
 		if (!existsSync(filePath)) continue;
 		const raw = readFileSync(filePath, 'utf8');
@@ -459,9 +476,10 @@ function enumerateLocalConcepts(): MirrorResult[] {
 
 /**
  * Enumerate website-local tutorial pages under `src/routes/docs/tutorials/*`.
- * Most tutorials are mirrored from upstream nkido (see MIRROR_INDEX); a few are
- * authored directly in this repo (e.g. cookbook, migrating). Skip any slug
- * already populated by the upstream mirror so we don't double-emit.
+ * Most tutorials are mirrored from upstream nkido (discovered by walking the
+ * upstream tree); a few are authored directly in this repo (e.g. cookbook,
+ * migrating). Skip any slug already populated by the upstream mirror so we
+ * don't double-emit.
  */
 function enumerateLocalTutorials(mirroredSlugs: Set<string>): MirrorResult[] {
 	const tutorialsDir = 'src/routes/docs/tutorials';
@@ -531,16 +549,32 @@ type Outcome =
 	| { kind: 'error'; entry: MirrorEntry; error: Error };
 
 async function main() {
-	const total = MIRROR_INDEX.length;
+	// Discover the upstream tree from whichever source is available locally.
+	// The clone (when present) wins because it picks up uncommitted edits
+	// during dev; otherwise we walk the committed fallback snapshot.
+	const discoveryRoot = useLocal ? localRoot : resolveFsPath(MIRROR_FALLBACK_ROOT);
+	const entries = discoverEntries(discoveryRoot);
+	if (entries.length === 0) {
+		console.error(
+			`✗ no upstream docs discovered under ${discoveryRoot}/web/static/docs — ` +
+				`expected a local nkido clone at ${MIRROR_LOCAL_PATH} or a fallback at ${MIRROR_FALLBACK_ROOT}.`
+		);
+		process.exit(1);
+	}
+
+	// Populate the cross-doc link rewriter table now that we know what's in.
+	for (const e of entries) UPSTREAM_TO_URL[e.upstream] = urlPath(e);
+
+	const total = entries.length;
 	const fetchWarnings: string[] = [];
 	let completed = 0;
 
-	const sourceLabel = useLocal ? `local clone at ${localRoot}` : 'upstream';
-	process.stderr.write(`Mirroring ${total} docs from ${sourceLabel}...\n`);
+	const sourceLabel = useLocal ? `local clone at ${localRoot}` : `fallback snapshot at ${MIRROR_FALLBACK_ROOT}`;
+	process.stderr.write(`Mirroring ${total} docs (discovered from ${sourceLabel})...\n`);
 	renderProgress(0, total);
 
 	const outcomes = await runWithConcurrency<MirrorEntry, Outcome>(
-		MIRROR_INDEX,
+		entries,
 		FETCH_CONCURRENCY,
 		async (entry) => {
 			let raw: string | null = null;
@@ -607,7 +641,10 @@ async function main() {
 		console.warn(`⚠ ${missingCount} entries missing — continuing in local dev`);
 	}
 
-	const localConcepts = enumerateLocalConcepts();
+	const mirroredConceptSlugs = new Set(
+		results.filter((r) => r.entry.category === 'concepts').map((r) => r.entry.slug)
+	);
+	const localConcepts = enumerateLocalConcepts(mirroredConceptSlugs);
 	results.push(...localConcepts);
 	if (localConcepts.length > 0) {
 		console.log(`✓ concepts: ${localConcepts.length} local`);

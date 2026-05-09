@@ -3,11 +3,29 @@ title: Timelines
 category: builtins
 order: 19
 keywords: [timeline, breakpoint, automation, envelope, curve, curve-notation, scheduled, clock, sync, breakpoints, parameter]
+group: sequencing
+subgroup: timing
+icon: Clock
+tagline: Time-driven automation with breakpoints and curves.
+subfeatures:
+  - name: Timeline
+    anchor: timeline
+    tagline: Sample-accurate parameter automation.
+    snippet: "osc(\"saw\", 220) * timeline(\"__/''\")"
+  - name: Breakpoints
+    anchor: breakpoint
+    tagline: Linear and curved segments.
+  - name: Curves
+    anchor: curve
+    tagline: Curve interpolation between values.
+  - name: Automation
+    anchor: automation
+    tagline: Synced parameter automation.
 ---
 
 # Timelines
 
-Breakpoint automation envelopes synced to the clock. Use `timeline()` to define smooth parameter curves with arbitrary shapes — slower than an `lfo()`, more expressive than a static value. Curves are expressed in **curve notation** (see the mini-notation reference) which encodes break-point amplitudes and segment shapes as a string of characters.
+Breakpoint automation envelopes synced to the clock. Use `timeline()` to define smooth parameter curves with arbitrary shapes: slower than an `lfo()` and more expressive than a static value. Curves are written in **curve notation** (see the mini-notation reference), which encodes breakpoint amplitudes and segment shapes as a string of characters.
 
 ## timeline
 

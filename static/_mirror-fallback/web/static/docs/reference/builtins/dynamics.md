@@ -3,6 +3,23 @@ title: Dynamics
 category: builtins
 order: 9
 keywords: [dynamics, comp, compressor, limiter, gate, noisegate, threshold, ratio, ceiling, compression]
+group: effects
+subgroup: dynamics
+icon: Gauge
+tagline: Compression, limiting, and gating.
+subfeatures:
+  - name: Compressor
+    anchor: comp
+    tagline: Feedforward compressor.
+    snippet: 'osc("saw", 110) * ar(trigger(2)) |> comp(%, -12, 4)'
+  - name: Limiter
+    anchor: limiter
+    tagline: Brick-wall ceiling.
+    snippet: 'osc("saw", 110) * 2 |> limiter(%, -0.1, 0.1)'
+  - name: Gate
+    anchor: gate
+    tagline: Threshold-based noise gate.
+    snippet: 'osc("noise") * ar(trigger(8), 0.001, 0.05) |> gate(%, -20, 10)'
 ---
 
 # Dynamics
@@ -44,7 +61,7 @@ Related: [limiter](#limiter), [gate](#gate)
 
 ## limiter
 
-**Limiter** - Brickwall limiter preventing signal from exceeding ceiling.
+**Limiter** - Brickwall limiter that prevents signal from exceeding ceiling.
 
 | Param   | Type   | Default | Description |
 |---------|--------|---------|-------------|
@@ -54,7 +71,7 @@ Related: [limiter](#limiter), [gate](#gate)
 
 Aliases: `limit`
 
-A limiter is an extreme compressor (infinite ratio) that prevents the signal from ever exceeding the ceiling. Essential for preventing digital clipping.
+A limiter is an extreme compressor (infinite ratio) that prevents the signal from ever exceeding the ceiling. Use to prevent digital clipping.
 
 ```akk
 // Master limiter
@@ -72,7 +89,7 @@ Related: [comp](#comp)
 
 ## gate
 
-**Noise Gate** - Silences signal below threshold.
+**Noise gate** - Silences signal below threshold.
 
 | Param  | Type   | Default | Description |
 |--------|--------|---------|-------------|

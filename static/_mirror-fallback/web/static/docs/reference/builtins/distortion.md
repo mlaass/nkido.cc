@@ -3,6 +3,49 @@ title: Distortion
 category: builtins
 order: 8
 keywords: [distortion, saturate, softclip, bitcrush, fold, wavefold, drive, crush, lofi, tube, valve, smooth, adaa, tape, warmth, xfmr, transformer, excite, exciter, harmonics]
+group: effects
+subgroup: nonlinear
+icon: Zap
+tagline: Soft to extreme nonlinearity — saturation, folding, and lo-fi.
+subfeatures:
+  - name: Saturate
+    anchor: saturate
+    tagline: Tape-style tanh saturation.
+    snippet: 'osc("saw", 110) |> saturate(%, 3)'
+  - name: Softclip
+    anchor: softclip
+    tagline: Cubic soft clipper.
+    snippet: 'osc("saw", 220) |> softclip(%, 0.7)'
+  - name: Bitcrush
+    anchor: bitcrush
+    tagline: 8-bit lo-fi color.
+    snippet: 'osc("saw", 220) |> bitcrush(%, 8, 0.5)'
+    icon: Binary
+  - name: Fold
+    anchor: fold
+    tagline: Wavefolder for harmonic chaos.
+    snippet: 'osc("sin", 110) * 2 |> fold(%, 0.5)'
+  - name: Tube
+    anchor: tube
+    tagline: Asymmetric valve warmth.
+    snippet: 'osc("saw", 110) |> tube(%, 5, 0.1)'
+    icon: Cylinder
+  - name: Smooth
+    anchor: smooth
+    tagline: Anti-aliased smooth distortion.
+    snippet: 'osc("saw", 220) |> smooth(%, 3)'
+  - name: Tape
+    anchor: tape
+    tagline: Tape compression and saturation.
+    snippet: 'osc("saw", 110) |> tape(%, 4, 0.4)'
+  - name: XFMR
+    anchor: xfmr
+    tagline: Transformer-style coloration.
+    snippet: 'osc("saw", 55) |> xfmr(%, 4, 8)'
+  - name: Excite
+    anchor: excite
+    tagline: Harmonic exciter.
+    snippet: 'osc("saw", 220) |> excite(%, 0.5, 3000)'
 ---
 
 # Distortion
@@ -11,7 +54,7 @@ Distortion effects add harmonic content by clipping, saturating, or otherwise ma
 
 ## saturate
 
-**Tanh Saturation** - Smooth hyperbolic tangent waveshaping with drive control.
+**Tanh saturation** - Smooth hyperbolic tangent waveshaping with drive control.
 
 | Param | Type   | Default | Description |
 |-------|--------|---------|-------------|
@@ -45,7 +88,7 @@ Related: [softclip](#softclip), [fold](#fold), [tanh (math)](math#tanh)
 
 ## softclip
 
-**Soft Clipping** - Polynomial soft clipper with adjustable threshold.
+**Soft clipping** - Polynomial soft clipper with adjustable threshold.
 
 | Param  | Type   | Default | Description |
 |--------|--------|---------|-------------|
@@ -70,7 +113,7 @@ Related: [saturate](#saturate)
 
 ## bitcrush
 
-**Bit Crusher** - Reduces bit depth and sample rate.
+**Bit crusher** - Reduces bit depth and sample rate.
 
 | Param | Type   | Default | Description |
 |-------|--------|---------|-------------|
@@ -112,7 +155,7 @@ Related: [fold](#fold)
 
 Aliases: `wavefold`
 
-Classic West Coast synthesis technique. When the signal exceeds the threshold, it folds back creating complex harmonic spectra.
+Classic West Coast synthesis technique. When the signal exceeds the threshold, it folds back, producing complex harmonic spectra.
 
 ```akk
 // Basic wavefold
@@ -135,7 +178,7 @@ Related: [saturate](#saturate), [softclip](#softclip)
 
 ## tube
 
-**Tube Saturation** - Asymmetric waveshaping with even harmonics.
+**Tube saturation** - Asymmetric waveshaping with even harmonics.
 
 | Param | Type   | Default | Description |
 |-------|--------|---------|-------------|
@@ -168,7 +211,7 @@ Related: [saturate](#saturate), [tape](#tape)
 
 ## smooth
 
-**ADAA Saturation** - Alias-free saturation using antiderivative antialiasing.
+**ADAA saturation** - Alias-free saturation using antiderivative antialiasing.
 
 | Param | Type   | Default | Description |
 |-------|--------|---------|-------------|
@@ -177,7 +220,7 @@ Related: [saturate](#saturate), [tape](#tape)
 
 Aliases: `adaa`
 
-High-quality tanh saturation with built-in antialiasing. Uses the ADAA (Antiderivative Antialiasing) algorithm to eliminate harsh aliasing artifacts without oversampling. Best for clean, high-fidelity saturation on full mixes or high-frequency content.
+Tanh saturation with built-in antialiasing. Uses the ADAA (Antiderivative Antialiasing) algorithm to eliminate aliasing artifacts without oversampling. Suited for saturation on full mixes or high-frequency content.
 
 ```akk
 // Clean master bus saturation
@@ -200,7 +243,7 @@ Related: [saturate](#saturate), [tube](#tube)
 
 ## tape
 
-**Tape Saturation** - Soft compression with high-frequency warmth.
+**Tape saturation** - Soft compression with high-frequency warmth.
 
 | Param  | Type   | Default | Description |
 |--------|--------|---------|-------------|
@@ -240,7 +283,7 @@ Related: [tube](#tube), [saturate](#saturate)
 
 ## xfmr
 
-**Transformer Saturation** - Bass-heavy saturation.
+**Transformer saturation** - Bass-heavy saturation.
 
 | Param | Type   | Default | Description |
 |-------|--------|---------|-------------|
@@ -251,7 +294,7 @@ Related: [tube](#tube), [saturate](#saturate)
 
 Aliases: `transformer`, `console`
 
-Emulates transformer/console saturation where bass frequencies saturate more heavily than highs (magnetic core saturation). Creates thick, punchy low-end while keeping highs relatively clean. Great for drums and bass. Uses 2x oversampling internally.
+Emulates transformer/console saturation where bass frequencies saturate more heavily than highs (magnetic core saturation). Produces thick, punchy low-end while keeping highs relatively clean. Suited for drums and bass. Uses 2x oversampling internally.
 
 The `bass_freq` parameter controls the cutoff frequency for bass extraction. Higher values include more of the signal in the bass saturation path.
 
@@ -281,7 +324,7 @@ Related: [tube](#tube), [tape](#tape)
 
 ## excite
 
-**Harmonic Exciter** - Adds controlled harmonics to high frequencies.
+**Harmonic exciter** - Adds controlled harmonics to high frequencies.
 
 | Param  | Type   | Default | Description |
 |--------|--------|---------|-------------|
@@ -293,9 +336,9 @@ Related: [tube](#tube), [tape](#tape)
 
 Aliases: `exciter`, `aural`
 
-Adds harmonic content to frequencies above the corner frequency only, similar to an Aphex Aural Exciter. Creates presence and sparkle without adding low-frequency mud. Uses 2x oversampling internally.
+Adds harmonic content to frequencies above the corner frequency only, similar to an Aphex Aural Exciter. Adds presence without low-frequency mud. Uses 2x oversampling internally.
 
-The `harm_odd` and `harm_even` parameters control the mix of odd and even harmonics. Even harmonics sound warmer and more musical, while odd harmonics add more edge and presence.
+The `harm_odd` and `harm_even` parameters control the mix of odd and even harmonics. Even harmonics sound warmer; odd harmonics add edge and presence.
 
 ```akk
 // Add presence to synths

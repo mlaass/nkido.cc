@@ -3,11 +3,14 @@ title: Waterfall
 category: builtins
 order: 23
 keywords: [waterfall, spectrogram, fft, visualization, viz, gradient, magma, viridis, inferno, thermal, grayscale, time-frequency, scrolling, angle, speed, minDb, maxDb]
+group: visualizations
+icon: AreaChart
+tagline: Scrolling time-frequency spectrogram.
 ---
 
 # Waterfall
 
-A scrolling spectrogram visualizer: time on one axis, frequency on the other, color for amplitude. Inserted as a pass-through node in the signal chain.
+A scrolling spectrogram visualizer: time on one axis, frequency on the other, color for amplitude. It sits in the chain as a pass-through, so audio flows through unchanged.
 
 ## waterfall
 

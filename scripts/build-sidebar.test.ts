@@ -176,8 +176,38 @@ describe('buildSidebar', () => {
 
 	it('exposes referenceTopOrder and referenceTopLabels for the consumer', () => {
 		const sidebar = buildSidebar(emptyManifest(), { warn });
-		expect(sidebar.referenceTopOrder).toEqual(['builtins', 'language', 'mini-notation']);
+		// Override-listed top-groups appear even when the manifest is empty so the
+		// sidebar JSON shape stays stable; whatever order the override defines is
+		// preserved.
+		expect(sidebar.referenceTopOrder).toContain('builtins');
+		expect(sidebar.referenceTopOrder).toContain('language');
+		expect(sidebar.referenceTopOrder).toContain('mini-notation');
 		expect(sidebar.referenceTopLabels.builtins).toBe('Builtins');
 		expect(sidebar.referenceTopLabels['mini-notation']).toBe('Mini-notation');
+	});
+
+	it('discovers a new reference top-group from the manifest without code changes', () => {
+		const m = emptyManifest();
+		// Manifest emits a key for a subcategory the override doesn't list yet.
+		m.entries['reference/synthesis-lab'] = [
+			entry({
+				slug: 'modal',
+				title: 'Modal Synthesis',
+				url: '/docs/reference/synthesis-lab/modal',
+				order: 1,
+				subgroup: 'experimental'
+			})
+		];
+
+		const sidebar = buildSidebar(m, { warn });
+
+		expect(sidebar.tree.reference['synthesis-lab']).toBeDefined();
+		expect(sidebar.tree.reference['synthesis-lab'].length).toBe(1);
+		expect(sidebar.tree.reference['synthesis-lab'][0].entries.map((e) => e.slug)).toEqual(['modal']);
+		expect(sidebar.referenceTopOrder).toContain('synthesis-lab');
+		// Falls back to title-cased slug for unlabeled groups.
+		expect(sidebar.referenceTopLabels['synthesis-lab']).toBe('Synthesis Lab');
+		// And we get a tolerant warn so the human notices.
+		expect(warnings.some((w) => w.includes("top-group 'synthesis-lab' not in override"))).toBe(true);
 	});
 });
