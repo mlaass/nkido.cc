@@ -335,6 +335,33 @@ describe('buildOverview', () => {
 		expect(cards[1].snippet).toBeUndefined();
 	});
 
+	it('breaks Akkado pipelines onto separate lines so cards can wrap', async () => {
+		const m = emptyManifest();
+		m.entries['reference/builtins'].push(
+			entry({
+				slug: 'delay',
+				url: '/docs/reference/builtins/delay',
+				group: 'effects',
+				subgroup: 'time-based',
+				icon: 'Clock',
+				headings: [h('delay')],
+				subfeatures: [
+					{
+						name: 'Delay',
+						anchor: 'delay',
+						tagline: 'D.',
+						snippet: 'osc("saw", 220) |> delay(%, 0.5, 0.4) |> reverb(%)'
+					}
+				]
+			})
+		);
+
+		const overview = await buildOverview(m, { warn });
+		const card = overview.groups[0].subgroups[0].cards[0];
+
+		expect(card.snippet).toBe('osc("saw", 220)\n  |> delay(%, 0.5, 0.4)\n  |> reverb(%)');
+	});
+
 	it('respects per-subfeature icon override', async () => {
 		const m = emptyManifest();
 		m.entries['reference/builtins'].push(

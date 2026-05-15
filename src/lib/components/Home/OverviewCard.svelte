@@ -6,9 +6,11 @@
 		BarChart,
 		Binary,
 		Box,
+		Boxes,
 		Brackets,
 		Calculator,
 		Clock,
+		Copy,
 		Cylinder,
 		Database,
 		Drum,
@@ -65,9 +67,11 @@
 		BarChart,
 		Binary,
 		Box,
+		Boxes,
 		Brackets,
 		Calculator,
 		Clock,
+		Copy,
 		Cylinder,
 		Database,
 		Drum,
@@ -103,20 +107,18 @@
 	$: Icon = iconMap[card.icon as keyof typeof iconMap] ?? Box;
 </script>
 
-<article class="overview-card">
+<a class="overview-card" href={card.url} aria-label="{card.name} reference">
 	<div class="overview-icon">
 		<svelte:component this={Icon} size={24} />
 	</div>
-	<h3 class="overview-title">
-		<a href={card.url} aria-label="{card.name} reference">{card.name}</a>
-	</h3>
+	<h3 class="overview-title">{card.name}</h3>
 	<p class="overview-tagline">{card.tagline}</p>
 	{#if card.snippetHtml}
 		<div class="overview-snippet">{@html card.snippetHtml}</div>
 	{:else if card.snippet}
 		<div class="overview-snippet"><pre><code>{card.snippet}</code></pre></div>
 	{/if}
-</article>
+</a>
 
 <style>
 	.overview-card {
@@ -126,10 +128,22 @@
 		background: var(--bg-secondary);
 		border: 1px solid var(--border-muted);
 		border-radius: 12px;
+		color: inherit;
+		text-decoration: none;
 		transition: border-color var(--transition-fast);
 	}
 
 	.overview-card:hover {
+		border-color: var(--accent-primary);
+	}
+
+	.overview-card:hover .overview-title {
+		color: var(--accent-primary);
+	}
+
+	.overview-card:focus-visible {
+		outline: 2px solid var(--accent-primary);
+		outline-offset: 2px;
 		border-color: var(--accent-primary);
 	}
 
@@ -141,22 +155,7 @@
 	.overview-title {
 		font-size: 1.0625rem;
 		margin: 0 0 var(--spacing-xs) 0;
-	}
-
-	.overview-title a {
-		color: inherit;
-		text-decoration: none;
-	}
-
-	.overview-title a:hover,
-	.overview-title a:focus-visible {
-		color: var(--accent-primary);
-	}
-
-	.overview-title a:focus-visible {
-		outline: 2px solid var(--accent-primary);
-		outline-offset: 2px;
-		border-radius: 2px;
+		transition: color var(--transition-fast);
 	}
 
 	.overview-tagline {
@@ -178,7 +177,6 @@
 		margin: auto 0 0 0;
 		font-size: 0.78rem;
 		font-family: var(--font-mono, monospace);
-		overflow-x: auto;
 	}
 
 	.overview-snippet :global(pre) {
@@ -187,7 +185,18 @@
 		background: var(--bg-primary);
 		border: 1px solid var(--border-muted);
 		border-radius: 8px;
-		overflow-x: auto;
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+
+	/* Hanging indent: each source line starts at column 0, but if it wraps
+	   inside the card the continuation is pulled 2ch in. Requires the
+	   Shiki `\n` between .line spans to be stripped (done in build-overview.ts)
+	   so display: block doesn't create a blank row per line. */
+	.overview-snippet :global(.line) {
+		display: block;
+		padding-left: 2ch;
+		text-indent: -2ch;
 	}
 
 	.overview-snippet :global(code) {

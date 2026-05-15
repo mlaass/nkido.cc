@@ -126,6 +126,12 @@ function subgroupHeading(id: string): string {
 		.join(' ');
 }
 
+/** Break Akkado pipelines onto separate lines so cards can wrap nicely.
+ *  Idempotent: re-running on already-formatted text is a no-op. */
+function formatSnippetForCard(snippet: string): string {
+	return snippet.replace(/[ \t]*\|>/g, '\n  |>');
+}
+
 function resolveIcon(
 	candidate: string | undefined,
 	fallback: string | undefined,
@@ -227,13 +233,23 @@ export async function buildOverview(
 					_arrayIndex: arrayIndex
 				};
 				if (sub.snippet) {
-					card.snippet = sub.snippet;
+					const formatted = formatSnippetForCard(sub.snippet);
+					card.snippet = formatted;
 					if (highlighter) {
 						try {
-							card.snippetHtml = highlighter.codeToHtml(sub.snippet, {
+							const html = highlighter.codeToHtml(formatted, {
 								lang: 'js',
 								theme: 'github-dark-dimmed'
 							});
+							// Strip the literal "\n" Shiki emits between line spans so that
+							// `.line { display: block }` in OverviewCard.svelte doesn't render
+							// a blank row per source line. Block lines are needed so the
+							// hanging-indent (padding-left + negative text-indent) resets
+							// per source line, indenting any wrapped continuations.
+							card.snippetHtml = html.replace(
+								/<\/span>\n<span class="line">/g,
+								'</span><span class="line">'
+							);
 						} catch (err) {
 							warn(
 								`⚠ overview: failed to highlight snippet for '${sub.name}': ${(err as Error).message}`
