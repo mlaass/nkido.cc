@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-15T12:53:55.634Z",
+  "generatedAt": "2026-05-15T14:52:16.720Z",
   "groups": [
     {
       "id": "instruments",
@@ -198,7 +198,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220)\n  |> delay(@, 0.5, 0.4)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> delay</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> delay</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Delay (ms)",
@@ -212,7 +212,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220)\n  |> delay_ms(@, 300, 0.4)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> delay_ms</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">300</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> delay_ms</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">300</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Tap Delay",
@@ -226,7 +226,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110)\n  |> tap_delay(@, 0.375, 0.7, (x) -> lp(x, 1500))",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> tap_delay</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.375</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">, (x) </span><span style=\"color:#F47067\">-></span><span style=\"color:#DCBDFB\"> lp</span><span style=\"color:#ADBAC7\">(x, </span><span style=\"color:#6CB6FF\">1500</span><span style=\"color:#ADBAC7\">))</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> tap_delay</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.375</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">, (x) </span><span style=\"color:#F47067\">-></span><span style=\"color:#DCBDFB\"> lp</span><span style=\"color:#ADBAC7\">(x, </span><span style=\"color:#6CB6FF\">1500</span><span style=\"color:#ADBAC7\">))</span></span></code></pre>"
             },
             {
               "name": "Freeverb",
@@ -240,7 +240,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220) * ar(trigger(2))\n  |> freeverb(@, 0.5, 0.5)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">))</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> freeverb</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">))</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> freeverb</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Dattorro",
@@ -254,7 +254,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220) * ar(trigger(2))\n  |> dattorro(@, 0.8, 30)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">))</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> dattorro</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.8</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">30</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">))</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> dattorro</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.8</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">30</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "FDN",
@@ -268,7 +268,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 55) * ar(trigger(0.5))\n  |> fdn(@, 0.9, 0.4)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">))</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> fdn</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.9</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">))</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> fdn</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.9</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Chorus",
@@ -282,7 +282,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220)\n  |> chorus(@, 0.5, 0.5)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> chorus</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> chorus</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Flanger",
@@ -296,7 +296,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110)\n  |> flanger(@, 0.5, 0.7)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> flanger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> flanger</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Phaser",
@@ -310,7 +310,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110)\n  |> phaser(@, 0.3, 0.8)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> phaser</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.3</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.8</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> phaser</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.3</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.8</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Comb",
@@ -324,7 +324,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"noise\")\n  |> comb(@, 1/220, 0.95)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"noise\"</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> comb</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">1</span><span style=\"color:#F47067\">/</span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.95</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"noise\"</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> comb</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">1</span><span style=\"color:#F47067\">/</span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.95</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         },
@@ -344,7 +344,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110)\n  |> saturate(@, 3)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> saturate</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">3</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> saturate</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">3</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Softclip",
@@ -358,7 +358,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220)\n  |> softclip(@, 0.7)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> softclip</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> softclip</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.7</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Bitcrush",
@@ -372,7 +372,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220)\n  |> bitcrush(@, 8, 0.5)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> bitcrush</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> bitcrush</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Fold",
@@ -386,7 +386,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"sin\", 110) * 2\n  |> fold(@, 0.5)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 2</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> fold</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 2</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> fold</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Tube",
@@ -400,7 +400,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110)\n  |> tube(@, 5, 0.1)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> tube</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> tube</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Smooth",
@@ -414,7 +414,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220)\n  |> smooth(@, 3)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> smooth</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">3</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> smooth</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">3</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Tape",
@@ -428,7 +428,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110)\n  |> tape(@, 4, 0.4)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> tape</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> tape</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "XFMR",
@@ -442,7 +442,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 55)\n  |> xfmr(@, 4, 8)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> xfmr</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">55</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> xfmr</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Excite",
@@ -456,7 +456,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 220)\n  |> excite(@, 0.5, 3000)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> excite</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">3000</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">220</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> excite</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#6CB6FF\">0.5</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">3000</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         },
@@ -476,7 +476,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110) * ar(trigger(2))\n  |> comp(@, -12, 4)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">))</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> comp</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">12</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">2</span><span style=\"color:#ADBAC7\">))</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> comp</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">12</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Limiter",
@@ -490,7 +490,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110) * 2\n  |> limiter(@, -0.1, 0.1)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 2</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> limiter</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 2</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> limiter</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.1</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Gate",
@@ -504,7 +504,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"noise\") * ar(trigger(8), 0.001, 0.05)\n  |> gate(@, -20, 10)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"noise\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#6CB6FF\">0.001</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.05</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> gate</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">20</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">10</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"noise\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#DCBDFB\"> ar</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#DCBDFB\">trigger</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">), </span><span style=\"color:#6CB6FF\">0.001</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.05</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> gate</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#F47067\">-</span><span style=\"color:#6CB6FF\">20</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">10</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             }
           ]
         }
@@ -659,7 +659,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110)\n  |> delay(@, clock() / 4, 0.4)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> delay</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#DCBDFB\">clock</span><span style=\"color:#ADBAC7\">() </span><span style=\"color:#F47067\">/</span><span style=\"color:#6CB6FF\"> 4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> delay</span><span style=\"color:#ADBAC7\">(@, </span><span style=\"color:#DCBDFB\">clock</span><span style=\"color:#ADBAC7\">() </span><span style=\"color:#F47067\">/</span><span style=\"color:#6CB6FF\"> 4</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">0.4</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "LFO",
@@ -729,7 +729,7 @@
                 "anchorMatched": true
               },
               "snippet": "run(8)\n  |> mtof(@ + 60)\n  |> osc(\"saw\", @)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">run</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> mtof</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#F47067\"> +</span><span style=\"color:#6CB6FF\"> 60</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">run</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> mtof</span><span style=\"color:#ADBAC7\">(@ </span><span style=\"color:#F47067\">+</span><span style=\"color:#6CB6FF\"> 60</span><span style=\"color:#ADBAC7\">)</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, @)</span></span></code></pre>"
             },
             {
               "name": "Timeline",
@@ -934,7 +934,7 @@
           "cards": [
             {
               "name": "Pipes & Holes",
-              "tagline": "Forward composition with -> and |>; the % hole.",
+              "tagline": "Forward composition with -> and |>; the @ hole.",
               "url": "/docs/reference/language/pipes",
               "icon": "Plug",
               "source": {
@@ -1120,7 +1120,7 @@
                 "anchorMatched": true
               },
               "snippet": "osc(\"saw\", 110) * 3\n  |> tanh(@)",
-              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 3</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> tanh</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#F47067\">%</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"saw\"</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">110</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">*</span><span style=\"color:#6CB6FF\"> 3</span></span><span class=\"line\"><span style=\"color:#F47067\">  |></span><span style=\"color:#DCBDFB\"> tanh</span><span style=\"color:#ADBAC7\">(@)</span></span></code></pre>"
             }
           ]
         },
