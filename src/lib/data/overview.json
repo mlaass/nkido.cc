@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-09T13:49:48.851Z",
+  "generatedAt": "2026-05-15T11:11:21.553Z",
   "groups": [
     {
       "id": "instruments",
@@ -800,6 +800,20 @@
               },
               "snippet": "pat(\"c4 e4 g4 b4\") |> poly(@, (f, g, v) -> osc(\"sin\", f) * v, 8)",
               "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">pat</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"c4 e4 g4 b4\"</span><span style=\"color:#ADBAC7\">) </span><span style=\"color:#F47067\">|></span><span style=\"color:#DCBDFB\"> poly</span><span style=\"color:#ADBAC7\">(@, (f, g, v) </span><span style=\"color:#F47067\">-></span><span style=\"color:#DCBDFB\"> osc</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#96D0FF\">\"sin\"</span><span style=\"color:#ADBAC7\">, f) </span><span style=\"color:#F47067\">*</span><span style=\"color:#ADBAC7\"> v, </span><span style=\"color:#6CB6FF\">8</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
+            },
+            {
+              "name": "Unison",
+              "tagline": "Fatten a single note into N stereo-spread, detuned voices.",
+              "url": "/docs/reference/builtins/unison#unison",
+              "icon": "Box",
+              "source": {
+                "docSlug": "unison",
+                "docCategory": "reference/builtins",
+                "anchor": "unison",
+                "anchorMatched": true
+              },
+              "snippet": "unison(440, 1, 1, (f, g, v, e) -> saw(f, e.phase), voices: 5, detune: 0.3)",
+              "snippetHtml": "<pre class=\"shiki github-dark-dimmed\" style=\"background-color:#22272e;color:#adbac7\" tabindex=\"0\"><code><span class=\"line\"><span style=\"color:#DCBDFB\">unison</span><span style=\"color:#ADBAC7\">(</span><span style=\"color:#6CB6FF\">440</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">1</span><span style=\"color:#ADBAC7\">, </span><span style=\"color:#6CB6FF\">1</span><span style=\"color:#ADBAC7\">, (f, g, v, e) </span><span style=\"color:#F47067\">-></span><span style=\"color:#DCBDFB\"> saw</span><span style=\"color:#ADBAC7\">(f, e.phase), voices: </span><span style=\"color:#6CB6FF\">5</span><span style=\"color:#ADBAC7\">, detune: </span><span style=\"color:#6CB6FF\">0.3</span><span style=\"color:#ADBAC7\">)</span></span></code></pre>"
             },
             {
               "name": "Mono",

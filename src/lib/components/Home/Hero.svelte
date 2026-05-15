@@ -5,12 +5,12 @@
 <section class="hero">
 	<div class="hero-content">
 		<h1 class="hero-title">
-			High-performance<br />
-			<span class="highlight">live-coded</span> audio synthesis.
+			Live-coded <span class="highlight">Music</span> Anywhere
 		</h1>
 		<p class="hero-subtitle">
-			A DAG-based DSP engine + pattern DSL that runs in the browser, on desktop, in Godot, and on ESP32.
+			<span class="highlight">NKIDO</span> is an open <span class="highlight">live-coding</span> music system. Featuring a friendly syntax, comprehensive documentation and a portable runtime. 
 		</p>
+
 		<div class="hero-ctas">
 			<a href="https://live.nkido.cc" class="cta-primary" target="_blank" rel="noopener">
 				Try it in your browser
@@ -22,11 +22,15 @@
 			</a>
 		</div>
 	</div>
+	<p class="hero-subtitle2">
+		Runs in your <span class="highlight">browser</span>, your favorite <a href="https://godotengine.org/" target="_blank" rel="noopener">game engine</a>, microcontrollers (e.g. a $10 ESP32) or anywhere else your imagination takes you. <br />
+		<span style="display: block; margin-top: 0.5rem;"> • <span class="highlight">C++ 20</span> • <span class="highlight">MIT licensed</span> • <span class="highlight">AI friendly</span></span>
+	</p>
 </section>
 
 <style>
 	.hero {
-		padding: var(--spacing-3xl) var(--content-padding);
+		padding: var(--spacing-3xl) var(--content-padding) var(--spacing-xl)  var(--content-padding);
 		text-align: center;
 		background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
 	}
@@ -51,6 +55,15 @@
 		font-size: clamp(1rem, 2vw, 1.25rem);
 		color: var(--text-secondary);
 		margin-bottom: var(--spacing-xl);
+		max-width: 600px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.hero-subtitle2 {
+		font-size: clamp(0.875rem, 1.5vw, 1rem);
+		color: var(--text-muted);
+		margin-top: var(--spacing-xl);
 		max-width: 600px;
 		margin-left: auto;
 		margin-right: auto;
