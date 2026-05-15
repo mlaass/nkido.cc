@@ -27,13 +27,12 @@ A live-coding system needs to _diff_ the new patch against the old one, keep the
 Every node in a NKIDO patch gets a stable **semantic ID** derived from its position in the source plus its operator + constant args. If you change a filter's cutoff but leave everything else alone, the node's ID stays the same. NKIDO recognizes it and keeps its internal state.
 
 <div class="ascii">
-  Old patch                New patch             Action
-  ─────────                ─────────             ──────
-  osc(sin, 440)       →    osc(sin, 440)         keep state
-     |> * 0.3         →       |> * 0.3           keep state
-     |> filter(lp,    →       |> filter(lp,      keep state
-             1200)                  800)         update cutoff
-     |> out()         →       |> out()           keep state
+  Old patch                  New patch                Action
+  ─────────                  ─────────                ──────
+  osc("sin", 440)        →   osc("sin", 440)          keep state
+     |> % * 0.3          →      |> % * 0.3            keep state
+     |> lp(%, 1200)      →      |> lp(%, 800)         keep state, update cutoff
+     |> out(%)           →      |> out(%)             keep state
 </div>
 
 ## What gets preserved

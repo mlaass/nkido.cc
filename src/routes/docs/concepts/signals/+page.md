@@ -17,26 +17,26 @@ A **signal** in NKIDO is any value that changes over time. Usually audio, but al
 When you write a patch, you're describing a **DAG** (directed acyclic graph) of DSP nodes. Each node takes signals as input and produces a signal as output. The pipe operator `|>` connects them.
 
 ```akk
-osc('sin', 440) * 0.3
-  |> filter('lp', 1200)
-  |> reverb(0.4)
-  |> out()
+osc("sin", 440) * 0.3
+  |> lp(%, 1200)
+  |> reverb(%, 0.4)
+  |> out(%)
 ```
 
 <div class="ascii">
- osc(sin, 440)
+ osc("sin", 440)
        │
        ▼
-    * 0.3
+     * 0.3
        │
        ▼
- filter(lp, 1200)
+   lp(%, 1200)
        │
        ▼
- reverb(0.4)
+  reverb(%, 0.4)
        │
        ▼
-     out()
+     out(%)
 </div>
 
 NKIDO compiles this graph to bytecode that runs in a stack-based VM, one audio block at a time. No per-sample allocations, no runtime garbage collection.
