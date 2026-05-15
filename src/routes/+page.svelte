@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Hero from '$lib/components/Home/Hero.svelte';
+	import PreReleaseNotice from '$lib/components/PreReleaseNotice.svelte';
 	import ExampleSelector from '$lib/components/Home/ExampleSelector.svelte';
 	import FeatureGrid from '$lib/components/Home/FeatureGrid.svelte';
 	import RunsEverywhere from '$lib/components/Home/RunsEverywhere.svelte';
@@ -18,6 +19,7 @@
 </svelte:head>
 
 <Hero />
+<PreReleaseNotice />
 <ExampleSelector />
 <FeatureGrid />
 <RunsEverywhere />

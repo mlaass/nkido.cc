@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Layers, Code, Zap } from 'lucide-svelte';
 	import manifest from '$lib/data/docs-manifest.json';
+	import PreReleaseNotice from '$lib/components/PreReleaseNotice.svelte';
 
 	type ManifestEntry = { title: string; url: string };
 	type Manifest = { entries: Record<string, ManifestEntry[]> };
@@ -53,6 +54,8 @@
 	<div class="page-inner">
 		<h1>Documentation</h1>
 		<p class="intro">Learn NKIDO from the ground up.</p>
+
+		<PreReleaseNotice />
 
 		<div class="docs-grid">
 			{#each sections as section}
