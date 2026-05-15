@@ -81,11 +81,14 @@
 			icon: Sliders,
 			title: 'Runtime parameter controls',
 			description: 'Define sliders, toggles, buttons, and dropdowns in code, rendered as interactive UI controls in the web app.',
+			href: '/docs/concepts/runtime-controls',
 		},
 		{
 			icon: Palette,
 			title: 'Customizable web UI',
 			description: '7 preset themes, custom theme editor, and CSS variable-based theming for personalized workflows.',
+			href: 'https://live.nkido.cc',
+			external: true,
 		},
 		{
 			icon: BookOpen,
