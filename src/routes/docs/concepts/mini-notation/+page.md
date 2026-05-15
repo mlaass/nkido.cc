@@ -49,12 +49,40 @@ n"c4 e4 ~ g4"
 
 Mini-notation supports a handful of inline modifiers on each event:
 
-- `x!3` — repeat `x` three times in the same slot.
-- `x@3` — weight: `x` takes 3× the slot length of unweighted events.
+- `x*3` — speed: play `x` three times inside the slot (event duration shrinks to fit).
+- `x/3` — slow: stretch `x` to take 3× its slot length.
+- `x@3` — weight: `x` takes 3× the slot length of unweighted siblings.
+- `x!3` — replicate: expand to three copies of `x` as separate slots in the parent sequence (`!` alone defaults to 2).
 - `x?` — play `x` with 50% probability (`x?0.3` for 30%).
 - `[a b]` — sub-sequence: `a` then `b` inside the slot.
 - `<a b c>` — alternate: one element per cycle, cycling through.
-- `a,b` — stack: play `a` and `b` simultaneously in the same slot.
+- `[a, b]` — stack: `a` and `b` play simultaneously (comma only works inside `[…]` or `<…>`).
+
+## Per-event params
+
+Each pattern event is a record. You've already seen `@.freq` and `@.gate`; the same `@` also exposes `vel`, `note`, `dur`, `phase`, `sample_id`, and a handful of others — the full table lives in [Records → Pattern events](/docs/reference/language/records#pattern-events-are-records).
+
+Two of those fields have inline-suffix shortcuts you can write directly inside the pattern string:
+
+- `c4:0.8` — set velocity on a pitch or chord atom (`@.vel` becomes 0.8 for that event; range 0–1).
+- `bd:2` — pick a sample variant (`@.sample_id` distinguishes `bd` from `bd:2`). Integer index after the colon, sample atoms only.
+
+```akk
+n"c4 e4:0.4 g4 b4:0.9"
+  |> saw(@.freq) * ar(@.gate, 0.01, 0.2) * @.vel
+  |> out(@)
+```
+
+When you want richer per-event modulation than velocity, multiply in a parallel pattern at the same length — every slot in a pattern is itself a signal:
+
+```akk
+n"c4 e4 g4 b4"
+  |> saw(@.freq) * ar(@.gate, 0.01, 0.2)
+  |> lp(@, v"400 1200 800 2400")
+  |> out(@)
+```
+
+For per-event params that don't have an inline suffix (filter cutoff, send level, custom controls), use record-suffix syntax (`n"c4{cutoff:0.3}"`) or the `bend()` / `aftertouch()` / `dur()` transforms — both covered in [Pattern Modulation](/docs/tutorials/pattern-modulation).
 
 ## Example: a riff with a filter sweep
 
@@ -68,8 +96,6 @@ n"<c4 eb4> g4 [bb4 c5] a4"
 ```
 
 `@.gate` triggers the envelope on every pattern event — including the `<c4 eb4>` alternation and the `[bb4 c5]` sub-sequence — so the amp and filter envelopes follow the actual note rate, not a fixed clock.
-
-> Every slot in the pattern is itself a signal, so you can modulate per-slot parameters (velocity, filter, pan) by writing a parallel pattern and multiplying.
 
 ## Next
 
