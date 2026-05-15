@@ -41,7 +41,7 @@ d1 $ s "bd ~ sn ~"
 pat("bd ~ sn ~") |> out(%, %)
 ```
 
-The shape that's different is what comes *after* the pattern. Tidal hands the pattern off to SuperDirt as named samples and effects via `#`. NKIDO routes the pattern signal through a DAG you can read in a single direction: `osc("saw", n"…") |> lp(%, …) |> reverb(%, …) |> out(%)`. There is no implicit "everything goes to a SuperDirt orbit" step.
+The shape that's different is what comes *after* the pattern. Tidal hands the pattern off to SuperDirt as named samples and effects via `#`. NKIDO routes the pattern signal through a DAG you can read in a single direction: `n"…" |> saw(@.freq) * ar(@.gate) |> lp(@, …) |> reverb(@, …) |> out(@)`. There is no implicit "everything goes to a SuperDirt orbit" step.
 
 For pitch patterns, Tidal's `n "0 3 7"` becomes NKIDO's `n"c4 eb4 g4"` — the names are explicit instead of intervals over a scale, but the cycle-fills-evenly semantics are the same.
 
@@ -62,15 +62,16 @@ bpm = 120
 pat("bd sd") |> out(%, %)
 ```
 
-When you write `note("c4 e4 g4")` in Strudel, you usually pair it with `.s("piano")` to pick a sample bank. In NKIDO you pair it with an oscillator and use a typed pattern literal: `osc("saw", n"c4 e4 g4")`. The synthesis is yours to build; there is no default sound.
+When you write `note("c4 e4 g4")` in Strudel, you usually pair it with `.s("piano")` to pick a sample bank. In NKIDO you lead with a typed pattern literal and pipe it into a waveform builtin: `n"c4 e4 g4" |> saw(@.freq)`. The synthesis is yours to build; there is no default sound.
 
-Strudel's chained `.lpf(...)`, `.room(...)`, `.gain(...)` calls each produce a new pattern wrapper. NKIDO uses `|>` for the same idea, but the pipe operates on signals rather than patterns and every RHS call needs the hole `%` (or `@`):
+Strudel's chained `.lpf(...)`, `.room(...)`, `.gain(...)` calls each produce a new pattern wrapper. NKIDO uses `|>` for the same idea, but the pipe operates on signals rather than patterns and every RHS call needs the hole `@` (or `%`). `@.freq` and `@.gate` read per-event fields off the pattern record on the way in:
 
 ```akk
-osc("saw", n"c4 e4 g4")
-    |> lp(%, 1200) * 0.4
-    |> reverb(%, 0.3)
-    |> out(%, %)
+n"c4 e4 g4"
+    |> saw(@.freq) * ar(@.gate, 0.01, 0.3)
+    |> lp(@, 1200) * 0.4
+    |> reverb(@, 0.3)
+    |> out(@, @)
 ```
 
 What doesn't translate: Strudel's pattern algebra (`stack`, `cat`, `arp`, `slice`) and its rich library of community samples and presets. The mini-notation parsing is shared; everything around it is rebuilt.

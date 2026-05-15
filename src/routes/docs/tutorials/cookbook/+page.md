@@ -107,12 +107,13 @@ A near-zero attack and 80 ms release shape the sound into a transient. The moog 
 A four-note arpeggio routed through a saw oscillator and a fixed-cutoff lowpass.
 
 ```akk
-osc("saw", n"c4 e4 g4 b4") * ar(trigger(4), 0.01, 0.15)
-    |> lp(%, 1200)
-    |> out(%, %)
+n"c4 e4 g4 b4"
+    |> saw(@.freq) * ar(@.gate, 0.01, 0.15)
+    |> lp(@, 1200)
+    |> out(@, @)
 ```
 
-`n"…"` is a note-pattern literal — its frequency buffer feeds straight into `osc`'s pitch slot. When the pattern advances, the oscillator's frequency updates on the beat. Hot-swap keeps the oscillator's phase across pitch changes, so you don't hear a click on each note.
+Lead with the pattern literal and pipe it into a waveform builtin: `@.freq` gives the per-event frequency, `@.gate` gives the per-event trigger. The envelope fires on every note (and stays silent on `~` rests) — no separate `trigger(n)` clock to drift out of sync with the pattern. Hot-swap keeps the oscillator's phase across pitch changes.
 
 ## Probabilistic hat pattern
 

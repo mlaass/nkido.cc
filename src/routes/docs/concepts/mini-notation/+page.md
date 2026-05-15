@@ -29,12 +29,21 @@ n"<c4 e4 g4>"        // one note per cycle, rotating
 Pattern literals coerce to a frequency signal at any signal slot, so you pass them straight into an oscillator's pitch argument.
 
 ```akk
-osc("saw", n"c4 e4 g4 b4")
-  |> lp(%, 1200)
-  |> out(%)
+n"c4 e4 g4 b4"
+  |> saw(@.freq)
+  |> lp(@, 1200)
+  |> out(@)
 ```
 
-When the pattern advances, the oscillator's frequency updates on the beat. Because of hot-swap, the phase keeps going across pitch changes.
+Lead with the pattern literal, then pipe it into a waveform builtin (`saw`, `sqr`, `tri`, …). `@` is the placeholder — same role as `%` — and `@.freq` reads the per-event frequency from the pattern record. When the pattern advances, the oscillator's frequency updates on the beat. Because of hot-swap, the phase keeps going across pitch changes.
+
+For envelope-triggered notes, reach for `@.gate` so the envelope fires on each pattern event (and stays silent on `~` rests) rather than running an independent clock that can drift:
+
+```akk
+n"c4 e4 ~ g4"
+  |> saw(@.freq) * ar(@.gate, 0.01, 0.2)
+  |> out(@)
+```
 
 ## Inline modifiers
 
@@ -50,15 +59,15 @@ Mini-notation supports a handful of inline modifiers on each event:
 ## Example: a riff with a filter sweep
 
 ```akk
-gate = trigger(4)              // one gate per beat
-src  = osc("square", n"<c4 eb4> g4 [bb4 c5] a4")
-       |> lp(%, 2000 + ar(gate, 0.05, 0.4) * 3000)
-       |> % * 0.25
-
-src |> reverb(%, 0.3) |> out(%)
+n"<c4 eb4> g4 [bb4 c5] a4"
+  |> sqr(@.freq) * ar(@.gate, 0.01, 0.25)
+  |> lp(@, 400 + ar(@.gate, 0.01, 0.25) * 3000)
+  |> @ * 0.25
+  |> reverb(@, 0.3)
+  |> out(@)
 ```
 
-The cutoff is the constant 2000 plus an attack-release envelope scaled by 3000, so each beat opens the filter up by ~3 kHz then closes again.
+`@.gate` triggers the envelope on every pattern event — including the `<c4 eb4>` alternation and the `[bb4 c5]` sub-sequence — so the amp and filter envelopes follow the actual note rate, not a fixed clock.
 
 > Every slot in the pattern is itself a signal, so you can modulate per-slot parameters (velocity, filter, pan) by writing a parallel pattern and multiplying.
 
