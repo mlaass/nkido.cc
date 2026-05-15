@@ -18,9 +18,9 @@ When you write a patch, you're describing a **DAG** (directed acyclic graph) of 
 
 ```akk
 osc("sin", 440) * 0.3
-  |> lp(%, 1200)
-  |> reverb(%, 0.4)
-  |> out(%)
+  |> lp(@, 1200)
+  |> reverb(@, 0.4)
+  |> out(@)
 ```
 
 <div class="ascii">
@@ -30,13 +30,13 @@ osc("sin", 440) * 0.3
      * 0.3
        │
        ▼
-   lp(%, 1200)
+   lp(@, 1200)
        │
        ▼
-  reverb(%, 0.4)
+  reverb(@, 0.4)
        │
        ▼
-     out(%)
+     out(@)
 </div>
 
 NKIDO compiles this graph to bytecode that runs in a stack-based VM, one audio block at a time. No per-sample allocations, no runtime garbage collection.

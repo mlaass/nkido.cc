@@ -11,19 +11,19 @@ subfeatures:
   - name: Chorus
     anchor: chorus
     tagline: Stereo chorus, lush detune.
-    snippet: 'osc("saw", 220) |> chorus(%, 0.5, 0.5)'
+    snippet: 'osc("saw", 220) |> chorus(@, 0.5, 0.5)'
   - name: Flanger
     anchor: flanger
     tagline: Swept short delay with feedback.
-    snippet: 'osc("saw", 110) |> flanger(%, 0.5, 0.7)'
+    snippet: 'osc("saw", 110) |> flanger(@, 0.5, 0.7)'
   - name: Phaser
     anchor: phaser
     tagline: All-pass cascade phaser.
-    snippet: 'osc("saw", 110) |> phaser(%, 0.3, 0.8)'
+    snippet: 'osc("saw", 110) |> phaser(@, 0.3, 0.8)'
   - name: Comb
     anchor: comb
     tagline: Comb filter modulation.
-    snippet: 'osc("noise") |> comb(%, 1/220, 0.95)'
+    snippet: 'osc("noise") |> comb(@, 1/220, 0.95)'
 ---
 
 # Modulation Effects
@@ -35,7 +35,7 @@ Modulation effects use time-varying delays to add movement and spatial width to 
 ```akk
 // 30% dry, 70% wet chorus
 dry = osc("saw", 220)
-dry * 0.3 + chorus(dry, 0.5, 0.5) * 0.7 |> out(%, %)
+dry * 0.3 + chorus(dry, 0.5, 0.5) * 0.7 |> out(@)
 ```
 
 ## chorus
@@ -56,22 +56,22 @@ The `base_delay` parameter sets the center delay time, while `depth_range` contr
 
 ```akk
 // Classic chorus
-osc("saw", 220) |> chorus(%, 0.5, 0.5) |> out(%, %)
+osc("saw", 220) |> chorus(@, 0.5, 0.5) |> out(@)
 ```
 
 ```akk
 // Slow deep chorus
-osc("tri", 110) |> chorus(%, 0.2, 0.8) |> out(%, %)
+osc("tri", 110) |> chorus(@, 0.2, 0.8) |> out(@)
 ```
 
 ```akk
 // Fast shimmer
-osc("sin", 440) |> chorus(%, 2, 0.3) |> out(%, %)
+osc("sin", 440) |> chorus(@, 2, 0.3) |> out(@)
 ```
 
 ```akk
 // Wide chorus with longer delay
-osc("saw", 220) |> chorus(%, 0.3, 0.6, 30, 15) |> out(%, %)
+osc("saw", 220) |> chorus(@, 0.3, 0.6, 30, 15) |> out(@)
 ```
 
 Related: [flanger](#flanger), [phaser](#phaser)
@@ -96,22 +96,22 @@ The `min_delay` and `max_delay` parameters define the sweep range. Shorter delay
 
 ```akk
 // Classic flanger
-osc("saw", 110) |> flanger(%, 0.5, 0.7) |> out(%, %)
+osc("saw", 110) |> flanger(@, 0.5, 0.7) |> out(@)
 ```
 
 ```akk
 // Slow metallic sweep
-osc("sqr", 220) |> flanger(%, 0.1, 0.9) |> out(%, %)
+osc("sqr", 220) |> flanger(@, 0.1, 0.9) |> out(@)
 ```
 
 ```akk
 // Fast subtle movement
-osc("tri", 440) |> flanger(%, 3, 0.3) |> out(%, %)
+osc("tri", 440) |> flanger(@, 3, 0.3) |> out(@)
 ```
 
 ```akk
 // Tight metallic flanger
-osc("saw", 110) |> flanger(%, 0.5, 0.8, 0.05, 2.0) |> out(%, %)
+osc("saw", 110) |> flanger(@, 0.5, 0.8, 0.05, 2.0) |> out(@)
 ```
 
 Related: [chorus](#chorus), [phaser](#phaser), [comb](#comb)
@@ -145,27 +145,27 @@ expect up to +6 dB peak gain at constructive interference points.
 
 ```akk
 // Classic phaser
-osc("saw", 110) |> phaser(%, 0.3, 0.8) |> out(%, %)
+osc("saw", 110) |> phaser(@, 0.3, 0.8) |> out(@)
 ```
 
 ```akk
 // Fast space phaser
-osc("sqr", 220) |> phaser(%, 2, 0.5) |> out(%, %)
+osc("sqr", 220) |> phaser(@, 2, 0.5) |> out(@)
 ```
 
 ```akk
 // Slow deep sweep
-osc("noise") |> lp(%, 2000) |> phaser(%, 0.1, 0.9) |> out(%, %)
+osc("noise") |> lp(@, 2000) |> phaser(@, 0.1, 0.9) |> out(@)
 ```
 
 ```akk
 // Extended high-frequency sweep
-osc("saw", 110) |> phaser(%, 0.2, 0.8, 100, 8000) |> out(%, %)
+osc("saw", 110) |> phaser(@, 0.2, 0.8, 100, 8000) |> out(@)
 ```
 
 ```akk
 // Deep, resonant 6-stage phaser with strong feedback
-osc("saw", 110) |> phaser(%, 0.5, 0.9, 100, 5000, 6, 0.7) |> out(%, %)
+osc("saw", 110) |> phaser(@, 0.5, 0.9, 100, 5000, 6, 0.7) |> out(@)
 ```
 
 Related: [flanger](#flanger), [chorus](#chorus)
@@ -186,17 +186,17 @@ A comb filter creates a series of peaks and notches at harmonics of the delay fr
 
 ```akk
 // Tuned resonator at ~220 Hz
-osc("noise") |> comb(%, 1/220, 0.95) |> out(%, %)
+osc("noise") |> comb(@, 1/220, 0.95) |> out(@)
 ```
 
 ```akk
 // Metallic coloring
-osc("saw", 110) |> comb(%, 0.01, 0.7) |> out(%, %)
+osc("saw", 110) |> comb(@, 0.01, 0.7) |> out(@)
 ```
 
 ```akk
 // Karplus-Strong style pluck
-osc("noise") * ar(trigger(4), 0.001, 0.01) |> comb(%, 1/440, 0.99) |> out(%, %)
+osc("noise") * ar(trigger(4), 0.001, 0.01) |> comb(@, 1/440, 0.99) |> out(@)
 ```
 
 Related: [flanger](#flanger), [delay](#../delays#delay)

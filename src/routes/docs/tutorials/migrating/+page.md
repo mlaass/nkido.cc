@@ -24,7 +24,7 @@ The three ecosystems each pull in a different direction. Tidal treats music as a
 | **Synthesis** | None — triggers SuperDirt | Built-in samples + simple synths | Full UGen library | Full built-in DSP, no externals |
 | **Sample handling** | `s "bd"` | `.s("bd")` | `Buffer.read` + `PlayBuf` | `pat("bd")` (built-in kit) |
 | **Live workflow** | GHCI re-evals | JS hot-reload | OSC messages or sclang | Hot-swap with state preservation |
-| **FX routing** | `# room 0.5` | `.room(0.5)` | Bus + Ndef | `\|> reverb(%, 0.4)` |
+| **FX routing** | `# room 0.5` | `.room(0.5)` | Bus + Ndef | `\|> reverb(@, 0.4)` |
 | **State across edits** | None — restarts | None — restarts | Manual via `Ndef` | Built-in (semantic IDs) |
 
 ## Coming from Tidal
@@ -38,7 +38,7 @@ d1 $ s "bd ~ sn ~"
 
 ```akk
 -- NKIDO
-pat("bd ~ sn ~") |> out(%, %)
+pat("bd ~ sn ~") |> out(@)
 ```
 
 The shape that's different is what comes *after* the pattern. Tidal hands the pattern off to SuperDirt as named samples and effects via `#`. NKIDO routes the pattern signal through a DAG you can read in a single direction: `n"…" |> saw(@.freq) * ar(@.gate) |> lp(@, …) |> reverb(@, …) |> out(@)`. There is no implicit "everything goes to a SuperDirt orbit" step.
@@ -59,7 +59,7 @@ Strudel is the closest ecosystem syntactically — it lives in the browser and s
 ```akk
 // NKIDO
 bpm = 120
-pat("bd sd") |> out(%, %)
+pat("bd sd") |> out(@)
 ```
 
 When you write `note("c4 e4 g4")` in Strudel, you usually pair it with `.s("piano")` to pick a sample bank. In NKIDO you lead with a typed pattern literal and pipe it into a waveform builtin: `n"c4 e4 g4" |> saw(@.freq)`. The synthesis is yours to build; there is no default sound.
@@ -93,7 +93,7 @@ SynthDef(\pluck, { |freq=440|
 ```akk
 -- NKIDO
 pluck = osc("saw", 440) * ar(trigger(2), 0.001, 0.3) * 0.3
-pluck |> out(%, %)
+pluck |> out(@)
 ```
 
 `Pbind` becomes mini-notation. Where you'd write `Pbind(\degree, Pseq([0, 2, 4, 7]))`, you write `n"c4 d4 e4 g4"`.

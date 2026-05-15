@@ -426,7 +426,7 @@ Three net-new doc pages. One existing top-level page is expanded.
 **Content outline:**
 
 1. **The four pillars** — Signals, DAGs, Hot-swap, Patterns. One paragraph each, linking to the dedicated concept page.
-2. **How they compose** — narrative walkthrough of a small patch that uses all four ideas (e.g. `osc("sin", "60 64 67 72") |> moog(%, env(lfo("saw", 1) * 1500 + 200, 0)) |> reverb(0.3) |> out()`), labelling each concept as it appears.
+2. **How they compose** — narrative walkthrough of a small patch that uses all four ideas (e.g. `osc("sin", "60 64 67 72") |> moog(@, env(lfo("saw", 1) * 1500 + 200, 0)) |> reverb(0.3) |> out()`), labelling each concept as it appears.
 3. **Why this combination** — short justification: signals are the universal interface, DAGs make order-of-operations obvious, hot-swap enables exploratory composition, mini-notation removes the boilerplate of "create a clip, schedule events, …".
 4. **What's *not* here** — nkido is not a beat-and-bar sequencer DAW; not a Max/MSP-style box-and-line UI; not a sample triggerer. Setting expectations before someone goes looking for these.
 5. **Next steps** — one link to Hello Sine (tutorial entry), one link to the live IDE.

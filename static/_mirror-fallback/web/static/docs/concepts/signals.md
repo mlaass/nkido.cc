@@ -27,9 +27,9 @@ stereo(saw(218), saw(222))
 `out()` accepts either:
 
 ```akkado
-saw(220) |> out(%)              // Mono  → duplicated to L and R
+saw(220) |> out(@)              // Mono  → duplicated to L and R
 stereo(saw(218), saw(222))
-  |> out(%)                     // Stereo → split into L and R
+  |> out(@)                     // Stereo → split into L and R
 out(saw(218), saw(222))         // Two mono signals → L, R explicitly
 ```
 
@@ -60,17 +60,17 @@ When a **mono** DSP function receives a **stereo** input, the compiler auto-lift
 bus = osc("saw", 220) |> stereo()
 
 bus
-  |> filter_lp(%, 500, 0.7)   // Stereo: per-channel filter state
-  |> delay(%, 0.25, 0.5)      // Stereo: per-channel delay line
-  |> out(%)                   // Stereo out
+  |> filter_lp(@, 500, 0.7)   // Stereo: per-channel filter state
+  |> delay(@, 0.25, 0.5)      // Stereo: per-channel delay line
+  |> out(@)                   // Stereo out
 ```
 
 This is exactly equivalent to writing:
 
 ```akkado
 sig = osc("saw", 220)
-left_out  = sig |> filter_lp(%, 500, 0.7) |> delay(%, 0.25, 0.5)
-right_out = sig |> filter_lp(%, 500, 0.7) |> delay(%, 0.25, 0.5)
+left_out  = sig |> filter_lp(@, 500, 0.7) |> delay(@, 0.25, 0.5)
+right_out = sig |> filter_lp(@, 500, 0.7) |> delay(@, 0.25, 0.5)
 out(left_out, right_out)
 ```
 
@@ -88,8 +88,8 @@ Identical state handling, identical audio. Same story for stateless effects (`sa
 
 ```akkado
 dry = osc("saw", 220)                          // Mono
-wet = dry |> stereo() |> freeverb(%, 0.9, 0.5) // Stereo
-dry * 0.3 + wet * 0.7 |> out(%)                // Stereo out
+wet = dry |> stereo() |> freeverb(@, 0.9, 0.5) // Stereo
+dry * 0.3 + wet * 0.7 |> out(@)                // Stereo out
 ```
 
 The `dry * 0.3` stays mono, `wet * 0.7` stays stereo, and `mono + stereo` promotes to stereo by dual-reading the mono buffer. No extra instructions.

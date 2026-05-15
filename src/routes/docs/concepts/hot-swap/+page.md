@@ -31,8 +31,8 @@ Every node in a NKIDO patch gets a stable **semantic ID** derived from its posit
   ─────────                  ─────────                ──────
   osc("sin", 440)        →   osc("sin", 440)          keep state
      |> % * 0.3          →      |> % * 0.3            keep state
-     |> lp(%, 1200)      →      |> lp(%, 800)         keep state, update cutoff
-     |> out(%)           →      |> out(%)             keep state
+     |> lp(@, 1200)      →      |> lp(@, 800)         keep state, update cutoff
+     |> out(@)           →      |> out(@)             keep state
 </div>
 
 ## What gets preserved

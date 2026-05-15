@@ -350,7 +350,7 @@ describe('buildOverview', () => {
 						name: 'Delay',
 						anchor: 'delay',
 						tagline: 'D.',
-						snippet: 'osc("saw", 220) |> delay(%, 0.5, 0.4) |> reverb(%)'
+						snippet: 'osc("saw", 220) |> delay(@, 0.5, 0.4) |> reverb(@)'
 					}
 				]
 			})
@@ -359,7 +359,7 @@ describe('buildOverview', () => {
 		const overview = await buildOverview(m, { warn });
 		const card = overview.groups[0].subgroups[0].cards[0];
 
-		expect(card.snippet).toBe('osc("saw", 220)\n  |> delay(%, 0.5, 0.4)\n  |> reverb(%)');
+		expect(card.snippet).toBe('osc("saw", 220)\n  |> delay(@, 0.5, 0.4)\n  |> reverb(@)');
 	});
 
 	it('respects per-subfeature icon override', async () => {

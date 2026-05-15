@@ -24,7 +24,7 @@
 	</div>
 	<p class="hero-subtitle2">
 		Runs in your <span class="highlight">browser</span>, your favorite <a href="https://godotengine.org/" target="_blank" rel="noopener">game engine</a>, microcontrollers (e.g. a $10 ESP32) or anywhere else your imagination takes you. <br />
-		<span style="display: block; margin-top: 0.5rem;"> • <span class="highlight">C++ 20</span> • <span class="highlight">MIT licensed</span> • <span class="highlight">AI friendly</span></span>
+		<span style="display: block; margin-top: 0.5rem;"><span class="highlight">C++ 20</span> • <span class="highlight">MIT licensed</span> • <span class="highlight">AI friendly</span></span>
 	</p>
 </section>
 

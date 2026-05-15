@@ -120,7 +120,7 @@ cmake --build build</code></pre>
 		<h2 id="first-patch">First patch</h2>
 		<p>Save the following as <code>hello.akk</code>:</p>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex --><div class="code-block" tabindex="0" role="region" aria-label="Code">
-<pre><code>osc("sin", 440) |> out(%, %)</code></pre>
+<pre><code>osc("sin", 440) |> out(@)</code></pre>
 		</div>
 		<p>That's the smallest complete patch — a 440 Hz sine wave routed to both stereo channels.</p>
 		<p>Run it from the build directory:</p>

@@ -77,8 +77,8 @@ func _ready() -> void:
     akkado.source_code = """
         cutoff = param("cutoff", 1200, 100, 8000)
         osc("saw", 220) * 0.3
-          |> lp(%, cutoff, 0.4)
-          |> out(%, %)
+          |> lp(@, cutoff, 0.4)
+          |> out(@)
     """
     stream.akkado_source = akkado
     stream.compilation_finished.connect(_on_compiled)

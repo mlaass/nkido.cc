@@ -59,7 +59,7 @@ There are three shapes of builtin:
 2. **Auto-lifting mono**: `lp`, `hp`, `delay`, `reverb` (the internal kind). Inputs can be mono *or* stereo. If stereo, the compiler runs the opcode twice (once per channel) with independent state.
 3. **Inherently stereo**: `freeverb`, `width`, `pan`, `ms_encode`/`decode`, `pingpong`. Input contract is explicit; output is always stereo.
 
-The auto-lift flag is the one that makes stereo feel invisible. You write `bus |> lp(%, 1200, 0.4)`, and if `bus` happens to be stereo, the filter runs per-channel with its own biquad state on each. No code duplication, no accidental state sharing.
+The auto-lift flag is the one that makes stereo feel invisible. You write `bus |> lp(@, 1200, 0.4)`, and if `bus` happens to be stereo, the filter runs per-channel with its own biquad state on each. No code duplication, no accidental state sharing.
 
 ## `stereo()`, `mono()`, `left()`, `right()`
 
@@ -144,8 +144,8 @@ The `/L` suffix on the state-path-hash deserves a sentence, because it's load-be
 
 ```akk
 dry = osc("saw", 220)                          # Mono
-wet = dry |> stereo() |> freeverb(%, 0.9, 0.5) # Stereo
-dry * 0.3 + wet * 0.7 |> out(%, %)             # Stereo out
+wet = dry |> stereo() |> freeverb(@, 0.9, 0.5) # Stereo
+dry * 0.3 + wet * 0.7 |> out(@)             # Stereo out
 ```
 
 `dry * 0.3` stays mono. `wet * 0.7` stays stereo. `mono + stereo` promotes to stereo by dual-reading the mono buffer into both channels, which is one extra instruction per operand.

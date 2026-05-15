@@ -20,13 +20,13 @@ This post walks through how.
 Imagine you're running:
 
 ```akk
-osc("sin", 440) * 0.3 |> out(%, %)
+osc("sin", 440) * 0.3 |> out(@)
 ```
 
 ...and you rewrite it to:
 
 ```akk
-osc("sin", 440) * 0.3 |> lp(%, 1200, 0.4) |> out(%, %)
+osc("sin", 440) * 0.3 |> lp(@, 1200, 0.4) |> out(@)
 ```
 
 A naive "stop the old program, start the new one" approach would:

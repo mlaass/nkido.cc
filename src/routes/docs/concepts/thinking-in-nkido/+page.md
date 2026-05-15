@@ -28,16 +28,16 @@ Take a small patch:
 
 ```akk
 osc("sin", n"60 64 67 72")
-  |> moog(%, lfo("saw", 1) * 1500 + 200)
-  |> reverb(%, 0.3)
-  |> out(%)
+  |> moog(@, lfo("saw", 1) * 1500 + 200)
+  |> reverb(@, 0.3)
+  |> out(@)
 ```
 
 Read it left to right. `osc("sin", n"60 64 67 72")` is an oscillator whose pitch is itself a **pattern** — four MIDI notes spread evenly over one cycle (the `n"…"` prefix is the note-pattern literal). The output is a **signal** at audio rate.
 
-The pipe `|>` hands that signal into `moog(%, …)` — a 4-pole filter whose cutoff is the second argument. The cutoff is built from a saw **LFO** scaled to oscillate between 200 and 1700 Hz — just signal arithmetic; nothing in mini-notation or in the filter knows about anything else.
+The pipe `|>` hands that signal into `moog(@, …)` — a 4-pole filter whose cutoff is the second argument. The cutoff is built from a saw **LFO** scaled to oscillate between 200 and 1700 Hz — just signal arithmetic; nothing in mini-notation or in the filter knows about anything else.
 
-`reverb(%, 0.3) |> out(%)` finishes the chain. You're looking at a **DAG**: oscillator → filter → reverb → output. No cycles, no hidden state, no scheduler in the loop.
+`reverb(@, 0.3) |> out(@)` finishes the chain. You're looking at a **DAG**: oscillator → filter → reverb → output. No cycles, no hidden state, no scheduler in the loop.
 
 Now edit the cutoff offset from `200` to `400` and re-run. **Hot-swap** keeps the oscillator's phase, the moog's filter delays, and the reverb tail intact. Only the constant changes; you hear the cutoff floor lift without any click or restart.
 
