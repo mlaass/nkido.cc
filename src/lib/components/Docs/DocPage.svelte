@@ -1,10 +1,60 @@
 <script lang="ts">
 	import { BookOpen, ArrowLeft, ArrowRight } from 'lucide-svelte';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import manifest from '$lib/data/docs-manifest.json';
 	import { DOCS_SHELL_KEY } from './docs-shell-context';
 
 	const inShell = getContext(DOCS_SHELL_KEY) !== undefined;
+
+	let bodyEl: HTMLDivElement | undefined = $state();
+
+	const COPY_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+	const CHECK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+	onMount(() => {
+		if (!bodyEl) return;
+		const blocks = bodyEl.querySelectorAll<HTMLPreElement>('pre.shiki');
+		const timers = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>();
+
+		blocks.forEach((pre) => {
+			const lineCount = pre.querySelectorAll('.line').length;
+			if (lineCount <= 2) return;
+
+			const btn = document.createElement('button');
+			btn.type = 'button';
+			btn.className = 'code-copy-btn';
+			btn.setAttribute('aria-label', 'Copy code');
+			btn.title = 'Copy code';
+			btn.innerHTML = COPY_SVG;
+
+			btn.addEventListener('click', async () => {
+				const code = pre.querySelector('code');
+				if (!code) return;
+				try {
+					await navigator.clipboard.writeText(code.innerText);
+					btn.innerHTML = CHECK_SVG;
+					btn.classList.add('copied');
+					btn.setAttribute('aria-label', 'Copied');
+					btn.title = 'Copied';
+					const prev = timers.get(btn);
+					if (prev) clearTimeout(prev);
+					timers.set(
+						btn,
+						setTimeout(() => {
+							btn.innerHTML = COPY_SVG;
+							btn.classList.remove('copied');
+							btn.setAttribute('aria-label', 'Copy code');
+							btn.title = 'Copy code';
+						}, 1500)
+					);
+				} catch {
+					/* clipboard refused — leave UI untouched */
+				}
+			});
+
+			pre.appendChild(btn);
+		});
+	});
 
 	interface Props {
 		title: string;
@@ -63,7 +113,7 @@
 
 		<h1>{title}</h1>
 
-		<div class="doc-body">
+		<div class="doc-body" bind:this={bodyEl}>
 			{@render children()}
 		</div>
 
@@ -155,6 +205,43 @@
 		background: transparent;
 		padding: 0;
 		font-size: 0.875rem;
+	}
+
+	.doc-body :global(pre.shiki) {
+		position: relative;
+	}
+
+	.doc-body :global(pre.shiki .code-copy-btn) {
+		position: absolute;
+		top: var(--spacing-xs);
+		right: var(--spacing-xs);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		padding: 0;
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-muted);
+		border-radius: 6px;
+		color: var(--text-secondary);
+		cursor: pointer;
+		opacity: 0;
+		transition: opacity 120ms ease, color 120ms ease, border-color 120ms ease;
+	}
+
+	.doc-body :global(pre.shiki:hover .code-copy-btn),
+	.doc-body :global(pre.shiki .code-copy-btn:focus-visible) {
+		opacity: 1;
+	}
+
+	.doc-body :global(pre.shiki .code-copy-btn:hover) {
+		color: var(--text-primary);
+		border-color: var(--border-default);
+	}
+
+	.doc-body :global(pre.shiki .code-copy-btn.copied) {
+		color: var(--accent-primary, var(--text-primary));
 	}
 
 	.doc-body :global(table) {
