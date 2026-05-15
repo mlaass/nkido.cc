@@ -24,7 +24,7 @@ The three ecosystems each pull in a different direction. Tidal treats music as a
 | **Synthesis** | None — triggers SuperDirt | Built-in samples + simple synths | Full UGen library | Full built-in DSP, no externals |
 | **Sample handling** | `s "bd"` | `.s("bd")` | `Buffer.read` + `PlayBuf` | `pat("bd")` (built-in kit) |
 | **Live workflow** | GHCI re-evals | JS hot-reload | OSC messages or sclang | Hot-swap with state preservation |
-| **FX routing** | `# room 0.5` | `.room(0.5)` | Bus + Ndef | `\|> reverb(0.4)` |
+| **FX routing** | `# room 0.5` | `.room(0.5)` | Bus + Ndef | `\|> reverb(%, 0.4)` |
 | **State across edits** | None — restarts | None — restarts | Manual via `Ndef` | Built-in (semantic IDs) |
 
 ## Coming from Tidal
@@ -41,9 +41,9 @@ d1 $ s "bd ~ sn ~"
 pat("bd ~ sn ~") |> out(%, %)
 ```
 
-The shape that's different is what comes *after* the pattern. Tidal hands the pattern off to SuperDirt as named samples and effects via `#`. NKIDO routes the pattern signal through a DAG you can read in a single direction: `pat(...) |> filter(...) |> reverb(...) |> out(...)`. There is no implicit "everything goes to a SuperDirt orbit" step.
+The shape that's different is what comes *after* the pattern. Tidal hands the pattern off to SuperDirt as named samples and effects via `#`. NKIDO routes the pattern signal through a DAG you can read in a single direction: `osc("saw", n"…") |> lp(%, …) |> reverb(%, …) |> out(%)`. There is no implicit "everything goes to a SuperDirt orbit" step.
 
-For pitch patterns, Tidal's `n "0 3 7"` becomes NKIDO's `note("c4 eb4 g4")` — the names are explicit instead of intervals over a scale, but the cycle-fills-evenly semantics are the same.
+For pitch patterns, Tidal's `n "0 3 7"` becomes NKIDO's `n"c4 eb4 g4"` — the names are explicit instead of intervals over a scale, but the cycle-fills-evenly semantics are the same.
 
 What doesn't translate: Tidal's pattern-combinator vocabulary (`every`, `jux`, `slow`, `fast`, `chunk`, `swingBy`) is a deep library that NKIDO does not match feature-for-feature. The mini-notation modifiers — `*`, `/`, `<>`, `[]`, `?`, `!`, `@` — do carry over. Higher-order pattern transformations (e.g. `every 3 (rev)`) are not currently in the language; you express the variation by changing the pattern string itself or by hot-swapping.
 
@@ -62,15 +62,14 @@ bpm = 120
 pat("bd sd") |> out(%, %)
 ```
 
-When you write `note("c4 e4 g4")` in Strudel, you usually pair it with `.s("piano")` to pick a sample bank. In NKIDO you pair it with an oscillator: `note("c4 e4 g4") |> osc("saw")`. The synthesis is yours to build; there is no default sound.
+When you write `note("c4 e4 g4")` in Strudel, you usually pair it with `.s("piano")` to pick a sample bank. In NKIDO you pair it with an oscillator and use a typed pattern literal: `osc("saw", n"c4 e4 g4")`. The synthesis is yours to build; there is no default sound.
 
-Strudel's chained `.lpf(...)`, `.room(...)`, `.gain(...)` calls each produce a new pattern wrapper. NKIDO uses `|>` for the same idea, but the pipe operates on signals rather than patterns:
+Strudel's chained `.lpf(...)`, `.room(...)`, `.gain(...)` calls each produce a new pattern wrapper. NKIDO uses `|>` for the same idea, but the pipe operates on signals rather than patterns and every RHS call needs the hole `%` (or `@`):
 
 ```akk
-note("c4 e4 g4") |> osc("saw")
-    |> lp(%, 1200)
-    * 0.4
-    |> reverb(0.3)
+osc("saw", n"c4 e4 g4")
+    |> lp(%, 1200) * 0.4
+    |> reverb(%, 0.3)
     |> out(%, %)
 ```
 
@@ -96,7 +95,7 @@ pluck = osc("saw", 440) * ar(trigger(2), 0.001, 0.3) * 0.3
 pluck |> out(%, %)
 ```
 
-`Pbind` becomes mini-notation. Where you'd write `Pbind(\degree, Pseq([0, 2, 4, 7]))`, you write `note("c4 d4 e4 g4")`.
+`Pbind` becomes mini-notation. Where you'd write `Pbind(\degree, Pseq([0, 2, 4, 7]))`, you write `n"c4 d4 e4 g4"`.
 
 Buses and `Ndef`s — SuperCollider's mechanism for keeping signals alive while you re-define them — are partially obviated by hot-swap. When you edit a NKIDO patch and re-run, the engine diffs node identity and keeps state for unchanged nodes, so you don't have to set up a bus topology to get continuity.
 

@@ -83,7 +83,7 @@ A long, evolving saw pad through a low-pass filter and reverb.
 ```akk
 osc("saw", 220) * adsr(trigger(0.5), 0.3, 0.6)
     |> lp(%, 1200)
-    |> reverb(0.4)
+    |> reverb(%, 0.4)
     |> out(%, %)
 ```
 
@@ -107,14 +107,12 @@ A near-zero attack and 80 ms release shape the sound into a transient. The moog 
 A four-note arpeggio routed through a saw oscillator and a fixed-cutoff lowpass.
 
 ```akk
-note("c4 e4 g4 b4")
-    |> osc("saw")
+osc("saw", n"c4 e4 g4 b4") * ar(trigger(4), 0.01, 0.15)
     |> lp(%, 1200)
-    * ar(trigger(4), 0.01, 0.15)
     |> out(%, %)
 ```
 
-`note(...)` turns a pattern of pitch names into a frequency signal. When the pattern advances, the oscillator's frequency updates on the beat. Hot-swap keeps the oscillator's phase across pitch changes, so you don't hear a click on each note.
+`n"…"` is a note-pattern literal — its frequency buffer feeds straight into `osc`'s pitch slot. When the pattern advances, the oscillator's frequency updates on the beat. Hot-swap keeps the oscillator's phase across pitch changes, so you don't hear a click on each note.
 
 ## Probabilistic hat pattern
 
@@ -134,7 +132,7 @@ A sustained oscillator with a slow LFO modulating the cutoff — useful as a bed
 ```akk
 osc("saw", 55)
     |> moog(%, 400 + lfo("saw", 0.1) * 300, 1.5)
-    |> reverb(0.5)
+    |> reverb(%, 0.5)
     |> out(%, %)
 ```
 
