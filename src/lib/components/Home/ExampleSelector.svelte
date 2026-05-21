@@ -6,6 +6,7 @@
 		DEFAULT_SLUG,
 		findExample
 	} from '$lib/data/landing-examples';
+	import { encodeInlineUrl } from '$lib/util/inline-url';
 	import ExampleTabs from './ExampleTabs.svelte';
 
 	const EMBED_ORIGIN =
@@ -20,12 +21,20 @@
 	let failed = $state(false);
 	let loadTimer: ReturnType<typeof setTimeout> | null = null;
 	let iframeEl = $state<HTMLIFrameElement | null>(null);
+	// Latest editor contents reported by the embed; null until it reports in
+	// (and reset on every tab switch). Drives the "open in IDE" deep link.
+	let liveCode = $state<string | null>(null);
 
 	const activeExample = $derived(findExample(activeSlug) ?? LANDING_EXAMPLES[0]);
 	const embedUrl = $derived(
 		`${EMBED_ORIGIN}/embed?patch=${encodeURIComponent(activeSlug)}&autoplay=1`
 	);
-	const fallbackUrl = $derived(`${EMBED_ORIGIN}/?patch=${encodeURIComponent(activeSlug)}`);
+	const fallbackUrl = $derived(
+		`${EMBED_ORIGIN}/embed?patch=${encodeURIComponent(activeSlug)}&autoplay=1`
+	);
+	// Deep link into the full IDE: the exact patch the visitor is hearing/editing
+	// once the embed has reported its code, the bare IDE before that.
+	const ideUrl = $derived(liveCode ? encodeInlineUrl(liveCode, EMBED_ORIGIN) : EMBED_ORIGIN);
 
 	function readSlugFromUrl(): string {
 		if (typeof window === 'undefined') return DEFAULT_SLUG;
@@ -53,6 +62,9 @@
 		if (slug === activeSlug) return;
 		activeSlug = slug;
 		writeSlugToUrl(slug);
+		// Drop the previous patch's code so the IDE link can't open the wrong
+		// patch — the embed re-reports once the new patch has loaded.
+		liveCode = null;
 		if (activated) postSwitch(slug);
 	}
 
@@ -74,11 +86,16 @@
 
 	function handleMessage(event: MessageEvent) {
 		if (event.origin !== EMBED_ORIGIN) return;
-		if (event.data?.type !== 'nkido:embed-ready') return;
-		// If the user picked a different tab while the iframe was loading,
-		// sync the embed now that it's listening.
-		const startedWith = new URL(embedUrl).searchParams.get('patch');
-		if (startedWith !== activeSlug) postSwitch(activeSlug);
+		const type = event.data?.type;
+		if (type === 'nkido:embed-ready') {
+			// If the user picked a different tab while the iframe was loading,
+			// sync the embed now that it's listening.
+			const startedWith = new URL(embedUrl).searchParams.get('patch');
+			if (startedWith !== activeSlug) postSwitch(activeSlug);
+		} else if (type === 'nkido:patch-code') {
+			const code = event.data.code;
+			if (typeof code === 'string' && code.length > 0) liveCode = code;
+		}
 	}
 
 	onMount(() => {
@@ -149,8 +166,9 @@
 		</div>
 
 		<div class="embed-footer">
-			<a href={EMBED_ORIGIN} target="_blank" rel="noopener">
-				Open the full IDE <ExternalLink size={14} />
+			<a href={ideUrl} target="_blank" rel="noopener">
+				{liveCode ? 'Open this patch in the IDE' : 'Open the full IDE'}
+				<ExternalLink size={14} />
 			</a>
 		</div>
 	</div>
