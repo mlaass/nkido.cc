@@ -122,7 +122,6 @@
 						</div>
 						<div class="poster-label">
 							<strong>Click to play</strong>
-							<span class="poster-sub">Loads the NKIDO IDE (~4s, ~2 MB WASM)</span>
 						</div>
 					</div>
 				</button>
@@ -270,11 +269,6 @@
 
 	.poster-label strong {
 		font-size: 1.125rem;
-	}
-
-	.poster-sub {
-		color: var(--text-secondary);
-		font-size: 0.875rem;
 	}
 
 	.fallback {
