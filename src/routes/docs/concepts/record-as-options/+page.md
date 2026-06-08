@@ -1,7 +1,7 @@
 ---
 layout: "doc"
 title: "Records as Builtin Options"
-description: "When a builtin needs more parameters than fit comfortably in positional slots, akkado uses a record literal as the last positional argument. This convention…"
+description: "When a builtin needs more parameters than fit comfortably in positional slots, akkado uses a record literal as the last positional argument. Call sites stay…"
 category: "concepts"
 slug: "record-as-options"
 order: 4
@@ -11,13 +11,13 @@ backLabel: "Concepts"
 referenceKeyword: "options"
 ---
 
-When a builtin needs more parameters than fit comfortably in positional slots, akkado uses a **record literal as the last positional argument**. This convention keeps call sites readable, lets the editor offer field-name autocomplete, and gives the compiler a typed schema to validate against.
+When a builtin needs more parameters than fit comfortably in positional slots, akkado uses a **record literal as the last positional argument**. Call sites stay readable, the editor knows what fields are legal so it can autocomplete them, and the compiler has a typed schema to validate against.
 
 ## The pattern
 
 ```akkado
 // Last positional argument is a record. Each field is a named option.
-osc("saw", 220) |> waterfall(@, "scope", {
+saw(220) |> waterfall(@, "scope", {
     fft: 1024,
     gradient: "viridis",
     angle: 270,
